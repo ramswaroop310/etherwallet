@@ -21,18 +21,56 @@ if (web3.isConnected())
 else
   throw "No connection";
 
- 
 app.post('/api', function(req, res) {
   var data = req.body;
 
-  if ("balance" in data) {
-    web3.eth.getBalance(data["balance"])
-  }
+  res.setHeader('Content-Type', 'application/json');
 
+  if ("balance" in data) {    
+    var jsonRes = getBalance(data["balance"]);
+    res.write(JSON.stringify(jsonRes));
+    res.sendStatus(200);
+  } else if ("rawtx" in data) {
+    var jsonRes = sendRawTransaction(data["rawtx"]);
+    res.write(JSON.stringify(jsonRes));
+    res.sendStatus(200);
+  } else if ("txdata" in data) {
+    var jsonRes = getTransactionData(data["txdata"]);
+    res.write(JSON.stringify(jsonRes));
+    res.sendStatus(200);
+  } else if ("estimatedGas" in data) {
+    var jsonRes = getEstimatedGas(data["estimatedGas"]);
+    res.write(JSON.stringify(jsonRes));
+    res.sendStatus(200);
+  } else if ("ethCall" in data) {
+    var jsonRes = getEthCall(data["ethCall"]);
+    res.write(JSON.stringify(jsonRes));
+    res.sendStatus(200);
+  }
   
-  console.error('Invalid Request: ' + action);
+  console.error('Invalid Request: ' + data);
   res.status(400).send();
 });
+
+function getBalance(addr, gethRPC) {
+  var data = getDefaultResponse();
+  try {
+    var addr = formatAddress(addr);
+    balancehex = web3.eth.getBalance(addr, "pending");
+    var balance = bchexdec(balancehex);
+    data["data"] = {
+      "address": addr,
+      "balance": balance,
+      "balancehex": balancehex
+    }
+  } catch (e) {
+    data["error"] = true;
+    data["msg"] = e;
+  }
+  return data;
+}
+
+
 
 function formatAddress(addr){
     if (addr.substring(0, 2) == "0x")
