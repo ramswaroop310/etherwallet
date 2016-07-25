@@ -10,7 +10,7 @@ ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.pendingPosts = [];
 ajaxReq.config = {
 	headers: {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/x-www-form-urlencoded'
 	}
 };
 ajaxReq.getBalance = function(addr, callback) {

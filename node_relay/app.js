@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var https = require('https');
 var app = express();
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.set('port', process.env.PORT || 8080);
 
@@ -22,34 +25,39 @@ if (web3.isConnected())
 else
   throw "No connection";
 
+app.get('/api', function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.sendStatus(200);
+})
+
 app.post('/api', function(req, res) {
-  var data = req;
-  //console.log(req.balance);
+  var data = req.body;
+  console.log(data)
 
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.setHeader('Content-Type', 'application/json');
+  res.header('Content-Type', 'application/json');
 
   if ("balance" in data) {    
     var jsonRes = getBalance(data["balance"]);
     res.write(JSON.stringify(jsonRes));
-    res.sendStatus(200);
+    res.end();
   } else if ("rawtx" in data) {
     var jsonRes = sendRawTransaction(data["rawtx"]);
     res.write(JSON.stringify(jsonRes));
-    res.sendStatus(200);
+    res.end();
   } else if ("txdata" in data) {
     var jsonRes = getTransactionData(data["txdata"]);
     res.write(JSON.stringify(jsonRes));
-    res.sendStatus(200);
+    res.end();
   } else if ("estimatedGas" in data) {
     var jsonRes = getEstimatedGas(data["estimatedGas"]);
     res.write(JSON.stringify(jsonRes));
-    res.sendStatus(200);
+    res.end();
   } else if ("ethCall" in data) {
     var jsonRes = getEthCall(data["ethCall"]);
     res.write(JSON.stringify(jsonRes));
-    res.sendStatus(200);
+    res.end();
   }
   
   console.error('Invalid Request: ' + data);
