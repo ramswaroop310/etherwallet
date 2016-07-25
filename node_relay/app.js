@@ -21,7 +21,7 @@ if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
   //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  web3 = new Web3(new Web3.providers.HttpProvider("http://52.206.67.235:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("https://wallet.elaineou.com:8545"));
 }
 if (web3.isConnected()) 
   console.log("Web3 connection established");
@@ -165,8 +165,8 @@ if ('test' == app.get('env')) {
 }
 else {
   var options = {
-    key  : fs.readFileSync('ethwallet.key'),
-    cert : fs.readFileSync('ethwallet.crt')
+    key  : fs.readFileSync('wallet.elaineou.com.key'),
+    cert : fs.readFileSync('wallet.elaineou.com.crt')
   };
   var server = https.createServer(options, app);
 }
