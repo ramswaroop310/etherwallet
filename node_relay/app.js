@@ -23,8 +23,11 @@ else
   throw "No connection";
 
 app.post('/api', function(req, res) {
-  var data = req.body;
+  var data = req;
+  //console.log(req.balance);
 
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader('Content-Type', 'application/json');
 
   if ("balance" in data) {    

@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "",
   "main": "gulpfile.js",
-  "author": "MyEtherWallet",
+  "author": "ClassicEtherWallet",
   "license": "ISC",
   "devDependencies": {
     "angular": "^1.5.3",
@@ -29,9 +29,13 @@
     "install": "^0.6.1",
     "npm": "^3.8.5",
     "scryptsy": "^1.2.1",
-    "uuid": "^2.0.1"
+    "uuid": "^2.0.1",
+    "web3": "^0.17.0"
   },
   "dependencies": {
-    "bignumber.js": "^2.4.0"
+    "bignumber.js": "^2.4.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "web3": "^0.17.0-alpha"
   }
 }
