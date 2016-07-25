@@ -4,13 +4,13 @@ var http;
 var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
-ajaxReq.SERVERURL = "https://rpc.myetherwallet.com/api.php";
-ajaxReq.DAOPROPOSALSURL = "https://rpc.myetherwallet.com/TheDAO/getDAOProposals.php";
+ajaxReq.SERVERURL = "http://52.206.67.235:8080/api";
+ajaxReq.DAOPROPOSALSURL = "https://52.206.67.235:8080/TheDAO"; //TODO: DAO
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.pendingPosts = [];
 ajaxReq.config = {
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+		'Content-Type': 'application/x-www-form-urlencoded'
 	}
 };
 ajaxReq.getBalance = function(addr, callback) {
