@@ -88,6 +88,7 @@ function sendRawTransaction(rawtx, gethRPC) {
   try {
     data["data"] = web3.eth.sendRawTransaction(rawtx);
   } catch (e) {
+    console.log(e);
     data["error"] = true;
     data["msg"] = e;
   }
@@ -108,6 +109,7 @@ function getTransactionData(addr, gethRPC) {
       "gasprice": gasprice
     }
   } catch (e) {
+    console.log(e);
     data["error"] = true;
     data["msg"] = e;
   }
