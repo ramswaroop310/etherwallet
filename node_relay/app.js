@@ -100,11 +100,11 @@ function getTransactionData(addr, gethRPC) {
     var balance = web3.eth.getBalance(addr, "pending");
     var nonce = web3.eth.getTransactionCount(addr, "pending");
     var gasprice = web3.eth.gasPrice;
-    var balance = bchexdec(balance);
+    //var balance = bchexdec(balance);
     data["data"] = {
       "address": addr,
       "balance": balance,
-      "nonce": nonce,
+      "nonce": nonce.toString(),
       "gasprice": gasprice
     }
   } catch (e) {
