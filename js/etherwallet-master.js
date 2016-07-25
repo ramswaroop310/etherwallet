@@ -4,7 +4,7 @@ var http;
 var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
-ajaxReq.SERVERURL = "https://wallet.elaineou.com:8080/api";
+ajaxReq.SERVERURL = "https://wallet.elaineou.com/api";
 ajaxReq.DAOPROPOSALSURL = "http://52.206.67.235:8080/TheDAO"; //TODO: DAO
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.pendingPosts = [];
@@ -1637,10 +1637,10 @@ globalFuncs.stripTags = function(str) {
 	return str;
 }
 globalFuncs.checkAndRedirectHTTPS = function() {
-	var host = "52.206.67.235:8080";
+	var host = "52.206.67.235:80";
 	var githost = "elaineo.github.io";
 	var githostw = "www.elaineo.github.io";
-	var hostw = "52.206.67.235:8080";
+	var hostw = "52.206.67.235:80";
 	if ((host == window.location.host || githost == window.location.host || hostw == window.location.host || githostw == window.location.host) && (window.location.protocol != "https:")) window.location.protocol = "https";
 }
 globalFuncs.isStrongPass = function(password) {
