@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+var fs = require('fs');
+
 var BigNumber = require('bignumber.js');
 var Web3 = require("web3");
 var web3;
@@ -8,6 +10,12 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var https = require('https');
 var app = express();
+
+var options = {
+   key  : fs.readFileSync('ethwallet.key'),
+   cert : fs.readFileSync('ethwallet.crt')
+};
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -158,7 +166,7 @@ function bchexdec(hex) {
 }
 
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 
 server.listen(app.get('port'), function() { 
     console.log((new Date()) + " Server is listening on port " + app.get('port'));
