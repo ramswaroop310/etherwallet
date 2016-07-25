@@ -4,7 +4,7 @@ var http;
 var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
-ajaxReq.SERVERURL = "http://52.206.67.235:8080/api";
+ajaxReq.SERVERURL = "https://localhost:8080/api";
 ajaxReq.DAOPROPOSALSURL = "https://52.206.67.235:8080/TheDAO"; //TODO: DAO
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.pendingPosts = [];
