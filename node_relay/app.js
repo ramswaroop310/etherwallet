@@ -3,18 +3,19 @@ var BigNumber = require('bignumber.js');
 var Web3 = require("web3");
 var web3;
 
-var solc = require("solc");
-var Transaction = require("ethereumjs-tx");
-var util = require("ethereumjs-util");
+var express = require('express');
+var bodyParser = require('body-parser');
+var http = require('http');
+var https = require('https');
+var app = express();
 
-var defaultGasPrice = "0x04e3b29200"; //21 Gwei
-var defaultGasLimit = "0x0249f0"; //150000
+app.set('port', process.env.PORT || 8080);
 
 if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
   //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  web3 = new Web3(new Web3.providers.HttpProvider("http://52.87.160.47:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("http://52.87.228.28:8545"));
 }
 if (web3.isConnected()) 
   console.log("Web3 connection established");
@@ -56,7 +57,7 @@ function getBalance(addr, gethRPC) {
   var data = getDefaultResponse();
   try {
     var addr = formatAddress(addr);
-    balancehex = web3.eth.getBalance(addr, "pending");
+    var balancehex = web3.eth.getBalance(addr, "pending");
     var balance = bchexdec(balancehex);
     data["data"] = {
       "address": addr,
@@ -69,8 +70,57 @@ function getBalance(addr, gethRPC) {
   }
   return data;
 }
+function sendRawTransaction(rawtx, gethRPC) {
+  var data = getDefaultResponse();
+  try {
+    data["data"] = web3.eth.sendRawTransaction(rawtx);
+  } catch (e) {
+    data["error"] = true;
+    data["msg"] = e;
+  }
+  return data;
+}
+function getTransactionData(addr, gethRPC) {
+  var data = getDefaultResponse();
+  try {
+    var addr = formatAddress(addr);
+    var balance = web3.eth.getBalance(addr, "pending");
+    var nonce = web3.eth.getTransactionCount(addr, "pending");
+    var gasprice = web3.eth.gasPrice;
+    var balance = bchexdec(balance);
+    data["data"] = {
+      "address": addr,
+      "balance": balance,
+      "nonce": nonce,
+      "gasprice": gasprice
+    }
+  } catch (e) {
+    data["error"] = true;
+    data["msg"] = e;
+  }
+  return data;  
+}
 
-
+function getEstimatedGas(txobj, gethRPC) {
+  var data = getDefaultResponse();
+  try {
+    data["data"] = web3.eth.estimateGas(txobj);
+  } catch (e) {
+    data["error"] = true;
+    data["msg"] = e;
+  }
+  return data;  
+}
+function getEthCall(txobj, gethRPC) {
+  var data = getDefaultResponse();
+  try {
+    data["data"] = web3.eth.call(txobj, "pending");
+  } catch (e) {
+    data["error"] = true;
+    data["msg"] = e;
+  }
+  return data;
+}
 
 function formatAddress(addr){
     if (addr.substring(0, 2) == "0x")
@@ -95,3 +145,10 @@ function bchexdec(hex) {
   }
   return dec;
 }
+
+
+var server = http.createServer(app);
+
+server.listen(app.get('port'), function() { 
+    console.log((new Date()) + " Server is listening on port " + app.get('port'));
+});
