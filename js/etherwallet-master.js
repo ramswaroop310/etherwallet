@@ -822,6 +822,7 @@ var sendOfflineTxCtrl = function($scope, $sce, walletService) {
 			ajaxReq.getTransactionData($scope.tx.from, function(data) {
 				if (data.error) throw data.msg;
 				data = data.data;
+				console.log(data);
 				$scope.gasPriceDec = ethFuncs.hexToDecimal(ethFuncs.sanitizeHex(ethFuncs.addTinyMoreToGas(data.gasprice)));
 				$scope.nonceDec = ethFuncs.hexToDecimal(data.nonce);
 				$scope.showWalletInfo = true;
@@ -1465,7 +1466,6 @@ ethFuncs.validateHexString = function(str) {
 	return re.test(str);
 }
 ethFuncs.sanitizeHex = function(hex) {
-	console.log(hex);
 	hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
 	if (hex == "") return "";
 	return '0x' + this.padLeftEven(hex);
@@ -2134,6 +2134,7 @@ uiFuncs.generateTx = function($scope, $sce, callback) {
 		ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
 			if (data.error) throw data.msg;
 			data = data.data;
+			console.log(data)
 			var rawTx = {
 				nonce: ethFuncs.sanitizeHex(data.nonce),
 				gasPrice: ethFuncs.sanitizeHex(ethFuncs.addTinyMoreToGas(data.gasprice)),
@@ -2163,6 +2164,7 @@ uiFuncs.sendTx = function($scope, $sce) {
     if(document.getElementById('sendTransaction')!=null)
         new Modal(document.getElementById('sendTransaction')).close();
 	ajaxReq.sendRawTx($scope.signedTx, function(data) {
+		console.log(data);
 		if (data.error) {
 			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(data.msg));
 		} else {
