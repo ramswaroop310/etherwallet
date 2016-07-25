@@ -158,7 +158,7 @@ function bchexdec(hex) {
 }
 
 
-var server = https.createServer(app);
+var server = http.createServer(app);
 
 server.listen(app.get('port'), function() { 
     console.log((new Date()) + " Server is listening on port " + app.get('port'));
