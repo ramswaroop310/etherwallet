@@ -1465,6 +1465,7 @@ ethFuncs.validateHexString = function(str) {
 	return re.test(str);
 }
 ethFuncs.sanitizeHex = function(hex) {
+	console.log(hex);
 	hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
 	if (hex == "") return "";
 	return '0x' + this.padLeftEven(hex);
