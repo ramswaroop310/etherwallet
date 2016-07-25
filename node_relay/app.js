@@ -11,11 +11,6 @@ var http = require('http');
 var https = require('https');
 var app = express();
 
-var options = {
-   key  : fs.readFileSync('ethwallet.key'),
-   cert : fs.readFileSync('ethwallet.crt')
-};
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -165,8 +160,16 @@ function bchexdec(hex) {
   return dec;
 }
 
-
-var server = https.createServer(options, app);
+if ('test' == app.get('env')) {
+  var server = http.createServer(app);
+}
+else {
+  var options = {
+    key  : fs.readFileSync('ethwallet.key'),
+    cert : fs.readFileSync('ethwallet.crt')
+  };
+  var server = https.createServer(options, app);
+}
 
 server.listen(app.get('port'), function() { 
     console.log((new Date()) + " Server is listening on port " + app.get('port'));
