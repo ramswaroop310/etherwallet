@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 
 if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
