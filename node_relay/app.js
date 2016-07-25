@@ -18,7 +18,7 @@ if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
   //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  web3 = new Web3(new Web3.providers.HttpProvider("http://52.87.228.28:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("http://52.206.67.235:8545"));
 }
 if (web3.isConnected()) 
   console.log("Web3 connection established");
