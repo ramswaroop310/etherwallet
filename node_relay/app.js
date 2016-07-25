@@ -21,7 +21,7 @@ if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  //web3 = new Web3(new Web3.providers.HttpProvider("https://wallet.elaineou.com:8545"));
+  //web3 = new Web3(new Web3.providers.HttpProvider("http://52.206.67.235:8545"));
 }
 if (web3.isConnected()) 
   console.log("Web3 connection established");
@@ -61,10 +61,10 @@ app.post('/api', function(req, res) {
     var jsonRes = getEthCall(data["ethCall"]);
     res.write(JSON.stringify(jsonRes));
     res.end();
+  } else {
+    console.error('Invalid Request: ' + data);
+    res.status(400).send();
   }
-  
-  console.error('Invalid Request: ' + data);
-  res.status(400).send();
 });
 
 function getBalance(addr, gethRPC) {
@@ -72,11 +72,10 @@ function getBalance(addr, gethRPC) {
   try {
     var addr = formatAddress(addr);
     var balancehex = web3.eth.getBalance(addr, "pending");
-    var balance = bchexdec(balancehex);
+    //var balance = bchexdec(balancehex);
     data["data"] = {
       "address": addr,
-      "balance": balance,
-      "balancehex": balancehex
+      "balance": balancehex.toString()
     }
   } catch (e) {
     data["error"] = true;
