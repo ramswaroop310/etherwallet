@@ -79,7 +79,7 @@ function getBalance(addr, gethRPC) {
     }
   } catch (e) {
     data["error"] = true;
-    data["msg"] = e;
+    data["msg"] = JSON.stringify(e);
   }
   return data;
 }
@@ -90,7 +90,7 @@ function sendRawTransaction(rawtx, gethRPC) {
   } catch (e) {
     console.log(e);
     data["error"] = true;
-    data["msg"] = e;
+    data["msg"] = JSON.stringify(e);
   }
   return data;
 }
@@ -111,7 +111,7 @@ function getTransactionData(addr, gethRPC) {
   } catch (e) {
     console.log(e);
     data["error"] = true;
-    data["msg"] = e;
+    data["msg"] = JSON.stringify(e);
   }
   return data;  
 }
@@ -122,7 +122,7 @@ function getEstimatedGas(txobj, gethRPC) {
     data["data"] = web3.eth.estimateGas(txobj);
   } catch (e) {
     data["error"] = true;
-    data["msg"] = e;
+    data["msg"] = JSON.stringify(e);
   }
   return data;  
 }
@@ -132,7 +132,7 @@ function getEthCall(txobj, gethRPC) {
     data["data"] = web3.eth.call(txobj, "pending");
   } catch (e) {
     data["error"] = true;
-    data["msg"] = e;
+    data["msg"] = JSON.stringify(e);
   }
   return data;
 }
