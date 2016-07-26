@@ -1622,7 +1622,7 @@ globalFuncs.postDelay = 300;
 globalFuncs.kdf = "scrypt";
 globalFuncs.defaultTxGasLimit = 21000;
 globalFuncs.digixClaimTxGasLimit = 150000;
-globalFuncs.donateAddress = "0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8";
+globalFuncs.donateAddress = "0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9";
 globalFuncs.isNumeric = function(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -2071,6 +2071,14 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       mew: true,
       cx: false
     },
+    replayProtection: {
+      id: 10,
+      name: "Replay Protection",
+      url: "replay-protection",
+      mew: true,
+      cx: true
+    },
+    /*
     dao: {
       id: 7,
       name: "The DAO",
@@ -2084,7 +2092,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "digix",
       mew: true,
       cx: true
-    },
+    },*/
     contracts: {
       id: 9,
       name: "Contracts",

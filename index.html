@@ -2,7 +2,7 @@
 <html lang="en" ng-app="mewApp">
 <head>
   <meta charset="utf-8">
-  <title>EthereumClassicWallet: Open Source JavaScript Client-Side Classic Ether Wallet</title>
+  <title>ClassicEtherWallet: Open Source JavaScript Client-Side Classic Ether Wallet</title>
   <link rel="canonical" href="https://http://ethereumclassic.com/" />
   <meta name="description" content="Classic Ether Wallet: Open Source JavaScript Client-Side Classic Ether Wallet">
   <meta name="author" content="">
@@ -33,7 +33,7 @@
 
   <a href="http://ethereumclassic.com/" class="announcement annoucement-warning" target="_blank">
     <div class="container">
-      Classic EtherWallet is only served at http://ethereumclassic.com/ and elaineo.github.io/etherwallet/. Beware of the phishing scams!
+      Classic EtherWallet is only served at http://ethereumclassic.com/ and http://elaineo.github.io/etherwallet/. Beware of the phishing scams!
     </div>
   </a>
   <header class="container-fluid bg-gradient text-white">
@@ -363,7 +363,7 @@
       <h4>Send Transaction</h4>
       <div class="form-group col-xs-10">
         <label> To Address: </label>
-        <input class="form-control"  type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tx.to" ng-change="validateAddress()"/>
+        <input class="form-control"  type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tx.to" ng-change="validateAddress()"/>
         <div ng-bind-html="validateAddressStatus"></div>
       </div>
       <div class="col-xs-2 address-identicon-container">
@@ -463,7 +463,7 @@
     <div class="form-group col-xs-10">
       <label><strong>From</strong> Address: </label>
       <p class="small">Note: This is the FROM address, not the TO address. Nonce is generated from the originating account. If using an airgapped computer, it would be the address of the cold-storage account.</p>
-      <input class="form-control"  type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tx.from" ng-change="validateAddress(tx.from,'validateAddressStatus')"/>
+      <input class="form-control"  type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tx.from" ng-change="validateAddress(tx.from,'validateAddressStatus')"/>
       <div ng-bind-html="validateAddressStatus"></div>
     </div>
     <div class="col-xs-2 address-identicon-container">
@@ -491,7 +491,7 @@
     <h4 class="col-xs-12"> Step 2: Generate Transaction (Offline Computer)</h4>
     <div class="form-group col-xs-10">
       <label> To Address: </label>
-      <input class="form-control"  type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tx.to" ng-change="validateAddress(tx.to,'validateToAddressStatus')"/>
+      <input class="form-control"  type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tx.to" ng-change="validateAddress(tx.to,'validateToAddressStatus')"/>
       <div ng-bind-html="validateToAddressStatus"></div>
     </div>
     <div class="col-xs-2 address-identicon-container">
@@ -702,7 +702,7 @@
         <h4>Send DAO Tokens</h4>
         <div class="form-group col-xs-10">
           <label> To Address: </label>
-          <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tokenTx.to" ng-change="validateAddress()"/>
+          <input class="form-control" type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tokenTx.to" ng-change="validateAddress()"/>
           <div ng-bind-html="validateAddressStatus"></div>
         </div>
         <div class="col-xs-2 address-identicon-container">
@@ -1087,7 +1087,7 @@
         <h4> Send Your DGD Tokens or Badges </h4>
         <div class="form-group col-xs-10">
           <label> To Address: </label>
-          <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tokenTx.to" ng-change="validateAddress(tokenTx.to,'validateAddressStatus')"/>
+          <input class="form-control" type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tokenTx.to" ng-change="validateAddress(tokenTx.to,'validateAddressStatus')"/>
           <div ng-bind-html="validateAddressStatus"></div>
         </div>
         <div class="col-xs-2 address-identicon-container">
@@ -1198,7 +1198,7 @@
     <div class="col-md-12">
       <span class="form-group">
         <h4> Contract Address</h4>
-        <input class="form-control" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" />
+        <input class="form-control" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" />
         <h4> ABI / JSON Interface </h4>
         <textarea class="form-control" rows="5" placeholder='[{ "type":"contructor", "inputs": [{ "name":"param1", "type":"uint256", "indexed":true }], "name":"Event" }, { "type":"function", "inputs": [{"name":"a", "type":"uint256"}], "name":"foo", "outputs": [] }] '></textarea>
       </span>
@@ -1238,7 +1238,7 @@
           <span class="label">Recipient:</span>
           <span class="output">
             <div class="address-identicon-container small"><div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div></div>
-            0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8
+            0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9
           </span>
         </p>
           <!-- example: boolean YES -->
@@ -1330,7 +1330,7 @@
             <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
           </div>
           <div class="modal-body">
-            <h4>You are about to execute a function on contract 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8.</h4>
+            <h4>You are about to execute a function on contract 0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9.</h4>
             <p> Estimated fee consumption: <strong> 0.00043598 ether (21,799 gas) </strong> </p>
             <p> Provided Maximum Fee: <strong> 0.00243598 ether (121,799 gas) </strong> </p>
             <p> Gas Price:  <strong> 0.021 ether per million gas </strong> </p>
@@ -1576,7 +1576,7 @@
 
 
   <h4>14. How do I check the balance of my account? </h4>
-  <p> You can use a blockchain explorer like <a href="http://etherscan.io/" target="_blank">etherscan.io</a>. Paste your address into the search bar and it will pull up your address and transaction history. For example, here's what our <a href="http://etherscan.io/address/0x7cb57b5a97eabe94205c07890be4c1ad31e486a8" target="_blank">donation account</a> looks like on etherscan.io</p>
+  <p> You can use a blockchain explorer like <a href="http://etherscan.io/" target="_blank">etherscan.io</a>. Paste your address into the search bar and it will pull up your address and transaction history. For example, here's what our <a href="http://etherscan.io/address/0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" target="_blank">donation account</a> looks like on etherscan.io</p>
 
 
   <h4>15. Where the hell is my geth wallet file? </h4>
@@ -1782,12 +1782,12 @@
     </p>
     <p>
       Source:
-        <a href="https://github.com/elaineo/etherwallet" target="_blank">ClassicEtherWallet.com & ClassicEtherWallet CX on github</a>
+        <a href="https://github.com/elaineo/etherwallet" target="_blank">ClassicEtherWallet.com on github</a>
     </p>
     <p>Contact:
       <a href="mailto:elaine.ou@gmail.com" target="_blank"> Email </a> &middot;
-      <a href="https://twitter.com/ethereumclassic" target="_blank"> Twitter </a> &middot;
-      <a href="https://www.reddit.com/r/ethereumclassic" target="_blank"> EthereumClassic on reddit </a> &middot;
+      <a href="https://twitter.com/eiaine" target="_blank"> Twitter </a> &middot;
+      <a href="https://www.reddit.com/r/ethereumclassic" target="_blank"> EthereumClassic on reddit </a> 
     </p>
   </div>
 </footer>
