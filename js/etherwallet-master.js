@@ -631,7 +631,7 @@ var decryptWalletCtrl = function($scope, $sce, walletService) {
 	};
 };
 module.exports = decryptWalletCtrl;
-},{}],9:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 var digixCtrl = function($scope, $sce, walletService) {
 	new Modal(document.getElementById('sendTransaction'));
@@ -1131,6 +1131,99 @@ var theDaoCtrl = function($scope, $sce, walletService) {
 	}
 };
 module.exports = theDaoCtrl;
+
+
+},{}],9:[function(require,module,exports){
+'use strict';
+var replayProtectionCtrl = function($scope, $sce, walletService) {
+	new Modal(document.getElementById('sendContract'));
+	walletService.wallet = null;
+	walletService.password = '';
+	$scope.showAdvance = false;
+	$scope.showRaw = false;
+	$scope.safeSendContract = "0x40ebf2d6e998a76a848c41908733b26e04adffe2"; 
+	$scope.safeSend = "0x4401a6e4";
+	$scope.tx = {
+		gasLimit: 500000,
+		data: '',
+		to: $scope.replaySafeSendContract,
+		unit: "ether",
+		value: 0,
+		nonce: null,
+		gasPrice: null,
+		donate: false
+	}
+	$scope.contractTx = {
+		to: '',
+		value: 0,
+		unit: "ether"
+	}
+	$scope.$watch(function() {
+		if (walletService.wallet == null) return null;
+		return walletService.wallet.getAddressString();
+	}, function() {
+		if (walletService.wallet == null) return;
+		$scope.wallet = walletService.wallet;
+		$scope.setBalance();
+	});
+	$scope.setBalance = function() {
+		ajaxReq.getBalance($scope.wallet.getAddressString(), function(data) {
+			if (data.error) {
+				$scope.etherBalance = data.msg;
+			} else {
+				$scope.etherBalance = etherUnits.toEther(data.data.balance, 'wei');
+				ajaxReq.getETHvalue(function(data) {
+					$scope.usdBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.usd);
+					$scope.eurBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.eur);
+					$scope.btcBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.btc);
+				});
+			}
+		});
+	}
+	$scope.$watch('tx', function() {
+	  	$scope.showRaw = false;
+		$scope.sendTxStatus = "";
+	}, true);
+	$scope.validateAddress = function() {
+		console.log($scope.contractTx)
+		if (ethFuncs.validateEtherAddress($scope.contractTx.to)) {
+		  $scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[0]));
+		} else {
+		  $scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getDangerText(globalFuncs.errorMsgs[5]));
+		}
+	}
+
+	// sending
+	$scope.generateSafeTx = function() {
+		try {
+			if (!ethFuncs.validateEtherAddress($scope.contractTx.to)) throw globalFuncs.errorMsgs[5];
+			else if (!globalFuncs.isNumeric($scope.contractTx.value) || parseFloat($scope.contractTx.value) < 0) throw globalFuncs.errorMsgs[7];
+			$scope.tx.to = $scope.safeSendContract;
+
+			var value = ethFuncs.padLeft(new BigNumber($scope.contractTx.value).times(etherUnits.toWei($scope.contractTx.value, $scope.contractTx.unit)).toString(16), 64);
+			var toAdd = ethFuncs.padLeft(ethFuncs.getNakedAddress($scope.contractTx.to), 64);
+			$scope.tx.data = $scope.safeSend + toAdd + value;
+			$scope.tx.value = 0;
+			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(''));
+			$scope.generateTx();
+		} catch (e) {
+			$scope.showRaw = false;
+			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(e));
+		}
+	};
+	$scope.generateTx = function() {
+		uiFuncs.generateTx($scope, $sce);
+	}
+	$scope.sendTx = function() {
+		uiFuncs.sendTx($scope, $sce);
+	}
+  	$scope.transferAllBalance = function() {
+    	uiFuncs.transferAllBalance($scope,$sce);
+    }
+};
+module.exports = replayProtectionCtrl;
+
+
 },{}],14:[function(require,module,exports){
 'use strict';
 var viewCtrl = function($scope, globalService) {
@@ -1693,8 +1786,9 @@ var bulkGenCtrl = require('./controllers/bulkGenCtrl');
 var decryptWalletCtrl = require('./controllers/decryptWalletCtrl');
 var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
-var digixCtrl = require('./controllers/digixCtrl');
+//var digixCtrl = require('./controllers/digixCtrl');
 var theDaoCtrl = require('./controllers/theDaoCtrl');
+var replayProtectionCtrl = require('./controllers/replayProtectionCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
 var globalService = require('./services/globalService');
 var walletService = require('./services/walletService');
@@ -1728,8 +1822,9 @@ app.controller('bulkGenCtrl', ['$scope', bulkGenCtrl]);
 app.controller('decryptWalletCtrl', ['$scope','$sce','walletService', decryptWalletCtrl]);
 app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
-app.controller('digixCtrl', ['$scope','$sce','walletService', digixCtrl]);
+//app.controller('digixCtrl', ['$scope','$sce','walletService', digixCtrl]);
 app.controller('theDaoCtrl', ['$scope','$sce','walletService', theDaoCtrl]);
+app.controller('replayProtectionCtrl', ['$scope','$sce','walletService', replayProtectionCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
 if(IS_CX){
     app.controller('addWalletCtrl', ['$scope','$sce', addWalletCtrl]);
@@ -1739,7 +1834,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/digixCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/theDaoCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/theDaoCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -2072,11 +2167,11 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       cx: false
     },
     replayProtection: {
-      id: 10,
+      id: 7,
       name: "Replay Protection",
       url: "replay-protection",
       mew: true,
-      cx: true
+      cx: false
     },
     /*
     dao: {
@@ -2092,16 +2187,16 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "digix",
       mew: true,
       cx: true
-    },*/
+    },
     contracts: {
       id: 9,
       name: "Contracts",
       url:"contracts",
       mew: false,
       cx: false
-    },
+    },*/
     help: {
-      id: 10,
+      id: 8,
       name: "Help",
       url: "help",
       mew: true,

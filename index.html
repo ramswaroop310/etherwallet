@@ -44,13 +44,6 @@
   </header>
 
 
-
-
-
-
-
-
-
 <section class="container" ng-controller='tabsCtrl'>
   <ul class="nav nav-tabs">
     <li ng-repeat="tab in tabNames track by $index" ng-class="{active: $index==activeTab}" ng-show="{{tab.mew}}" ng-click="tabClick($index)"> <a>{{tab.name}} </a></li>
@@ -64,31 +57,31 @@
 
     <section class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.generateWallet.id" ng-controller='walletGenCtrl'>
 
-  <!-- Top -->
-  <h2> Generate Wallet </h2>
+    <!-- Top -->
+    <h2> Generate Wallet </h2>
 
   
     <p>We removed the <a ng-click="globalService.currentTab=globalService.tabs.bulkGenerate.id"> Bulk Generate tab </a> from the nav as it wasn't very widely used, but feel free to still use it if you want.</p>
   
 
-  <article class="row">
-    <div class="col-sm-6">
-      <div class="form-group">
-        <h4>Enter a strong password <small> (at least 9 characters)</small> </h4>
-        <div class="input-group">
-          <input type="{{showPass && 'password' || 'text'}}" class="form-control" placeholder="Don't forget to save this!" ng-model="password" ng-class="isStrongPass() ? 'valid' : 'invalid'"/>
-          <span class="input-group-addon eye" ng-click="showPass=!showPass"></span>
+    <article class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <h4>Enter a strong password <small> (at least 9 characters)</small> </h4>
+          <div class="input-group">
+            <input type="{{showPass && 'password' || 'text'}}" class="form-control" placeholder="Don't forget to save this!" ng-model="password" ng-class="isStrongPass() ? 'valid' : 'invalid'"/>
+            <span class="input-group-addon eye" ng-click="showPass=!showPass"></span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="form-group">
-        <h4>Generate Wallet </h4>
-        <a class="btn btn-primary btn-block btnAction" func="generateSingleWallet" ng-click="genNewWallet()">GENERATE</a>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <h4>Generate Wallet </h4>
+          <a class="btn btn-primary btn-block btnAction" func="generateSingleWallet" ng-click="genNewWallet()">GENERATE</a>
+        </div>
       </div>
-    </div>
-  </article>
-  <!-- / Top -->
+    </article>
+    <!-- / Top -->
 
   <!-- Bottom - Display Generated Wallet -->
   <section id="generatedWallet" ng-show="showWallet">
@@ -197,6 +190,7 @@
 
 
   </section>
+
 </section>
 <!-- / wallet generator -->
 
@@ -1010,134 +1004,71 @@
 <!-- / The DAO Proposals -->
 
 
-
-
-
-
-
-    <!-- Digix -->
-<div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.digix.id">
-  <h2> Digix </h2>
-  <p><strong>Claim</strong> and <strong> Send </strong> your DigixDAO (DGD) tokens & badges. In order to claim, you must have participated in the token sale on March 30th/31st.</p>
-
+    <!-- Replay Protection -->
+<div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.replayProtection.id">
+  <h2> Send with Replay Protection</h2>
+  <p>This sends a transaction through a contract to make sure you are NOT on the fork. The transaction will only succeed on EthereumClassic. It will be rejected if replayed on EthereumForked. For more information about replay attacks, <a href="https://medium.com/@timonrapp/how-to-deal-with-the-ethereum-replay-attack-3fd44074a6d8#.tr98aa8ri" target="_blank">go here</a>.
+  </p>
+  <wallet-decrypt-drtv></wallet-decrypt-drtv>
   
-  
-    <wallet-decrypt-drtv></wallet-decrypt-drtv>
-  
+  <section class="row" ng-show="wallet!=null" ng-controller='replayProtectionCtrl'>
 
-  <section class="row" ng-show="wallet!=null" ng-controller='digixCtrl'>
-    <hr />
 
-    <!-- Account Information - Left Column -->
-    <section class="col-sm-4">
+    <div class="col-md-12"> <hr /> </div>
+
+    <div class="col-sm-4">
       <h4> Account Information </h4>
-      <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
-      <br />
-      <p>
-        Account Address: <br />
-        <strong style="padding-left: 1em; display: block;" class="mono word-wrap">{{wallet.getChecksumAddressString()}}</strong>
-      </p>
-      <p>
-        ETH Balance: <br />
-        <strong style="margin-left: 1em"> {{etherBalance}} Ether </strong>
-      </p>
-      <p> DGD Token Balance: <br />
-        <strong style="margin-left: 1em"> {{tokenBalance}} DGD </strong>
-      </p>
-      <p> DGD Badge Balance: <br />
-        <strong style="margin-left: 1em"> {{badgeBalance}} DGDb  </strong>
-      </p>
-      <p> DGD Crowdsale Information: <br />
-        <strong style="margin-left: 1em"> Centstotal: {{centsTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Weitotal: {{weiTotal}} </strong><br />
-        <strong  style="margin-left: 1em"> Share: {{shareTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Badges: {{badgesTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Claimed? {{claimedTotal}} </strong>
-      </p>
-      <p>
-        Equivalent Values: <br />
-        <strong style="margin-left: 1em"> {{usdBalance}} USD </strong> <br />
-        <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong> <br />
-        <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
-      </p>
-      <p> See Transaction History:
+      <div>
+        <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
         <br />
-        <a href="http://classic.aakilfernandes.com/#/address/{{wallet.getAddressString()}}" target="_blank">http://classic.aakilfernandes.com/#/address/ {{wallet.getAddressString()}}</a>
-      </p>
-      <br />
-      <div class="well">
-        <p> ClassicEtherWallet is a free, open-source service dedicated to your privacy and security. The more donations we receive, the more time we spend creating new features, listening to your feedback, and giving you what you want. We are just two people trying to change the world. Help us?</p>
-        <a class="btn btn-primary btn-block" ng-click="onDonateClick()">DONATE</a>
-        <div class="text-success text-center marg-v-sm"><strong ng-show="tx.donate"> THANK YOU!!! </strong></div>
+        <p> Account Address: <br /> <strong style="margin-left: 1em" class="mono">{{wallet.getChecksumAddressString()}}</strong></p>
+
+        <p> Account Balance:
+          <br />
+          <strong style="margin-left: 1em"> {{etherBalance}} Ether </strong>
+        </p>
+        <p> Equivalent Values:
+          <br />
+          <strong style="margin-left: 1em"> {{usdBalance}} USD </strong>
+          <br />
+          <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong>
+          <br />
+          <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
+        </p>
+        <p> See Transaction History: <br /> <a href="http://classic.aakilfernandes.com/#/address/{{wallet.getAddressString()}}" target="_blank">http://classic.aakilfernandes.com/#/address/ {{wallet.getAddressString()}}</a></p>
       </div>
-    </section>
-    <!-- Account Information - Left Column -->
-
-
-    <!-- Claim / Send Information - Right Column -->
-    <section class="col-sm-8 digix-send">
-
-      <article class="btn-group">
-        <a class="btn btn-primary" ng-class="{active: showSend}" ng-click="showSend=true"> Send your DGD Tokens or Badges </a>
-        <a class="btn btn-primary" ng-class="{active: !showSend}" ng-click="showSend=false"> Claim your DGD Tokens </a>
-      </article>
-
-      <!-- Send Tokens Interface -->
-      <article ng-show="showSend">
-        <h4> Send Your DGD Tokens or Badges </h4>
-        <div class="form-group col-xs-10">
-          <label> To Address: </label>
-          <input class="form-control" type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tokenTx.to" ng-change="validateAddress(tokenTx.to,'validateAddressStatus')"/>
-          <div ng-bind-html="validateAddressStatus"></div>
+    </div>
+    <div class="col-sm-8">
+      <h4>Send with Replay Protection</h4>
+      <div class="form-group col-xs-10">
+        <label>EthereumClassic Address: </label>
+        <input class="form-control"  type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="contractTx.to" ng-change="validateAddress()"/>
+        <div ng-bind-html="validateAddressStatus"></div>
+      </div>
+      <div class="col-xs-2 address-identicon-container">
+        <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{contractTx.to}}" watch-var="tx.to"></div>
+      </div>
+      <div class="form-group col-xs-12">
+        <label>
+          Amount to Send:
+          <br />
+        </label>
+        <a class="pull-right" ng-click="transferAllBalance()">Transfer total available balance</a>
+        <input class="form-control" type="text" placeholder="Amount" ng-model="contractTx.value"/>
+        <div class="radio">
+          <label>
+            <input type="radio" name="currencyRadio" value="ether" ng-model="contractTx.unit"/>Ether</label>
+          <label>
+            <input type="radio" name="currencyRadio" value="finney" ng-model="contractTx.unit"/>Finney</label>
+          <label>
+            <input type="radio" name="currencyRadio" value="szabo" ng-model="contractTx.unit"/>Szabo</label>
         </div>
-        <div class="col-xs-2 address-identicon-container">
-          <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{tokenTx.to}}" watch-var="tokenTx.to"></div>
-        </div>
-        <div class="form-group col-xs-12">
-          <label>Amount to Send:</label><br />
-          <input class="form-control" type="text" placeholder="Amount" ng-model="tokenTx.value"/>
-          <div class="radio">
-            <label><input type="radio" name="tokenRadio" value="dgd" ng-model="tokenTx.unit"/>DGD Tokens</label>
-            <label><input type="radio" name="tokenRadio" value="dgdb" ng-model="tokenTx.unit"/>DGD Badges</label>
-          </div>
-          <div class="form-group">
-            <label> Gas: </label>
-            <input class="form-control" type="text" ng-model="tx.gasLimit"/>
-          </div>
-        </div>
-        <div class="form-group col-xs-12">
-          <a class="btn btn-info btn-block" ng-click="generateTokenTx()">GENERATE TRANSACTION</a>
-        </div>
-      </article>
-      <!-- / Send Tokens Interface -->
-
-      <!-- Claim Interface -->
-      <article ng-show="!showSend">
-        <h4> Claim Your DGD Tokens </h4>
-        <div class="form-group col-xs-12">
-          <label>Estimated fee consumption:</label><br />
-          <input class="form-control disabled" type="text" value="0.00043598 ether (21,799 gas)" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Provided Maximum Fee:</label><br />
-          <input class="form-control disabled" type="text" value="0.00243598 ether (121,799 gas)" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Gas Price:</label><br />
-          <input class="form-control disabled" type="text" value="0.021 ether per million gas" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Data:</label><br />
-          <input class="form-control disabled" type="text" readonly ng-model="tx.data"/>
-        </div>
-        <div class="form-group col-xs-12">
-          <a class="btn btn-info btn-block" ng-click="generateTx()">GENERATE CLAIM</a>
-        </div>
-      </article>
-      <!-- / Claim Interface -->
-
-      <!-- raw transaction / buttons -->
+      </div>
+      <div class="form-group col-xs-12">
+        <a class="btn btn-info btn-block" ng-click="generateSafeTx()">GENERATE TRANSACTION</a>
+      </div>
       <div class="col-xs-12">
+        <p><small> * We use standard rates for all gas + a itty-bitty bit more to ensure it gets mined quickly. If you move 1 Ether the total transaction will be that 1 Ether + current gas price + 1 gwei in gas. We do not take a transaction fee.</small></p>
          <div ng-bind-html="validateTxStatus"></div>
       </div>
       <div class="form-group col-xs-12" ng-show="showRaw">
@@ -1147,212 +1078,82 @@
         <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
       </div>
       <div class="form-group col-xs-12" ng-show="showRaw">
-        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">EXECUTE TRANSACTION</a>
+        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendContract">EXECUTE</a>
       </div>
       <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
-      <!-- / raw transaction / buttons -->
-    </section>
-  <!-- Modal -->
-  <section class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
-        </div>
-        <div class="modal-body">
-          <h4>
-            You are about to send
-            <strong id="confirmAmount" class="text-primary"> {{tokenTx.value}} </strong>
-            <strong id="confirmCurrancy" class="text-primary"> {{tokenTx.unit}} </strong>
-            to address
-            <strong id="confirmAddress" class="text-primary"> {{tokenTx.to}} </strong>
-          </h4>
-          <h4> Are you <span class="text-underline"> sure </span> you want to do this?</h4>
-        </div>
-        <div class="modal-footer text-center">
-          <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
-          <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, I am sure! Execute transaction.</button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="sendContract" tabindex="-1" role="dialog" aria-labelledby="sendContractLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
+            </div>
+            <div class="modal-body">
+            <h4>You are about to execute a function on contract 0x40ebf2d6e998a76a848c41908733b26e04adffe2.</h4>
+            <p> Estimated fee consumption: <strong> 0.0018 ether (23,837 gas) </strong> </p>
+            <p> Provided Maximum Fee: <strong> 0.002 ether (100,000 gas) </strong> </p>
+            <p> Gas Price:  <strong> 0.02 ether per million gas </strong> </p>
+            <p> Data:  <strong> 0x4401a6e4 </strong> </p>
+            <h4> Are you <span class="text-underline">sure</span> you want to do this?</h4>
+              <h4>
+                You are about to send
+                <strong id="confirmAmount" class="text-primary"> {{contractTx.value}} </strong>
+                <strong id="confirmCurrancy" class="text-primary"> {{contractTx.unit}} </strong>
+                to address
+                <strong id="confirmAddress" class="text-primary"> {{contractTx.to}} </strong>
+              </h4>
+              <h4> Are you <span class="text-underline"> sure </span> you want to do this?</h4>
+            </div>
+            <div class="modal-footer text-center">
+              <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
+              <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, I am sure! Send Transaction.</button>
+            </div>
+          </div>
         </div>
       </div>
+      <!--/modal-->
+
     </div>
   </section>
-  <!--/ Modal -->
-  </section>
 
-</div>
-<!-- / Digix -->
+  <div class="col-md-12"> <hr /> </div>
 
-
-    <!-- Contracts -->
-<div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.contracts.id">
-  <h2> Contracts </h2>
-
-  <wallet-decrypt-drtv></wallet-decrypt-drtv>
-
-  <section class="row" ng-show="wallet!=null" ng-controller='sendTxCtrl'>
-
-    <div class="col-md-12"> <hr /> </div>
-
-    <!-- STEP 1 -->
+    <!-- CONTRACT INFO -->
     <div class="col-md-12">
       <span class="form-group">
-        <h4> Contract Address</h4>
-        <input class="form-control" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" />
-        <h4> ABI / JSON Interface </h4>
-        <textarea class="form-control" rows="5" placeholder='[{ "type":"contructor", "inputs": [{ "name":"param1", "type":"uint256", "indexed":true }], "name":"Event" }, { "type":"function", "inputs": [{"name":"a", "type":"uint256"}], "name":"foo", "outputs": [] }] '></textarea>
-      </span>
-      <span class="form-group">
-        <button class="btn btn-primary"> ACCESS </button>
-      </span>
-    </div>
-    <!-- / STEP 1 -->
+        <h4>Contract Information</h4> 
+        <label> Contract Address</label> 
+        <pre style="white-space: pre-wrap;">0x40ebf2d6e998a76a848c41908733b26e04adffe2</pre>
+        <label>Source: <a href="https://etherscan.io/address/0x40ebf2d6e998a76a848c41908733b26e04adffe2#code" target="_blank">Verify contract here.</a></label>
+        <pre>
+contract AmIOnTheFork {
+  function forked() constant returns(bool);
+}
 
-    <div class="col-md-12"> <hr /> </div>
+contract ReplaySafeSend {
+  // Fork oracle to use
+  AmIOnTheFork amIOnTheFork = AmIOnTheFork(0x2bd2326c993dfaef84f696526064ff22eba5b362);
 
+  function safeSend(address etcAddress) returns(bool) {
+    if (!amIOnTheFork.forked() && etcAddress.send(msg.value)) {
+      return true;
+    }
+    throw; // don't accept value transfer, otherwise it would be trapped.
+  }
 
-    <!-- STEP READ -->
-    <div class="col-md-6">
-
-      <!-- Read - Step 1 -->
-      <span class="form-group">
-        <h4> 3. Read From Contract</h4>
-      </span>
-      <span class="form-group read-function">
-        <h5> Function Name (ie: User Info or Proposals) </h5>
-        <h6> Function Description (ie: user - adddress or 256 bits unsigned integer) </h6>
-        <input class="form-control" />
-        <span class="output">&#8627;  0x29384927349283 (output of the above) </span>
-      </span>
-      <!-- / Read - Step 1 -->
-
-      <!-- Read - Step 2 -->
-      <span class="form-group">
-        <!-- example: integer / string / bytes? /  -->
-         <p class="item">
-          <span class="label">Centstotal:</span>
-          <span class="output"> 123 </span>
-         </p>
-         <!-- example: address -->
-         <p class="item">
-          <span class="label">Recipient:</span>
-          <span class="output">
-            <div class="address-identicon-container small"><div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div></div>
-            0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9
-          </span>
-        </p>
-          <!-- example: boolean YES -->
-         <p class="item">
-          <span class="label">Claimed:</span>
-          <span class="output boolean-yes"> YES </span>
-         </p>
-          <!-- example: boolean NO -->
-         <p class="item">
-          <span class="label">Open:</span>
-          <span class="output boolean-no"> NO </span>
-         </p>
-      </span>
-      <!--/ Read - Step 2 -->
-
-    </div>
-    <!-- / STEP READ -->
-
-
-
-    <!-- STEP WRITE -->
-    <div class="col-md-6">
-
-      <!-- Write - Step 1 -->
-      <span class="form-group">
-        <h4> 3. Write To Contract </h4>
-        <div class="write-function" ng-controller="DropdownCtrl">
-          <div class="btn-group" uib-dropdown keyboard-nav>
-            <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default" uib-dropdown-toggle>
-            Select A Function <span class="caret"></span></button>
-            <ul class="dropdown-menu" uib-dropdown-menu>
-              <li><a href="#">Claim</a></li>
-              <li><a href="#">Item 2</a></li>
-              <li><a href="#">Item 3</a></li>
-            </ul>
-          </div>
-        </div>
-      </span>
-      <!-- / Write - Step 1 -->
-
-
-      <!-- Write - Step 2 -->
-      <hr />
-      <span class="form-group">
-        <!-- address -->
-        <p class="item">
-          <label> Recipient — <small> address </small> </label>
-          <input class="form-control" type="text" placeholder="0x314156..."/>
-        </p>
-        <!-- 256 unsigned integer -->
-        <p class="item">
-          <label> Amount — <small> 256 unsigned integer </small> </label>
-          <input class="form-control" type="text" placeholder="151"/>
-        </p>
-        <!-- string -->
-        <p class="item">
-          <label> Description — <small> string </small> </label>
-          <input class="form-control" type="text" placeholder="Ohh! Shiny!"/>
-        </p>
-        <!-- bytes -->
-        <p class="item">
-          <label> Data — <small> bytes </small> </label>
-          <input class="form-control" type="text" placeholder="0x151bc..."/>
-        </p>
-        <!-- boolean -->
-        <p class="item">
-          <label> New Provider — <small> boolean </small> </label>
-          <label class="check"><input type="checkbox" value=""> Yes </label>
-        </p>
-        <!-- boolean -->
-        <p class="item">
-          <label> Amount to Send: (this is always here) </label>
-          <input class="form-control" placeholder="0" />
-        </p>
-      </span>
-      <span class="form-group">
-        <button class="btn btn-primary" >EXECUTE</button> <!-- this opens modal -->
+  // Reject value transfers.
+  function() {
+    throw;
+  }
+}     </pre>
       </span>
     </div>
-    <!-- / Write - Step 2 -->
-
-
-    <!-- Step 3 - Modal -->
-    <div class="modal fade" id="sendContract" tabindex="-1" role="dialog" aria-labelledby="sendContractLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
-          </div>
-          <div class="modal-body">
-            <h4>You are about to execute a function on contract 0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9.</h4>
-            <p> Estimated fee consumption: <strong> 0.00043598 ether (21,799 gas) </strong> </p>
-            <p> Provided Maximum Fee: <strong> 0.00243598 ether (121,799 gas) </strong> </p>
-            <p> Gas Price:  <strong> 0.021 ether per million gas </strong> </p>
-            <p> Data:  <strong> 0x4e71d92d </strong> </p>
-            <h4> Are you <span class="text-underline">sure</span> you want to do this?</h4>
-          </div>
-          <div class="modal-footer text-center">
-            <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
-            <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, I am sure! Send transaction.</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- / Step 3 - Modal -->
-
-
-  </section>
-
+    <!-- CONTRACT INFO -->
 
 </div>
-<!-- / contracts -->
-
+<!-- / Replay Protection -->
 
     <!-- Help -->
 <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.help.id">
