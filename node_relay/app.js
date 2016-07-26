@@ -105,8 +105,8 @@ function getTransactionData(addr, gethRPC) {
     data["data"] = {
       "address": addr,
       "balance": balance,
-      "nonce": nonce.toString(),
-      "gasprice": gasprice
+      "nonce": web3.toHex(nonce),
+      "gasprice": web3.toHex(gasprice)
     }
   } catch (e) {
     console.log(e);
