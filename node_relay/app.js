@@ -90,7 +90,7 @@ function sendRawTransaction(rawtx, gethRPC) {
   } catch (e) {
     console.log(e);
     data["error"] = true;
-    data["msg"] = e[0];
+    data["msg"] = e;
   }
   return data;
 }
