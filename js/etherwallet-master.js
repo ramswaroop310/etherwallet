@@ -1106,8 +1106,8 @@ var theDaoCtrl = function($scope, $sce, walletService) {
 									$scope.withdrawTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(data.msg));
 								} else {
 									if ($scope.setBalance !== undefined) $scope.setBalance();
-                                    $scope.sendTxStatus = $sce.trustAsHtml("Approval Transaction: " + globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://classic.aakilfernandes.com/#/transaction/" + approveTx + "' target='_blank'>" + approveTx + "</a>"));
-									$scope.withdrawTxStatus = $sce.trustAsHtml("Withdrawal Transaction: " + globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://classic.aakilfernandes.com/#/transaction/" + data.data + "' target='_blank'>" + data.data + "</a>"));
+                                    $scope.sendTxStatus = $sce.trustAsHtml("Approval Transaction: " + globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://gastracker.io/tx/" + approveTx + "' target='_blank'>" + approveTx + "</a>"));
+									$scope.withdrawTxStatus = $sce.trustAsHtml("Withdrawal Transaction: " + globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://gastracker.io/tx/" + data.data + "' target='_blank'>" + data.data + "</a>"));
 								}
 							});
 						});
@@ -2272,7 +2272,7 @@ uiFuncs.sendTx = function($scope, $sce) {
 			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(data.msg));
 		} else {
 			if( $scope.setBalance !== undefined ) $scope.setBalance();
-			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://classic.aakilfernandes.com/#/transaction/" + data.data + "' target='_blank'>" + data.data + "</a>"));
+			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://gastracker.io/tx/" + data.data + "' target='_blank'>" + data.data + "</a>"));
 		}
 	});
 }
