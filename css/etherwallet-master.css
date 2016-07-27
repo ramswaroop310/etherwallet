@@ -3944,6 +3944,10 @@ footer a:focus {
 .announcement-warning {
   background-color: rgba(212, 63, 58, 0.75);
 }
+.announcement-info {
+  text-align: left;
+  background-color: rgba(41, 160, 149, 0.75);
+}
 .annoucement-warning:hover,
 .annoucement-warning:focus {
   background-color: #d43f3a;

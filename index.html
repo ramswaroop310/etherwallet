@@ -1009,6 +1009,9 @@
   <h2> Send with Replay Protection</h2>
   <p>This sends a transaction through a contract to make sure you are NOT on the fork. The transaction will only succeed on EthereumClassic. It will be rejected if replayed on EthereumForked. For more information about replay attacks, <a href="https://medium.com/@timonrapp/how-to-deal-with-the-ethereum-replay-attack-3fd44074a6d8#.tr98aa8ri" target="_blank">go here</a>.
   </p>
+  <p class="announcement announcement-info">
+  Note: If it looks like nothing is loading, your browser is probably blocking my server's SSL certificate. If you're using chrome, click on the shield icon on the right side of the address bar to enable permissions.
+  </p>
   <wallet-decrypt-drtv></wallet-decrypt-drtv>
   
   <section class="row" ng-show="wallet!=null" ng-controller='replayProtectionCtrl'>
