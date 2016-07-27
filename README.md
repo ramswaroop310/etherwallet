@@ -1,11 +1,11 @@
-## https://www.myetherwallet.com - Content of MyEtherWallet.com is served directly from github.
+## https://www.ethereumclassic.com - Content of ClassicEtherWallet.com is served directly from github.
 
-### MyEtherWallet
+### ClassicEtherWallet
 
-MyEtherWallet is an open source, javascript, client-side tool for generating Ether wallets. It was created, and is maintained, by [kvhnuke](https://github.com/kvhnuke) and [tayvano](https://github.com/tayvano) aka [insomniasexx](https://www.reddit.com/user/insomniasexx).
+ClassicEtherWallet is an open source, javascript, client-side tool for generating Ether wallets. It was forked from  [kvhnuke](https://github.com/kvhnuke).
 
-- Official link: https://www.myetherwallet.com
-- Original, non-SSL link: http://kvhnuke.github.io/etherwallet/
+- Official link: https://www.ethereumclassic.com
+- Original, non-SSL link: http://elaineo.github.io/etherwallet/
 
 ### Purpose
 
@@ -26,9 +26,6 @@ Version 2 expands on this vision to offer:
 - Ability to create a custom link that will pre-fill the send transaction tab with the to address, amount, data, and gas. All the user has to do is unlock their wallet and press send.
 
 ### Contact
-If you can think of any other features or run into bugs, let us know. You can fork, open a PR, open an issue, [message kvhnuke on reddit](https://www.reddit.com/message/compose/?to=kvhnuke), [email tayvano](mailto:tayvano@gmail.com) or [in any of these ways](https://www.myetherwallet.com/#contact).
-
-### TODO / In Progress
-See our [trello baord](https://trello.com/b/npX68sKj/myetherwallet)
+If you can think of any other features or run into bugs, let us know. 
 
 #### MyEtherWallet.com & MyEtherWallet CX are licensed under The MIT License (MIT).
