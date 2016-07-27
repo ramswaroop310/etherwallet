@@ -3897,8 +3897,16 @@ header img {
     float: none;
   }
 }
+header {
+    background: #212121;
+    background: -moz-linear-gradient(top, #373737, #212121);
+    background: -webkit-linear-gradient(top, #373737, #212121);
+    background: -ms-linear-gradient(top, #373737, #212121);
+    background: -o-linear-gradient(top, #373737, #212121);
+    background: linear-gradient(top, #373737, #212121);
+}
 footer {
-  background-color: #263c56;
+  background-color: #212121;
   color: white;
   margin-top: 100px;
 }
@@ -3933,8 +3941,8 @@ footer a:focus {
 .announcement strong {
   font-weight: 400;
 }
-.annoucement-warning {
-  background-color: #d9534f;
+.announcement-warning {
+  background-color: rgba(212, 63, 58, 0.75);
 }
 .annoucement-warning:hover,
 .annoucement-warning:focus {
