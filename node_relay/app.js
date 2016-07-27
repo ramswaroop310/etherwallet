@@ -166,8 +166,8 @@ if ('test' == app.get('env')) {
 }
 else {
   var options = {
-    key  : fs.readFileSync('wallet.elaineou.com.key'),
-    cert : fs.readFileSync('wallet.elaineou.com.crt')
+    key  : fs.readFileSync('/etc/letsencrypt/live/wallet.elaineou.com/privkey.pem'),
+    cert : fs.readFileSync('/etc/letsencrypt/live/wallet.elaineou.com/cert.pem')
   };
   var server = https.createServer(options, app);
 }
