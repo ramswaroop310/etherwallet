@@ -1144,7 +1144,7 @@ var replayProtectionCtrl = function($scope, $sce, walletService) {
 	$scope.safeSendContract = "0x40ebf2d6e998a76a848c41908733b26e04adffe2"; 
 	$scope.safeSend = "0x4401a6e4";
 	$scope.tx = {
-		gasLimit: 500000,
+		gasLimit: 90000,
 		data: '',
 		to: $scope.replaySafeSendContract,
 		unit: "ether",
