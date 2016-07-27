@@ -1136,7 +1136,7 @@ module.exports = theDaoCtrl;
 },{}],9:[function(require,module,exports){
 'use strict';
 var replayProtectionCtrl = function($scope, $sce, walletService) {
-	new Modal(document.getElementById('sendContract'));
+	new Modal(document.getElementById('sendTransaction'));
 	walletService.wallet = null;
 	walletService.password = '';
 	$scope.showAdvance = false;
@@ -1202,8 +1202,9 @@ var replayProtectionCtrl = function($scope, $sce, walletService) {
 
 			var value = ethFuncs.padLeft(new BigNumber($scope.contractTx.value).times(etherUnits.toWei($scope.contractTx.value, $scope.contractTx.unit)).toString(16), 64);
 			var toAdd = ethFuncs.padLeft(ethFuncs.getNakedAddress($scope.contractTx.to), 64);
-			$scope.tx.data = $scope.safeSend + toAdd + value;
-			$scope.tx.value = 0;
+			$scope.tx.data = $scope.safeSend + toAdd;
+			$scope.tx.value = $scope.contractTx.value;
+			$scope.tx.unit = $scope.contractTx.unit;
 			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(''));
 			$scope.generateTx();
 		} catch (e) {
@@ -1217,9 +1218,6 @@ var replayProtectionCtrl = function($scope, $sce, walletService) {
 	$scope.sendTx = function() {
 		uiFuncs.sendTx($scope, $sce);
 	}
-  	$scope.transferAllBalance = function() {
-    	uiFuncs.transferAllBalance($scope,$sce);
-    }
 };
 module.exports = replayProtectionCtrl;
 

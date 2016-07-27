@@ -1053,7 +1053,6 @@
           Amount to Send:
           <br />
         </label>
-        <a class="pull-right" ng-click="transferAllBalance()">Transfer total available balance</a>
         <input class="form-control" type="text" placeholder="Amount" ng-model="contractTx.value"/>
         <div class="radio">
           <label>
@@ -1078,12 +1077,12 @@
         <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
       </div>
       <div class="form-group col-xs-12" ng-show="showRaw">
-        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendContract">EXECUTE</a>
+        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">EXECUTE</a>
       </div>
       <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
 
       <!-- Modal -->
-      <div class="modal fade" id="sendContract" tabindex="-1" role="dialog" aria-labelledby="sendContractLabel">
+      <div class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendContractLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
