@@ -1,9 +1,9 @@
 {
-  "name": "MyEtherWallet CX",
+  "name": "ClassicEtherWallet CX",
   "version": "0.2.8",
   "manifest_version": 2,
-  "description": "MyEtherWallet Chrome Extension",
-  "homepage_url": "https://www.myetherwallet.com/",
+  "description": "ClassicEtherWallet Web Extension",
+  "homepage_url": "https://www.classicetherwallet.com/",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -17,7 +17,7 @@
   "options_page": "cx-wallet.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
-    "default_title": "MyEtherWallet CX",
+    "default_title": "ClassicEtherWallet CX",
     "default_popup": "browser_action/browser_action.html"
   },
   "permissions": [
