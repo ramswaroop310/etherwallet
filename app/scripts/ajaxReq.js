@@ -15,26 +15,31 @@ ajaxReq.config = {
 ajaxReq.getBalance = function(addr, callback) {
 	this.post({
 		balance: addr
+		isClassic: true
 	}, callback);
 }
 ajaxReq.getTransactionData = function(addr, callback) {
 	this.post({
 		txdata: addr
+		isClassic: true
 	}, callback);
 }
 ajaxReq.sendRawTx = function(rawTx, callback) {
 	this.post({
 		rawtx: rawTx
+		isClassic: true
 	}, callback);
 }
 ajaxReq.getEstimatedGas = function(txobj, callback) {
 	this.post({
 		estimatedGas: txobj
+		isClassic: true
 	}, callback);
 }
 ajaxReq.getEthCall = function(txobj, callback) {
 	this.post({
 		ethCall: txobj
+		isClassic: true
 	}, callback);
 }
 ajaxReq.queuePost = function() {
