@@ -125,13 +125,13 @@ gulp.task('buildHTML', function () {
 });
 
 // Browserify
-gulp.task('browserify', shell.task([
-  'browserify '+mainjs+' -o dist/js/etherwallet-master.js'
-]));
+// gulp.task('browserify', shell.task([
+//   'browserify '+mainjs+' -o dist/js/etherwallet-master.js'
+// ]));
 
-gulp.task('cxBrowserify', shell.task([
-  'browserify '+mainjs+' -o chrome-extension/js/etherwallet-master.js'
-]));
+// gulp.task('cxBrowserify', shell.task([
+//   'browserify '+mainjs+' -o chrome-extension/js/etherwallet-master.js'
+// ]));
 
 // Watch Tasks
 gulp.task('watchJS', function() {
