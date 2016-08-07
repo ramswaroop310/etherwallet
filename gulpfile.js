@@ -138,8 +138,8 @@ gulp.task('watchJS', function() {
   gulp.watch([jsFiles, AllJsFiles],[
     // 'browserify',
     // 'cxBrowserify',
-    'minJS',
-    'cxMinJS'
+    // 'minJS',
+    // 'cxMinJS'
   ]);
 });
 gulp.task('watchLess', function() {
@@ -153,7 +153,7 @@ gulp.task('watchTPL', function() {
 });
 
 
-gulp.task('build', ['copy-images','copy-fonts','buildHTML','less', 'staticJS', /* 'browserify', 'cxBrowserify', */ 'minJS', 'cxMinJS']);
+gulp.task('build', ['copy-images','copy-fonts','buildHTML','less', 'staticJS'/* , 'browserify', 'cxBrowserify', 'minJS', 'cxMinJS'*/ ]);
 gulp.task('watch', ['watchJS' , 'watchLess', 'watchPAGES', 'watchTPL']);
 
 gulp.task('default', ['build', 'watch']);
