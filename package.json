@@ -37,6 +37,7 @@
     "bignumber.js": "^2.4.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "marked": "^0.3.6",
     "web3": "^0.17.0-alpha"
   }
 }
