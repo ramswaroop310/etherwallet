@@ -67,14 +67,6 @@ gulp.task('less', function (cb) {
       .pipe(notify('CX Styles Complete'));
 });
 
-gulp.task('browserify', shell.task([
-  'browserify '+mainjs+' -o dist/js/etherwallet-master.js'
-]));
-
-gulp.task('cxBrowserify', shell.task([
-  'browserify '+mainjs+' -o chrome-extension/js/etherwallet-master.js'
-]));
-
 gulp.task('staticJS', function () {
   return gulp
     .src(staticjsFiles)
@@ -131,6 +123,15 @@ gulp.task('buildHTML', function () {
     .pipe(gulp.dest('./chrome-extension/'))
     .pipe(notify({message:'CX HTML Pages Complete', onLast:true}));
 });
+
+// Browserify
+gulp.task('browserify', shell.task([
+  'browserify '+mainjs+' -o dist/js/etherwallet-master.js'
+]));
+
+gulp.task('cxBrowserify', shell.task([
+  'browserify '+mainjs+' -o chrome-extension/js/etherwallet-master.js'
+]));
 
 // Watch Tasks
 gulp.task('watchJS', function() {
