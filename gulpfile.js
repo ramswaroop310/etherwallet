@@ -80,21 +80,21 @@ gulp.task('staticJS', function () {
       .pipe(notify('CX StaticJS Complete'));
 });
 
-gulp.task('minJS',['browserify'],function () {
-  return gulp
-    .src('./dist/js/etherwallet-master.js')
-      .pipe(concat('etherwallet-master-min.js'))
-      .pipe(gulp.dest('./dist/js/'))
-      .pipe(notify('MEW MinJS'));
-});
+// gulp.task('minJS',['browserify'],function () {
+  // return gulp
+    // .src('./dist/js/etherwallet-master.js')
+      // .pipe(concat('etherwallet-master-min.js'))
+      // .pipe(gulp.dest('./dist/js/'))
+      // .pipe(notify('MEW MinJS'));
+// });
 
-gulp.task('cxMinJS',['cxBrowserify'],function () {
-  return gulp
-    .src('./chrome-extension/js/etherwallet-master.js')
-      .pipe(concat('etherwallet-master-min.js'))
-      .pipe(gulp.dest('./chrome-extension/js/'))
-      .pipe(notify('CX MinJS'));
-});
+// gulp.task('cxMinJS',['cxBrowserify'],function () {
+  // return gulp
+    // .src('./chrome-extension/js/etherwallet-master.js')
+      // .pipe(concat('etherwallet-master-min.js'))
+      // .pipe(gulp.dest('./chrome-extension/js/'))
+      // .pipe(notify('CX MinJS'));
+// });
 
 gulp.task('copy-images', function() {
    gulp.src(imagesFolder)
@@ -136,8 +136,8 @@ gulp.task('buildHTML', function () {
 // Watch Tasks
 gulp.task('watchJS', function() {
   gulp.watch([jsFiles, AllJsFiles],[
-    'browserify',
-    'cxBrowserify',
+    // 'browserify',
+    // 'cxBrowserify',
     'minJS',
     'cxMinJS'
   ]);
@@ -153,7 +153,7 @@ gulp.task('watchTPL', function() {
 });
 
 
-gulp.task('build', ['copy-images','copy-fonts','buildHTML','less', 'staticJS', 'browserify', 'cxBrowserify', 'minJS', 'cxMinJS']);
+gulp.task('build', ['copy-images','copy-fonts','buildHTML','less', 'staticJS', /* 'browserify', 'cxBrowserify', */ 'minJS', 'cxMinJS']);
 gulp.task('watch', ['watchJS' , 'watchLess', 'watchPAGES', 'watchTPL']);
 
 gulp.task('default', ['build', 'watch']);
