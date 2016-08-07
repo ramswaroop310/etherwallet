@@ -134,14 +134,14 @@ gulp.task('buildHTML', function () {
 // ]));
 
 // Watch Tasks
-gulp.task('watchJS', function() {
-  gulp.watch([jsFiles, AllJsFiles],[
-    // 'browserify',
-    // 'cxBrowserify',
-    // 'minJS',
-    // 'cxMinJS'
-  ]);
-});
+// gulp.task('watchJS', function() {
+//   gulp.watch([jsFiles, AllJsFiles],[
+//     // 'browserify',
+//     // 'cxBrowserify',
+//     // 'minJS',
+//     // 'cxMinJS'
+//   ]);
+// });
 gulp.task('watchLess', function() {
     gulp.watch(lessWatchFolder, ['less']);
 });
