@@ -2,7 +2,7 @@
 <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.viewWalletInfo.id">
   <h2> View Wallet Details </h2>
   <p> Download an unencrypted private key, grab your encrypted Mist/Geth Keystore file, or re-print your paper wallet. You may want to do this in order to <a href="http://ethereum.stackexchange.com/questions/465/how-to-import-a-plain-private-key-into-geth/" target="_blank">import your account into Geth/Mist</a>. You can also do this with the <a href="https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm/" target="__blank">MyEtherWallet CX</a> and save your wallet for easier and quicker access.</p>
-  <p> If you just want to check your balance, we recommend using a blockchain explorer like <a href="http://gastracker.io/" target="_blank">gastracker.io</a>
+  <p> If you just want to check your balance, we recommend using a blockchain explorer like <a href="http://blocks.elaineou.com/" target="_blank">blocks.elaineou.com</a>
   <div>
   <wallet-decrypt-drtv></wallet-decrypt-drtv>
   </div>
@@ -99,7 +99,7 @@
       <p>
         See Transaction History:
         <br />
-        <a href="http://gastracker.io/addr/{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr{{wallet.getAddressString()}}</a>
+        <a href="http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}" target="_blank">http://blocks.elaineou.com/addr{{wallet.getAddressString()}}</a>
         <!--
         <strong style="margin-left: 1em"> {{token.balance}} DAO Tokens</strong>
         <br />
