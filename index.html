@@ -199,7 +199,7 @@
 <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.viewWalletInfo.id">
   <h2> View Wallet Details </h2>
   <p> Download an unencrypted private key, grab your encrypted Mist/Geth Keystore file, or re-print your paper wallet. You may want to do this in order to <a href="http://ethereum.stackexchange.com/questions/465/how-to-import-a-plain-private-key-into-geth/" target="_blank">import your account into Geth/Mist</a>. You can also do this with the <a href="https://chrome.google.com/webstore/detail/ClassicEtherWallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm/" target="__blank">ClassicEtherWallet CX</a> and save your wallet for easier and quicker access.</p>
-  <p> If you just want to check your balance, we recommend using a blockchain explorer like <a href="http://etherscan.io/" target="_blank">etherscan.io</a> or <a href="https://live.ether.camp/" target="_blank">live.ether.camp</a>.
+  <p> If you just want to check your balance, we recommend using a blockchain explorer like <a href="http://blocks.elaineou.com/" target="_blank">blocks.elaineou.com</a>.
   <div>
   <wallet-decrypt-drtv></wallet-decrypt-drtv>
   </div>
@@ -296,7 +296,7 @@
       <p>
         See Transaction History:
         <br />
-        <a href="http://gastracker.io/addr/{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr/{{wallet.getAddressString()}}</a>
+        <a href="http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}" target="_blank">http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}</a>
         <!--
         <strong style="margin-left: 1em"> {{token.balance}} DAO Tokens</strong>
         <br />
@@ -344,7 +344,7 @@
           <br />
           <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
         </p>
-        <p> See Transaction History: <br /> <a href="http://gastracker.io/addr/{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr/ {{wallet.getAddressString()}}</a></p>
+        <p> See Transaction History: <br /> <a href="http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}" target="_blank">http://blocks.elaineou.com/addr/ {{wallet.getAddressString()}}</a></p>
       </div>
       <br />
       <div class="well">
@@ -654,7 +654,7 @@
         </p>
         <p> See Transaction History:
           <br />
-          <a href="http://gastracker.io/addr/{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr/ {{wallet.getAddressString()}}</a>
+          <a href="http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}" target="_blank">http://blocks.elaineou.com/addr/ {{wallet.getAddressString()}}</a>
         </p>
       </div>
       <br />
@@ -1035,7 +1035,7 @@
           <br />
           <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
         </p>
-        <p> See Transaction History: <br /> <a href="http://gastracker.io/addr/{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr/ {{wallet.getAddressString()}}</a></p>
+        <p> See Transaction History: <br /> <a href="http://blocks.elaineou.com/addr/{{wallet.getAddressString()}}" target="_blank">http://blocks.elaineou.com/addr/ {{wallet.getAddressString()}}</a></p>
       </div>
     </div>
     <div class="col-sm-8">
@@ -1125,7 +1125,7 @@
         <h4>Contract Information</h4> 
         <label> Contract Address</label> 
         <pre style="white-space: pre-wrap;">0x40ebf2d6e998a76a848c41908733b26e04adffe2</pre>
-        <label>Source: <a href="https://etherscan.io/address/0x40ebf2d6e998a76a848c41908733b26e04adffe2#code" target="_blank">Verify contract here.</a></label>
+        <label>Source: <a href="http://blocks.elaineou.com/addr/0x40ebf2d6e998a76a848c41908733b26e04adffe2" target="_blank">Verify contract here.</a></label>
         <pre>
 contract AmIOnTheFork {
   function forked() constant returns(bool);
@@ -1248,7 +1248,7 @@ contract ReplaySafeSend {
   
   <h4>4. How do I send Ether from one wallet to another? </h4>
   <p> Once you have saved and backed up all information <strong> and </strong> verified you have access to your new wallet, you can transfer some Ether to that new wallet.</p>
-  <p><strong>Before you start,</strong> If you plan to move a large amount of ether, you should test sending a small amount first to make sure everything goes smoothly. After making the small transaction, you can check by pasting the TX ID or the address into a blockchain explorer, e.g. <a href="https://www.etherscan.io" target="_blank">https://www.etherscan.io</a>.</p>
+  <p><strong>Before you start,</strong> If you plan to move a large amount of ether, you should test sending a small amount first to make sure everything goes smoothly. After making the small transaction, you can check by pasting the TX ID or the address into a blockchain explorer, e.g. <a href="http://blocks.elaineou.com" target="_blank">http://blocks.elaineou.com</a>.</p>
   <ol>
     <li> Navigate to the "Send Transaction" tab</li>
     <li> Select your wallet file -or- paste your private key. </li>
@@ -1376,7 +1376,7 @@ contract ReplaySafeSend {
 
 
   <h4>14. How do I check the balance of my account? </h4>
-  <p> You can use a blockchain explorer like <a href="http://etherscan.io/" target="_blank">etherscan.io</a>. Paste your address into the search bar and it will pull up your address and transaction history. For example, here's what our <a href="http://etherscan.io/address/0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" target="_blank">donation account</a> looks like on etherscan.io</p>
+  <p> You can use a blockchain explorer like <a href="http://blocks.elaineou.com/" target="_blank">blocks.elaineou.com</a>. Paste your address into the search bar and it will pull up your address and transaction history. For example, here's what our <a href="http://blocks.elaineou.com/addr/0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" target="_blank">donation account</a> looks like on blocks.elaineou.com</p>
 
 
   <h4>15. Where the hell is my geth wallet file? </h4>
@@ -1435,7 +1435,7 @@ contract ReplaySafeSend {
 
   <h4>Helpful Links </h4>
   <ul>
-    <li><a href="https://ethereumclassic.com/" target="_blank">Official EthereumClassic Site</a></li>
+    <li><a href="http://ethereumclassic.com/" target="_blank">Official EthereumClassic Site</a></li>
     <li><a href="https://www.reddit.com/r/ethereumclassic" target="_blank">EthereumClassic Subreddit </a></li>
   </ul>
 
