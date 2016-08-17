@@ -2,8 +2,8 @@
 <html lang="en" ng-app="mewApp">
 <head>
   <meta charset="utf-8">
-  <title>MyEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
-  <link rel="canonical" href="https://www.myetherwallet.com" />
+  <title>ClassicEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
+  <link rel="canonical" href="https://www.ClassicEtherWallet.com" />
   <meta name="description" content="Ether Wallet: Open Source JavaScript Client-Side Ether Wallet">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,9 +31,9 @@
 <body>
 
 
-  <a href="https://www.myetherwallet.com" class="announcement annoucement-warning" target="_blank">
+  <a href="https://www.ClassicEtherWallet.com" class="announcement annoucement-warning" target="_blank">
     <div class="container">
-      MyEtherWallet is only served at www.myetherwallet.com and kvhnuke.github.io/etherwallet/. Beware of the phishing scams!
+      ClassicEtherWallet is only served at www.ClassicEtherWallet.com and elaineo.github.io/etherwallet/. Beware of the phishing scams!
     </div>
   </a>
   <a href="https://www.reddit.com/r/ethereum/comments/47nkoi/psa_check_your_ethaddressorg_wallets_and_any/d0eo45o" class="announcement annoucement-warning" target="_blank">
@@ -43,7 +43,7 @@
   </a>
   <header class="container-fluid bg-gradient text-white">
     <section class="container">
-      <a href="https://www.myetherwallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="My Ether Wallet" /></a>
+      <a href="https://www.ClassicEtherWallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="My Ether Wallet" /></a>
       <p>Open Source JavaScript Client-Side Ether Wallet &middot; v2.8</p>
     </section>
   </header>
@@ -72,9 +72,9 @@
   <!-- Top -->
   <h2> Generate Wallet </h2>
 
-  
+
     <p>We removed the <a ng-click="globalService.currentTab=globalService.tabs.bulkGenerate.id"> Bulk Generate tab </a> from the nav as it wasn't very widely used, but feel free to still use it if you want.</p>
-  
+
 
   <article class="row">
     <div class="col-sm-6">
@@ -102,7 +102,7 @@
     <!-- 0. Warning -->
     <h2>Success! Your wallet has been generated.</h2>
     <div class="alert alert-danger">
-      <strong>You need your Keystore/JSON File & password or Private Key</strong> to access this wallet in the future. Please save & back it up externally! There is no way to recover a wallet if you do not save it. Read the <a href="https://www.myetherwallet.com/#help" target="_blank">help page</a> for instructions.
+      <strong>You need your Keystore/JSON File & password or Private Key</strong> to access this wallet in the future. Please save & back it up externally! There is no way to recover a wallet if you do not save it. Read the <a href="https://www.ClassicEtherWallet.com/#help" target="_blank">help page</a> for instructions.
     </div>
     <!-- / 0. Warning -->
 
@@ -209,7 +209,7 @@
     <!-- view wallet info -->
 <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.viewWalletInfo.id">
   <h2> View Wallet Details </h2>
-  <p> Download an unencrypted private key, grab your encrypted Mist/Geth Keystore file, or re-print your paper wallet. You may want to do this in order to <a href="http://ethereum.stackexchange.com/questions/465/how-to-import-a-plain-private-key-into-geth/" target="_blank">import your account into Geth/Mist</a>. You can also do this with the <a href="https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm/" target="__blank">MyEtherWallet CX</a> and save your wallet for easier and quicker access.</p>
+  <p> Download an unencrypted private key, grab your encrypted Mist/Geth Keystore file, or re-print your paper wallet. You may want to do this in order to <a href="http://ethereum.stackexchange.com/questions/465/how-to-import-a-plain-private-key-into-geth/" target="_blank">import your account into Geth/Mist</a>. You can also do this with the <a href="https://chrome.google.com/webstore/detail/ClassicEtherWallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm/" target="__blank">ClassicEtherWallet CX</a> and save your wallet for easier and quicker access.</p>
   <p> If you just want to check your balance, we recommend using a blockchain explorer like <a href="http://etherscan.io/" target="_blank">etherscan.io</a> or <a href="https://live.ether.camp/" target="_blank">live.ether.camp</a>.
   <div>
   <wallet-decrypt-drtv></wallet-decrypt-drtv>
@@ -307,7 +307,7 @@
       <p>
         See Transaction History:
         <br />
-        <a href="https://etherscan.io/address/{{wallet.getAddressString()}}" target="_blank">https://etherscan.io/address/{{wallet.getAddressString()}}</a>
+        <a href="http://gastracker.io/addr{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr{{wallet.getAddressString()}}</a>
         <!--
         <strong style="margin-left: 1em"> {{token.balance}} DAO Tokens</strong>
         <br />
@@ -329,10 +329,10 @@
   <h2> Send Transaction </h2>
   <p> If you want to send Tokens, please use The DAO or Digix pages instead. </p>
   <div>
-      
-      
+
+
         <wallet-decrypt-drtv></wallet-decrypt-drtv>
-      
+
   </div>
   <section class="row" ng-show="wallet!=null" ng-controller='sendTxCtrl'>
     <hr />
@@ -355,11 +355,11 @@
           <br />
           <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
         </p>
-        <p> See Transaction History: <br /> <a href="https://etherscan.io/address/{{wallet.getAddressString()}}" target="_blank">https://etherscan.io/address/ {{wallet.getAddressString()}}</a></p>
+        <p> See Transaction History: <br /> <a href="http://gastracker.io/addr{{wallet.getAddressString()}}" target="_blank">http://gastracker.io/addr {{wallet.getAddressString()}}</a></p>
       </div>
       <br />
       <div class="well">
-        <p> MyEtherWallet is a free, open-source service dedicated to your privacy and security. The more donations we receive, the more time we spend creating new features, listening to your feedback, and giving you what you want. We are just two people trying to change the world. Help us?</p>
+        <p> ClassicEtherWallet is a free, open-source service dedicated to your privacy and security. The more donations we receive, the more time we spend creating new features, listening to your feedback, and giving you what you want. We are just two people trying to change the world. Help us?</p>
         <a class="btn btn-primary btn-block" ng-click="onDonateClick()">DONATE</a>
         <div class="text-success text-center marg-v-sm"><strong ng-show="tx.donate"> THANK YOU!!! </strong></div>
       </div>
@@ -618,576 +618,6 @@
 <!-- /send transaction -->
 
 
-    <!-- The DAO -->
-<div class="tab-pane page-dao active" ng-if="globalService.currentTab==globalService.tabs.dao.id">
-
-  <!-- TOP: The DAO -->
-  <section class="row">
-    <div class="col-md-9 col-sm-8">
-      <h2> The DAO </h2>
-      <p> Use this tab to <strong>Withdraw your DAO Tokens for ETH or Send DAO Tokens </strong>.</p>
-    </div>
-    <div class="col-md-3 col-sm-4"><img src="images/thedao-addressicon.png" width="250px" height="auto" style="margin-top: 32px;" /></div>
-  </section>
-  <br />
-
-  
-  
-    <wallet-decrypt-drtv></wallet-decrypt-drtv>
-  
-  <!-- / TOP: The DAO -->
-
-  <!-- BOTTOM: The DAO -->
-  <section class="row" ng-show="wallet!=null" ng-controller='theDaoCtrl'>
-    <hr />
-    <div class="col-sm-4">
-      <h4> Account Information </h4>
-      <div>
-        <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
-        <br />
-        <p> Account Address:
-          <br /> <strong style="padding-left: 1em; display: block;" class="mono word-wrap">{{wallet.getChecksumAddressString()}}</strong>
-        </p>
-        <p> Account Balance:
-          <br />
-          <strong class="text-primary" style="margin-left: 1em"> {{token.balance}} DAO Tokens</strong>
-          <br />
-          <strong style="margin-left: 1em"> {{etherBalance}} Ether </strong>
-        </p>
-        </p>
-        <p> Equivalent Values:
-          <br />
-          <strong style="margin-left: 1em"> {{usdBalance}} USD </strong>
-          <br />
-          <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong>
-          <br />
-          <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
-        </p>
-        <p> See Transaction History:
-          <br />
-          <a href="https://etherscan.io/address/{{wallet.getAddressString()}}" target="_blank">https://etherscan.io/address/ {{wallet.getAddressString()}}</a>
-        </p>
-      </div>
-      <br />
-      <div class="well">
-        <p> MyEtherWallet is a free, open-source service dedicated to your privacy and security. The more donations we receive, the more time we spend creating new features, listening to your feedback, and giving you what you want. We are just two people trying to change the world. Help us?</p>
-        <a class="btn btn-primary btn-block" ng-click="onDonateClick()">DONATE</a>
-        <div class="text-success text-center marg-v-sm"><strong ng-show="tx.donate"> THANK YOU!!! </strong></div>
-      </div>
-    </div>
-
-    <div class="col-sm-8">
-
-      <div class = "btn-group">
-        <a class="btn btn-primary" ng-class="curTab=='withdraw' ? 'active' : ''" ng-click="curTab='withdraw'"> Withdraw DAO Tokens </a>
-        <a class="btn btn-primary" ng-class="curTab=='send' ? 'active' : ''" ng-click="curTab='send'"> Send DAO Tokens </a>
-        <!--<a class="btn btn-primary" ng-class="curTab=='vote' ? 'active' : ''" ng-click="curTab='vote'"> Vote on a Proposal </a>-->
-      </div>
-
-
-      <!-- Withdraw DAO Tokens -->
-      <section class="daoGetTokens clearfix" ng-show="curTab=='withdraw'">
-        <br /><br /><br />
-        <div class=" text-center">
-          <a class="btn btn-danger btn-lg" data-toggle="modal" data-target="#withdrawTransaction"> WITHDRAW YOUR DAO TOKENS FOR ETH </a>
-          <p><small> Yes. Just push the big red button. It's that easy. </small></p>
-          <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
-          <div class="form-group col-xs-12" ng-bind-html="withdrawTxStatus"></div>
-        </div>
-        <br /><br /><br />
-        <ul>
-          <li> There is no deadline for the withdrawals. Waiting is not the worst idea. </li>
-          <li> If you are getting an <em>insufficient balance for gas * ... </em> error, you must have a small amount of ETH in your account in order to cover the cost of gas. Add .01 ETH to this account and try again. </li>
-        </ul>
-      </section>
-      <!-- / Withdraw DAO Tokens -->
-
-      <!-- Send DAO Tokens -->
-      <section class="daoGetTokens clearfix" ng-show="curTab=='send'">
-        <h4>Send DAO Tokens</h4>
-        <div class="form-group col-xs-10">
-          <label> To Address: </label>
-          <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tokenTx.to" ng-change="validateAddress()"/>
-          <div ng-bind-html="validateAddressStatus"></div>
-        </div>
-        <div class="col-xs-2 address-identicon-container">
-          <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{tokenTx.to}}" watch-var="tokenTx.to"></div>
-        </div>
-        <div class="form-group col-xs-12">
-          <label>
-            Amount to Send:
-            <br />
-          </label>
-          <input class="form-control" type="text" placeholder="Amount" ng-model="tokenTx.value"/>
-          <div class="radio">
-            <label><input type="radio" name="currencyRadio" value="dao" ng-model="tokenTx.unit"/>DAO Tokens</label>
-          </div>
-          <!-- advanced option panel -->
-          <section>
-            <div class="form-group">
-              <label> Gas: </label>
-              <input class="form-control" type="text" ng-model="tx.gasLimit"/>
-            </div>
-          </section>
-          <!-- / advanced option panel -->
-        </div>
-        <div class="form-group col-xs-12">
-          <a class="btn btn-info btn-block" ng-click="generateTokenTx()">GENERATE TRANSACTION</a>
-        </div>
-        <div class="col-xs-12">
-           <div ng-bind-html="validateTxStatus"></div>
-        </div>
-        <div class="form-group col-xs-12" ng-show="showRaw">
-          <label> Raw Transaction </label>
-          <textarea class="form-control" rows="4" disabled >{{rawTx}}</textarea>
-          <label> Signed Transaction </label>
-          <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
-        </div>
-        <div class="form-group col-xs-12" ng-show="showRaw">
-          <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">SEND TRANSACTION</a>
-        </div>
-        <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
-      </section>
-      <!--/ Send DAO Tokens -->
-
-
-
-    </div>
-  <!-- / BOTTOM: The DAO -->
-
-  <!-- Withdraw Modal -->
-  <div class="modal fade" id="withdrawTransaction" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Just making sure...</strong></h3>
-        </div>
-        <div class="modal-body">
-          <!-- todo: update values -->
-          <h4>You are about to withdraw {{token.balance}} DAO Tokens for {{token.balanceEth}} ETH.</h4>
-          <h4> Are you <span class="text-underline">sure</span> you want to do this?</h4>
-        </div>
-        <div class="modal-footer text-center">
-          <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
-          <button type="button" class="btn btn-primary" ng-click="generateAndSendWithdrawTx()">Yes, I am sure! Withdraw.</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- / Withdraw Modal -->
-
-
-  <!-- Send Modal -->
-  <div class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
-        </div>
-        <div class="modal-body">
-          <h4>
-            You are about to send
-            <strong id="confirmAmount" class="text-primary"> {{tokenTx.value}} </strong>
-            <strong id="confirmCurrancy" class="text-primary"> DAO Token </strong>
-            to address
-            <strong id="confirmAddress" class="text-primary"> {{tokenTx.to}} </strong>
-          </h4>
-          <h4> Are you <span class="text-underline">sure</span> you want to do this?</h4>
-          <p><em> NOTE: If you encounter a gas error (account doesn't exist or balance too low) then you need to add ETH to your account) to cover the cost of sending DAO tokens.</em></p>
-
-        </div>
-        <div class="modal-footer text-center">
-          <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
-          <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, I am sure! Make transaction.</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- / Send Modal -->
-</section>
-  <!-- / Vote Modal -->
-
-
-</div>
-<!-- / The DAO -->
-
-
-
-    <!-- The DAO Proposals -->
-<div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.daoproposals.id">
-
-  <section class="row">
-    <div class="col-xs-12">
-      <h2> Browse DAO Proposals </h2>
-      <p><a ng-click="globalService.currentTab=globalService.tabs.dao.id">If you would like to Send DAO Tokens, please click here.</a> Learn more at <a href="http://daohub.org/" target="_blank">DAOHub</a>, <a href="https://blog.slock.it/the-art-of-the-dao-experiments-with-the-generic-dao-framework-4782f7862131#.bibozinlb" target="_blank">The Art of the DAO</a>, and <a href="https://forum.daohub.org/c/theDAO" target="_blank">DAO Hub Forums (Support, too!)</a></p>
-    </div>
-
-  </section>
-
-  <!-- DAO Proposals -->
-  <section class="proposal-container" ng-controller='theDaoProposalCtrl'>
-    <!-- DAO Filters -->
-  <!-- TODO: make these work, change active class on click -->
-  <section class="row" style="margin-bottom: 10px;">
-    <h4 class="col-xs-12"> Show.... </h4>
-
-    <div class="col-xs-6 form-group">
-      <div class="input-group">
-        <input type="number" class="form-control" placeholder="Proposal ID" ng-model='filters.id' ngTrim='false' >
-        <span class="input-group-addon" ng-click=" filters.id='' "> X </span>
-      </div>
-    </div>
-
-    <div class="col-xs-6 form-group">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Description" ng-model='filters.description' ngTrim='false' >
-        <span class="input-group-addon" ng-click=" filters.description='' "> X </span>
-      </div>
-    </div>
-
-    <div class="proposal-filter-container col-sm-2">
-      <a class="proposal-filter" style="width: 100%;" ng-class="filters=={} ? 'active' : ''" ng-click="filters={};">All Proposals</a>
-    </div>
-    <div class="proposal-filter-container col-sm-5">
-      <a class="proposal-filter" ng-class="filters.isOpen=='true' ? 'active' : ''"    ng-click="filters.isOpen!=='true' ? filters.isOpen='true' : filters.isOpen='' ">Current Proposals</a>
-      <a class="proposal-filter" ng-class="filters.isOpen=='false' ? 'active' : ''"   ng-click="filters.isOpen!=='false' ? filters.isOpen='false' : filters.isOpen=''">Past Proposals</a>
-    </div>
-    <div class="proposal-filter-container col-sm-5">
-      <a class="proposal-filter" ng-class="filters.split=='false' ? 'active' : ''"  ng-click="filters.split!=='false' ? filters.split='false' : filters.split=''">Non-Split Proposals</a>
-      <a class="proposal-filter" ng-class="filters.split=='true' ? 'active' : ''"   ng-click="filters.split!=='true' ? filters.split='true' : filters.split=''">Split Proposals</a>
-    </div>
-
-  </section>
-  <!-- / DAO Filters -->
-
-        <article class="proposal-item col-xs-12" ng-show="objProposal.show" ng-repeat="objProposal in AllProposals | filter:filters:comparator | orderBy : '-id' " >
-
-          <section class="proposal-top clearfix" ng-click="showProposal(objProposal.id)">
-            <div class="graph-container">
-              <div class="graph-unfilled" style="width:100%"></div>
-              <div class="graph-needed"   style="width:{{ objProposal.quorumPer | number:2 }}%"></div>
-              <div class="graph-yes"      style="width:{{ ( objProposal.yea * 100 ) / totRaised | number:2 }}%"></div>
-              <div class="graph-no"       style="width:{{ ( objProposal.nay * 100 ) / totRaised | number:2 }}%;
-                                                 left: {{ ( objProposal.yea * 100 ) / totRaised | number:2 }}%;"></div>
-            </div>
-            <div class="col-xs-9 clearfix">
-              <h4>{{objProposal.description}} </h4>
-              <p>
-                Proposal ID: <strong >{{objProposal.id}}</strong> &middot;
-                <span class="text-success" ng-show="objProposal.votingDeadline.getTime() >= objProposal.today.getTime()">ends: <strong>{{objProposal.votingDeadline | date:'medium'}}</strong></span>
-                <span class="text-danger" ng-show="objProposal.votingDeadline.getTime() < objProposal.today.getTime()">ended: <strong>{{objProposal.votingDeadline | date:'medium'}}</strong>
-              </p></span>
-            </div>
-            <div class="col-xs-3 clearfix text-right" ng-show="objProposal.split==false">
-              <h4> &nbsp; {{objProposal.amount}}</h4>
-              <p>  ETH  </p>
-            </div>
-            <div class="col-xs-3 clearfix text-right" ng-show="objProposal.split==true">
-              <h4> Split </h4>
-              <p>  &nbsp; </p>
-            </div>
-          </section>
-          <section class="proposal-expanded col-xs-12" ng-show="objProposal.showprop">
-
-            <div class="description-html" ng-bind-html="objProposal.descriptionHTML"></div>
-
-            <p ng-show="objProposal.split==true"><em>This is a proposal to Split the DAO. If you vote yes, you must then call the SplitDAO function via Mist in order to join this new Split DAO. <a href="https://daowiki.atlassian.net/wiki/display/DAO/Step-by-Step%3A+Splitting+the+DAO" target="_blank"> Lean More Here.</a></em></p>
-            <table class="table">
-              <tr>
-                <td class="label">Votes Yea:</td>
-                <td class="output votes-yes">
-                  {{ ( objProposal.yea * 100 ) / totRaised | number:2 }}% of total
-                  &middot;
-                  {{objProposal.yeaPer | number:2}}% of votes
-                  &middot;
-                  <em>({{ (objProposal.yea * 100) | number:2 }} DAO) </em></td>
-              </tr>
-              <tr>
-                <td class="label">Votes Nay:</td>
-                <td class="output votes-no">
-                  {{ ( objProposal.nay * 100 ) / totRaised | number:2 }}% of total
-                  &middot;
-                  {{objProposal.nayPer | number:2}}% of votes
-                  &middot;
-                  <em>({{ (objProposal.nay * 100) | number:2 }} DAO) </em></td>
-              </tr>
-              <tr ng-show="objProposal.split==false">
-                <td class="label">Quorum:</td>
-                <td class="output">
-                  <div class="votes-needed">{{ objProposal.quorumCurrent | number:2 }}% of {{ objProposal.quorumPer | number:2}}%</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="label">Creator:</td>
-                <td class="output"><div class="address-identicon-container small"><div id="addressIdenticon" title="Address Indenticon" blockie-address="{{objProposal.creator}}" watch-var="objProposal"></div></div>
-                {{objProposal.creator}}</td>
-              </tr>
-              <tr>
-                <td class="label">Recipient:</td>
-                <td class="output"> <div class="address-identicon-container small"><div id="addressIdenticon" title="Address Indenticon" blockie-address="{{objProposal.recipient}}" watch-var="objProposal"></div></div>
-                {{objProposal.recipient}} </td>
-              </tr>
-              <tr>
-                <td class="label">New Curator:</td>
-                <td class="output"><span ng-class="objProposal.split==true ? 'boolean-yes' : 'boolean-no'"> {{objProposal.splitEnglish}} </span></td>
-              </tr>
-              <tr>
-                <td class="label">Open:</td>
-                <td class="output"><span ng-class="objProposal.isOpen==true ? 'boolean-yes' : 'boolean-no'"> {{objProposal.openEnglish}} </span></td>
-              </tr>
-              <tr>
-                <td class="label">Proposal Passed:</td>
-                <td class="output"><span ng-class="objProposal.proposalPassed==true ? 'boolean-yes' : 'boolean-no'"> {{objProposal.proposalPassedEnglish}} </span></td>
-              </tr>
-              <tr>
-                <td class="label">Proposal Hash:</td>
-                <td class="output">{{objProposal.proposalHash}}</td>
-              </tr>
-              <tr>
-                <td class="label">Proposal Deposit:</td>
-                <td class="output">{{objProposal.proposalDeposit}} Ether</td>
-              </tr>
-            </table>
-            <div class="form-group" ng-show="objProposal.votingDeadline.getTime() > objProposal.today.getTime()">
-              <a class="btn btn-primary" ng-click="openVote(objProposal.id)">VOTE ON THIS PROPOSAL</a>
-            </div>
-          </section>
-
-        </article>
-        <section class="no-items text-center">
-          <h4> Sorry...there are no results with these filters. </h4>
-          <a class="btn btn-info" ng-class="filters=={} ? 'active' : ''" ng-click="filters={};">Show All Proposals</a>
-        </section>
-
-  <!-- Vote Modal -->
-  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel" id="voteProposal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel">Unlock your Wallet to Vote on Proposal #{{voteID}}</h3>
-          <p><em> <span class="text-danger">Note: </span> If you vote on a proposal, the tokens cannot be sent until the proposal period ends. If you wish to vote with a portion of your tokens, you must send them to a new account first and then vote with only one account.</em></p>
-
-        </div>
-        <div class="modal-body">
-
-          <!-- Step 1: Unlock Your Wallet -->
-          <div>
-            
-            
-              <wallet-decrypt-drtv></wallet-decrypt-drtv>
-            
-          </div>
-          <!-- / Step 1: Unlock Your Wallet -->
-
-          <hr />
-          <div ng-show="wallet!=null">
-          <!-- Step 2: Confirm and Vote -->
-          <h4>You are about to vote on Proposal <strong>#{{voteID}}</strong>: {{AllProposals[voteID].description}}.</h4>
-          <h4 class="text-light">Please vote carefully, there are no do-overs or take-backs.</h4>
-          <div class="row">
-            <div class="col-sm-4 marg-v-md">
-              <button type="button" class="btn btn-block btn-danger" ng-click="generateVoteTx(false)" ng-show="showVoteNo">VOTE NO</button>
-            </div>
-            <div class="col-sm-4 marg-v-md">
-              <button type="button" class="btn btn-block btn-default" data-dismiss="modal">GET ME OUT OF HERE</button>
-            </div>
-            <div class="col-sm-4 marg-v-md">
-              <button type="button" class="btn btn-block btn-primary" ng-click="generateVoteTx(true)" ng-show="showVoteYes">VOTE YES</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
-            <div class="form-group col-xs-12" ng-bind-html="voteTxStatus"></div>
-          </div>
-          <!-- / Step 2: Confirm and Vote -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- / Vote Modal -->
-  </section>
-  <!-- /DAO Proposals -->
-</div>
-<!-- / The DAO Proposals -->
-
-
-
-
-
-
-
-    <!-- Digix -->
-<div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.digix.id">
-  <h2> Digix </h2>
-  <p><strong>Claim</strong> and <strong> Send </strong> your DigixDAO (DGD) tokens & badges. In order to claim, you must have participated in the token sale on March 30th/31st.</p>
-
-  
-  
-    <wallet-decrypt-drtv></wallet-decrypt-drtv>
-  
-
-  <section class="row" ng-show="wallet!=null" ng-controller='digixCtrl'>
-    <hr />
-
-    <!-- Account Information - Left Column -->
-    <section class="col-sm-4">
-      <h4> Account Information </h4>
-      <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
-      <br />
-      <p>
-        Account Address: <br />
-        <strong style="padding-left: 1em; display: block;" class="mono word-wrap">{{wallet.getChecksumAddressString()}}</strong>
-      </p>
-      <p>
-        ETH Balance: <br />
-        <strong style="margin-left: 1em"> {{etherBalance}} Ether </strong>
-      </p>
-      <p> DGD Token Balance: <br />
-        <strong style="margin-left: 1em"> {{tokenBalance}} DGD </strong>
-      </p>
-      <p> DGD Badge Balance: <br />
-        <strong style="margin-left: 1em"> {{badgeBalance}} DGDb  </strong>
-      </p>
-      <p> DGD Crowdsale Information: <br />
-        <strong style="margin-left: 1em"> Centstotal: {{centsTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Weitotal: {{weiTotal}} </strong><br />
-        <strong  style="margin-left: 1em"> Share: {{shareTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Badges: {{badgesTotal}} </strong><br />
-        <strong style="margin-left: 1em"> Claimed? {{claimedTotal}} </strong>
-      </p>
-      <p>
-        Equivalent Values: <br />
-        <strong style="margin-left: 1em"> {{usdBalance}} USD </strong> <br />
-        <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong> <br />
-        <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
-      </p>
-      <p> See Transaction History:
-        <br />
-        <a href="https://etherscan.io/address/{{wallet.getAddressString()}}" target="_blank">https://etherscan.io/address/ {{wallet.getAddressString()}}</a>
-      </p>
-      <br />
-      <div class="well">
-        <p> MyEtherWallet is a free, open-source service dedicated to your privacy and security. The more donations we receive, the more time we spend creating new features, listening to your feedback, and giving you what you want. We are just two people trying to change the world. Help us?</p>
-        <a class="btn btn-primary btn-block" ng-click="onDonateClick()">DONATE</a>
-        <div class="text-success text-center marg-v-sm"><strong ng-show="tx.donate"> THANK YOU!!! </strong></div>
-      </div>
-    </section>
-    <!-- Account Information - Left Column -->
-
-
-    <!-- Claim / Send Information - Right Column -->
-    <section class="col-sm-8 digix-send">
-
-      <article class="btn-group">
-        <a class="btn btn-primary" ng-class="{active: showSend}" ng-click="showSend=true"> Send your DGD Tokens or Badges </a>
-        <a class="btn btn-primary" ng-class="{active: !showSend}" ng-click="showSend=false"> Claim your DGD Tokens </a>
-      </article>
-
-      <!-- Send Tokens Interface -->
-      <article ng-show="showSend">
-        <h4> Send Your DGD Tokens or Badges </h4>
-        <div class="form-group col-xs-10">
-          <label> To Address: </label>
-          <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="tokenTx.to" ng-change="validateAddress(tokenTx.to,'validateAddressStatus')"/>
-          <div ng-bind-html="validateAddressStatus"></div>
-        </div>
-        <div class="col-xs-2 address-identicon-container">
-          <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{tokenTx.to}}" watch-var="tokenTx.to"></div>
-        </div>
-        <div class="form-group col-xs-12">
-          <label>Amount to Send:</label><br />
-          <input class="form-control" type="text" placeholder="Amount" ng-model="tokenTx.value"/>
-          <div class="radio">
-            <label><input type="radio" name="tokenRadio" value="dgd" ng-model="tokenTx.unit"/>DGD Tokens</label>
-            <label><input type="radio" name="tokenRadio" value="dgdb" ng-model="tokenTx.unit"/>DGD Badges</label>
-          </div>
-          <div class="form-group">
-            <label> Gas: </label>
-            <input class="form-control" type="text" ng-model="tx.gasLimit"/>
-          </div>
-        </div>
-        <div class="form-group col-xs-12">
-          <a class="btn btn-info btn-block" ng-click="generateTokenTx()">GENERATE TRANSACTION</a>
-        </div>
-      </article>
-      <!-- / Send Tokens Interface -->
-
-      <!-- Claim Interface -->
-      <article ng-show="!showSend">
-        <h4> Claim Your DGD Tokens </h4>
-        <div class="form-group col-xs-12">
-          <label>Estimated fee consumption:</label><br />
-          <input class="form-control disabled" type="text" value="0.00043598 ether (21,799 gas)" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Provided Maximum Fee:</label><br />
-          <input class="form-control disabled" type="text" value="0.00243598 ether (121,799 gas)" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Gas Price:</label><br />
-          <input class="form-control disabled" type="text" value="0.021 ether per million gas" readonly />
-        </div>
-       <div class="form-group col-xs-12">
-          <label>Data:</label><br />
-          <input class="form-control disabled" type="text" readonly ng-model="tx.data"/>
-        </div>
-        <div class="form-group col-xs-12">
-          <a class="btn btn-info btn-block" ng-click="generateTx()">GENERATE CLAIM</a>
-        </div>
-      </article>
-      <!-- / Claim Interface -->
-
-      <!-- raw transaction / buttons -->
-      <div class="col-xs-12">
-         <div ng-bind-html="validateTxStatus"></div>
-      </div>
-      <div class="form-group col-xs-12" ng-show="showRaw">
-        <label> Raw Transaction </label>
-        <textarea class="form-control" rows="4" disabled >{{rawTx}}</textarea>
-        <label> Signed Transaction </label>
-        <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
-      </div>
-      <div class="form-group col-xs-12" ng-show="showRaw">
-        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">EXECUTE TRANSACTION</a>
-      </div>
-      <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
-      <!-- / raw transaction / buttons -->
-    </section>
-  <!-- Modal -->
-  <section class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
-        </div>
-        <div class="modal-body">
-          <h4>
-            You are about to send
-            <strong id="confirmAmount" class="text-primary"> {{tokenTx.value}} </strong>
-            <strong id="confirmCurrancy" class="text-primary"> {{tokenTx.unit}} </strong>
-            to address
-            <strong id="confirmAddress" class="text-primary"> {{tokenTx.to}} </strong>
-          </h4>
-          <h4> Are you <span class="text-underline"> sure </span> you want to do this?</h4>
-        </div>
-        <div class="modal-footer text-center">
-          <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
-          <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, I am sure! Execute transaction.</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!--/ Modal -->
-  </section>
-
-</div>
-<!-- / Digix -->
-
 
     <!-- Contracts -->
 <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.contracts.id">
@@ -1369,8 +799,8 @@
 
   <h4>First, a reminder </h4>
   <ul>
-    <li><strong>Ethereum, MyEtherWallet.com & MyEtherWallet CX, and some of the underlying Javascript libraries we use are under active development.</strong> While we have tested thoroughly & tens of thousands of wallets have been successfully created by people all over the globe, there is always the remote possibility that something unexpected happens that causes your ETH to be lost. While do everything we can to ensure that this does not happen and are available via email/reddit/twitter to assist in every way we can, this possibility still exists. Please do not invest more than you are willing to lose and please be careful. If something were to happen, we are sorry, <strong>but we are not responsible for the lost Ether.</strong></li>
-    <li>MyEtherWallet.com & MyEtherWallet CX are not "web wallets". You do not create an account or give us your Ether to hold onto. All data is created on our computer/your browser, not our servers. It's not a website where you put your Ether and we store them for you. We just make it easy for you to save your wallet information in your browser/on your computer. Then we give you a place you to access that information and do stuff with it.</li>
+    <li><strong>Ethereum, ClassicEtherWallet.com & ClassicEtherWallet CX, and some of the underlying Javascript libraries we use are under active development.</strong> While we have tested thoroughly & tens of thousands of wallets have been successfully created by people all over the globe, there is always the remote possibility that something unexpected happens that causes your ETH to be lost. While do everything we can to ensure that this does not happen and are available via email/reddit/twitter to assist in every way we can, this possibility still exists. Please do not invest more than you are willing to lose and please be careful. If something were to happen, we are sorry, <strong>but we are not responsible for the lost Ether.</strong></li>
+    <li>ClassicEtherWallet.com & ClassicEtherWallet CX are not "web wallets". You do not create an account or give us your Ether to hold onto. All data is created on our computer/your browser, not our servers. It's not a website where you put your Ether and we store them for you. We just make it easy for you to save your wallet information in your browser/on your computer. Then we give you a place you to access that information and do stuff with it.</li>
     <li>Please, do not forget to save your private key & password when you create a new wallet. Back them up in multiple phsyical locations &ndash; not just on your computer!</li>
     <li>Please make sure you are sending to the correct address.</li>
     <li>Please reach out to us with any and all feedback you have, especially with things that confuse you or error messages that don't make sense.</li>
@@ -1378,7 +808,7 @@
 
 
   <h4>0. I'm new. What do I do? </h4>
-  <p> MyEtherWallet gives you the ability to generate new wallets so you can store your Ether yourself, not on an exchange. This process happens entirely on your computer, not our servers. Therefore, when you generate a new wallet, <strong> you are responsible for safely backing it up</strong>.
+  <p> ClassicEtherWallet gives you the ability to generate new wallets so you can store your Ether yourself, not on an exchange. This process happens entirely on your computer, not our servers. Therefore, when you generate a new wallet, <strong> you are responsible for safely backing it up</strong>.
   <p> Do not hesitate to reach out to us if you have any questions. Remember, Ether now holds real monetary value and can be a significant investment. If you do not save your private key & password, there is no way to recover access to your wallet or the funds it holds.  I do not say this to scare you, only to remind you to be diligent, read carefully, and take your time during all the steps.</p>
   <ol>
     <li> Create a new wallet. </li>
@@ -1390,8 +820,8 @@
 
   <h4>1. How do I create a new wallet? </h4>
   <ol>
-       <li> Go to the "Generate Wallet" tab.</li>    
-    
+       <li> Go to the "Generate Wallet" tab.</li>
+
     <li> Create a strong password. Save this somewhere safe. <em><small>The password encrypts the private key for this wallet. You will need this password to send transactions.</small></em></li>
     <li> Type or copy the password from where you have saved it and paste it into the "Enter a password" field. </li>
     <li> Click "GENERATE". </li>
@@ -1418,10 +848,10 @@
   </ol>
 
 
-  
-  <h4>2b. How do I safely / offline / cold storage with MyEtherWallet?</h4>
+
+  <h4>2b. How do I safely / offline / cold storage with ClassicEtherWallet?</h4>
   <ol>
-    <li>Go here: <a href="https://github.com/kvhnuke/etherwallet/tree/gh-pages">https://github.com/kvhnuke/etherwallet/tree/gh-pages</a>.</li>
+    <li>Go here: <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages">https://github.com/ethereumproject/etherwallet/tree/gh-pages</a>.</li>
     <li>Click download zip in the upper right.</li>
     <li>Move zip to an airgapped computer.</li>
     <li>Unzip it.</li>
@@ -1434,14 +864,14 @@
     <li>Refresh that page. Select the keystore file and enter the password to ensure it are correct and can access your wallet. Check that the address you saved on your computer or USB is the same.</li>
   </ol>
   <p>Keep in mind, you must prevent loss of the keys and password due to loss or failure of you hard drive failure, or USB drive, or piece of paper. You also must keep in mind physical loss / damage of an entire area (think fire or flood). So. Multiple. Different. Physical. Locations. </p>
-  
+
 
 
   <h4>3. How do I verify I have access to my new wallet?</h4>
   <p> <strong> Before you send any Ether to your new wallet</strong>, you should ensure you have access to it. You should NOT copy and paste from the generate wallet tab, but instead copy and paste from the text document or paper where you have stored your wallet information.</p>
   <ol>
-       <li> Navigate to the "Send Transaction" tab. </li>    
-    
+       <li> Navigate to the "Send Transaction" tab. </li>
+
     <li> Select your wallet file -or- paste your private key. </li>
     <li> If the wallet is the encrypted, a text box will automatically appear. Enter the password. </li>
     <li> Click the "Decrypt" button. </li>
@@ -1450,7 +880,7 @@
   </ol>
 
 
-  
+
   <h4>4. How do I send Ether from one wallet to another? </h4>
   <p> Once you have saved and backed up all information <strong> and </strong> verified you have access to your new wallet, you can transfer some Ether to that new wallet.</p>
   <p><strong>Before you start,</strong> If you plan to move a large amount of ether, you should test sending a small amount first to make sure everything goes smoothly. After making the small transaction, you can check by pasting the TX ID or the address into a blockchain explorer, e.g. <a href="https://www.etherscan.io" target="_blank">https://www.etherscan.io</a>.</p>
@@ -1468,39 +898,39 @@
     <li>The transaction will be submitted. The TX ID will display. You can copy that TX ID and paste it into the search bar on a blockchain explorer to verify the transaction went through.</li>
     <li> Success! </li>
   </ol>
-  
 
 
-  
 
 
-  
-  <h4>5. How do I run MyEtherWallet.com offline/locally? </h4>
-  <p> You can run MyEtherWallet.com on your computer instead of from the GitHub servers. Everything except the "send transaction" tab can be done completely without the internet, so feel free to turn your internet off. If you would like to send transactions from an offline or airgapped computer, check out the "Offline Transaction" tab. </p>
+
+
+
+  <h4>5. How do I run ClassicEtherWallet.com offline/locally? </h4>
+  <p> You can run ClassicEtherWallet.com on your computer instead of from the GitHub servers. Everything except the "send transaction" tab can be done completely without the internet, so feel free to turn your internet off. If you would like to send transactions from an offline or airgapped computer, check out the "Offline Transaction" tab. </p>
   <ol>
-    <li>Go to the GitHub repo @ <a href="https://github.com/kvhnuke/etherwallet/tree/gh-pages" target="_blank">https://github.com/kvhnuke/etherwallet</a></li>
+    <li>Go to the GitHub repo @ <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages" target="_blank">https://github.com/ethereumproject/etherwallet</a></li>
     <li>Click download zip in the upper right.</li>
     <li>Unzip it.</li>
     <li>Open the <code>dist</code> folder.</li>
     <li>Double-Click <code>index.html</code>.</li>
-    <li> MyEtherWallet.com is now running entirely on your computer.</li>
+    <li> ClassicEtherWallet.com is now running entirely on your computer.</li>
   </ol>
-  <p> In case you are not familiar, you need to keep the entire <code> dist folder</code> in order to run it, not just index.html. Don't touch or move anything around in the folder. If you are storing a backup of the MyEtherWallet repo for the distant future, we recommend just storing the ZIP so you can be sure the folder contents stay intact.</p>
-  <p>As we are constantly updating MyEtherWallet.com, we recommend you periodically update your saved version of the repo. The MyEtherWallet team has <strong> no intentions of ever removing this project from GitHub. As long as GitHub is around, the repo will be accessible.</strong></p>
-  
+  <p> In case you are not familiar, you need to keep the entire <code> dist folder</code> in order to run it, not just index.html. Don't touch or move anything around in the folder. If you are storing a backup of the ClassicEtherWallet repo for the distant future, we recommend just storing the ZIP so you can be sure the folder contents stay intact.</p>
+  <p>As we are constantly updating ClassicEtherWallet.com, we recommend you periodically update your saved version of the repo. The ClassicEtherWallet team has <strong> no intentions of ever removing this project from GitHub. As long as GitHub is around, the repo will be accessible.</strong></p>
 
 
-  
 
-  
+
+
+
   <h4>6. What happens if your site goes down? </h4>
-  <p>There seems to be a lot of confusion about what MyEtherWallet does. It's not a web wallet where you put your Ether and we store them for you. You don't have a login and nothing ever gets saved to our servers. It is simply an interface that allows you to do things you normally would do via command line.</p>
-  <p>If MyEtherWallet goes down, you would have to find another way (like geth or Ethereum Wallet / Mist) to do what we are doing. But you wouldn't have to "get" your ether out of MyEtherWallet because it's not in MyEtherWallet. It's in whatever wallet your generated via our site.</p>
+  <p>There seems to be a lot of confusion about what ClassicEtherWallet does. It's not a web wallet where you put your Ether and we store them for you. You don't have a login and nothing ever gets saved to our servers. It is simply an interface that allows you to do things you normally would do via command line.</p>
+  <p>If ClassicEtherWallet goes down, you would have to find another way (like geth or Ethereum Wallet / Mist) to do what we are doing. But you wouldn't have to "get" your ether out of ClassicEtherWallet because it's not in ClassicEtherWallet. It's in whatever wallet your generated via our site.</p>
   <p> You can import your unencrypted private key and your Geth/Mist Format (encrypted) files directly into geth / Ethereum Wallet / Mist very easily now. See question #10 below. </p>
-  <p>In addition, the likelihood of us taking MyEtherWallet down is slim to none. It costs us almost nothing to maintain as we aren't storing any information. If we do take the domain down, it still is, and always will be, publicly available at <a href="https://github.com/kvhnuke/etherwallet/tree/gh-pages" target="_blank">https://github.com/kvhnuke/etherwallet</a>. You can download the ZIP there and run it locally. </p>
-  
+  <p>In addition, the likelihood of us taking ClassicEtherWallet down is slim to none. It costs us almost nothing to maintain as we aren't storing any information. If we do take the domain down, it still is, and always will be, publicly available at <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages" target="_blank">https://github.com/ethereumproject/etherwallet</a>. You can download the ZIP there and run it locally. </p>
 
-  
+
+
 
 
   <h4>7. Is using the send transaction offline? </h4>
@@ -1528,8 +958,8 @@
   <p> Simply navigate to the "Send Transaction" tab, Select your wallet file -or- enter/paste your private key and unlock your wallet, enter a "To Address" and "Amount to Send", and then click the "Advanced Options" button below the amount field. This will display two additional fields that you can use to increase the gas above the default 21000, or add data to your transaction.</p>
 
 
-  <h4>10. How do I import a wallet created with MyEtherWallet into geth / Ethereum Wallet / Mist?</h4>
-  
+  <h4>10. How do I import a wallet created with ClassicEtherWallet into geth / Ethereum Wallet / Mist?</h4>
+
   <p><strong> Using your unencrypted private key... </strong></p>
   <ol>
     <li> If you do not already have your unencrypted private key, navigate to the "View Wallet Details" tab.</li>
@@ -1555,11 +985,11 @@
         <li> The next time you open the Ethereum Wallet application, your account will be listed under "Accounts". </li>
       </ul>
     </ol>
-  
-  <p><strong> Using an Geth/Mist JSON file from MyEtherWallet v2+....</strong></p>
+
+  <p><strong> Using an Geth/Mist JSON file from ClassicEtherWallet v2+....</strong></p>
   <ol>
     <li> Go to the View Wallet Info Tab.</li> <li> Unlock your wallet using your ENCRYPTED private key or JSON file. </li>
-    
+
     <li> On the right hand side, look for <code>Download JSON file - Geth/Mist Format (encrypted)</code>. Press the DOWNLOAD button below that. You now have your keystore file.</li>
     <li> Open the Ethereum Wallet application. </li>
     <li> In the menu bar, go "Accounts" -> "Backup" -> "Accounts"</li>
@@ -1572,8 +1002,8 @@
   <p> Most likely, this means you are attempting to send Ether to a contract. Sending to a contract requires a bit more data and therefore a bit more gas. On the "Send Transaction" tab, click the "Advanced Options" button below the amount field. This will display two additional fields that you can use to increase the gas above the default 21000, or add data to your transaction. </p>
 
 
-  <h4><span class="text-primary collapseButton"></span> 12. Some sites randomize (seed) the private key generation via mouse movements. MyEtherWallet.com doesn't do this. Is the random number generation for MyEtherWallet safe?</h4>
-  <p> While the mouse moving thing is clever and we understand why people like it, the reality is window.crypto ensures more entropy than your mouse movements. The mouse movements aren't unsafe, it's just that we (and tons of other crypto experments) believe in window.crypto. In addition, MyEtherWallet.com can be used on touch devices. Here's a <a href="https://www.reddit.com/r/ethereum/comments/2bilqg/note_there_is_a_paranoid_highsecurity_way_to/cj5sgrm" target="_blank">conversation between an angry redditor and Vitalik Buterin regarding mouse movements v. window.crypto</a> and here is the <a href="https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-GlobalCrypto" target="_blank">the window.crypto w3 spec</a>. </p>
+  <h4><span class="text-primary collapseButton"></span> 12. Some sites randomize (seed) the private key generation via mouse movements. ClassicEtherWallet.com doesn't do this. Is the random number generation for ClassicEtherWallet safe?</h4>
+  <p> While the mouse moving thing is clever and we understand why people like it, the reality is window.crypto ensures more entropy than your mouse movements. The mouse movements aren't unsafe, it's just that we (and tons of other crypto experments) believe in window.crypto. In addition, ClassicEtherWallet.com can be used on touch devices. Here's a <a href="https://www.reddit.com/r/ethereum/comments/2bilqg/note_there_is_a_paranoid_highsecurity_way_to/cj5sgrm" target="_blank">conversation between an angry redditor and Vitalik Buterin regarding mouse movements v. window.crypto</a> and here is the <a href="https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-GlobalCrypto" target="_blank">the window.crypto w3 spec</a>. </p>
 
 
   <h4>13. Why hasn't the wallet I just created show up in the blockchain explorer? (ie: etherchain, etherscan) </h4>
@@ -1610,7 +1040,7 @@
   <p> Of course, this all assumes that keys are generated in a truly random way & with sufficient entropy. The keys generated here meet that criteria. geth/Mist as well. Jaxx as well. The Ethereum wallets are all pretty good. Keys generated by brainwallets do not, as a person's brain is not capable of creating a truly random seed. There have been a number of other issues regarding lack of entropy or seeds not being generated in a truly random way in Bitcoin-land, but I'll save that for another day. </p>
   <hr />
 
-  
+
 
 
   <h4>Security </h4>
@@ -1618,10 +1048,10 @@
   <p> At this point, we have not had our code audited. Apparently, it costs a fair bit of money to get code audited. If you or a team you know would be willing to help us out in the auditing department, please let us know. <a href="https://www.reddit.com/r/ethereum/comments/3hh89n/could_someone_please_audit_ether_wallet/">Here is a reddit thread with another user asking for someone to audit us.</a> You can reach out to us in a variety of ways.</p>
   <p> Here are some things to alleviate any paranoia you have:</p>
   <ul>
-    <li>We've been up and running since August 2015. If you search for <a href="https://www.reddit.com/me/m/all_ethereum/search?q=myetherwallet&sort=new&restrict_sr=on&t=all" target="_blank" />"myetherwallet" on reddit</a>, you can see numerous people who use us and no complaints or reports of stolen funds.</li>
+    <li>We've been up and running since August 2015. If you search for <a href="https://www.reddit.com/me/m/all_ethereum/search?q=ClassicEtherWallet&sort=new&restrict_sr=on&t=all" target="_blank" />"ClassicEtherWallet" on reddit</a>, you can see numerous people who use us and no complaints or reports of stolen funds.</li>
     <li>We aren't going to take your money or steal your private key(s). There is no malicious code on this site. In fact the "GENERATE WALLET" and "BULK GENERATE" tabs are completely client-side. That means that all the code is executed on <strong> your computer </strong> and it is never sent to the servers or to us or anywhere else in the magical internet land.</li>
-    <li> Check the URL -- This site is being served through GitHub and you can see the source code here: <a href="https://github.com/kvhnuke/etherwallet/tree/gh-pages" target="_blank">https://github.com/kvhnuke/etherwallet</a> to the domains: <a href="http://kvhnuke.github.io/etherwallet/" target="_blank">http://kvhnuke.github.io/etherwallet/</a> and <a href="https://www.myetherwallet.com" target="_blank">https://www.myetherwallet.com</a> (our new domain with SSL). You can verify it's hosted at GitHub by using <a href="http://viewdns.info/dnsrecord/?domain=myetherwallet.com" target="_blank">http://viewdns.info/dnsrecord/?domain=myetherwallet.com</a> - last two A record IPs are owned by GitHub for their custom domain hosting.</li>
-    <li> For generating wallets, you can download the <a href="https://github.com/kvhnuke/etherwallet/tree/gh-pages">source code</a> by using the "DOWNLOAD ZIP" button in the aforementioned link. Then, disconnect your computer from the internet and / or move that .zip file via flash drive to an air-gapped computer. Unzip the file, open the dist folder, double-click on "index.html", and you have the exact same thing happening on your air-gapped computer. You can now generate wallets on that computer without fear that we are stealing you heart and soul and first-born child. (Obviously, the "Send Transaction" tab is not going to work without the internet. Sorry!)</li>
+    <li> Check the URL -- This site is being served through GitHub and you can see the source code here: <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages" target="_blank">https://github.com/ethereumproject/etherwallet</a> to the domains: <a href="http://elaineo.github.io/etherwallet/" target="_blank">http://elaineo.github.io/etherwallet/</a> and <a href="https://www.ClassicEtherWallet.com" target="_blank">https://www.ClassicEtherWallet.com</a> (our new domain with SSL). You can verify it's hosted at GitHub by using <a href="http://viewdns.info/dnsrecord/?domain=ClassicEtherWallet.com" target="_blank">http://viewdns.info/dnsrecord/?domain=ClassicEtherWallet.com</a> - last two A record IPs are owned by GitHub for their custom domain hosting.</li>
+    <li> For generating wallets, you can download the <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages">source code</a> by using the "DOWNLOAD ZIP" button in the aforementioned link. Then, disconnect your computer from the internet and / or move that .zip file via flash drive to an air-gapped computer. Unzip the file, open the dist folder, double-click on "index.html", and you have the exact same thing happening on your air-gapped computer. You can now generate wallets on that computer without fear that we are stealing you heart and soul and first-born child. (Obviously, the "Send Transaction" tab is not going to work without the internet. Sorry!)</li>
     <li> Do a test run and check and see what network activity is happening. The easiest way for you (yes, YOU!) to do this (if you are using Chrome) is to right click on the page and click "inspect element". Now, go to the "Network" tab. Then, generate a wallet. Any wallet, any password&mdash;this is a test, remember. You will see there is no network activity. You may see something happening that looks like data:image/gif and data:image/png. Those are the QR codes being generated...on your computer...by your computer. No bytes were transferred.</li>
     <li> Now, to be safe, move over to the "Resources" tab. Here you can see all the different elements that make up a website. That includes things like the HTML (the base of what you see on the page), images (pretty pictures! Usually in .jpg, .gif, or .png format), the CSS (the stuff that makes the HTML look so pretty), the JS (the stuff that makes the HTML do other stuff, like making QR codes show up when you press Generate), Local Storage (one way of storing things on your local machine), Cookies (yum! Another way for sites to store data on your machine), and caches (yet another way to store stuff on your machine, usually to make things go faster). If you click through Local Storage, Cookies, and Cache, you will see nothing is being stored. Nothing is being saved. Refresh the page and you are back to square one.</li>
     <li> If you do not feel comfortable using this tool, then by all means, do not use it. We created this tool as a helpful way for people to generate wallets and make transactions without needing to dive into command line / geth / etc. Again, feel free to reach out if you have concerns and we will respond as quickly as possible. Thanks! </li>
@@ -1654,12 +1084,8 @@
 
   <h4>Ways to Get in Touch </h4>
   <ul>
-    <li><a href="https://twitter.com/myetherwallet" target="_blank"> Follow Us on Twitter </a></li>
-    <li><a href="mailto:myetherwallet@gmail.com" target="_blank"> Email Us </a></li>
-    <li><a href="https://github.com/kvhnuke/etherwallet/issues" target="_blank"> Open a GitHub Issue</a></li>
-    <li><a href="https://www.reddit.com/message/compose/?to=kvhnuke" target="_blank"> Message kvhnuke on Reddit </a></li>
-    <li><a href="https://www.reddit.com/message/compose/?to=insomniasexx" target="_blank"> Message tayvano (she goes by insom over there) on Reddit </a></li>
-    <li><a href="https://hubski.com/user?id=insomniasexx" target="_blank"> Message tayvano (she goes by insom over there, too!) on Hubski </a></li>
+    <li><a href="https://github.com/ethereumproject/etherwallet/issues" target="_blank"> Open a GitHub Issue</a></li>
+    <li><a href="https://www.reddit.com/message/compose/?to=1dontpanic" target="_blank"> Message 1dontpanic on Reddit </a></li>
   </ul>
 
 
@@ -1692,7 +1118,7 @@
     <hr />
     <div class="row">
       <h2 class="col-xs-12">Success! Your wallets have been generated.</h2>
-      <p class="col-xs-12 text-danger"> You need to back up your private keys externally and verify you can access the wallets. Do this BEFORE you send any Ether to a new wallet. MyEtherWallet.com does not receive or store any information so we <strong>cannot</strong> recover your wallet. Read the <a id="help" class="ptabs" showId="paneHelp">help page</a> for instructions.</p>
+      <p class="col-xs-12 text-danger"> You need to back up your private keys externally and verify you can access the wallets. Do this BEFORE you send any Ether to a new wallet. ClassicEtherWallet.com does not receive or store any information so we <strong>cannot</strong> recover your wallet. Read the <a id="help" class="ptabs" showId="paneHelp">help page</a> for instructions.</p>
       <article class="col-md-9">
         <table id="bulkgentable" class="table">
           <thead>
@@ -1783,27 +1209,24 @@
 
 <footer class="container-fluid">
   <div class="container">
-    <p><a href="https://www.myetherwallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Ether Wallet" /></a></p>
+    <p><a href="https://www.ClassicEtherWallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Ether Wallet" /></a></p>
 
     <p>An open source, javascript, client-side tool for generating Ethererum Wallets & sending transactions. Created by <a href="https://github.com/kvhnuke" target="_blank">kvhnuke</a> and <a href="https://github.com/tayvano" target="_blank">tayvano</a>.</p>
     <p class="wrap"> Donations greatly appreciated: <span class="mono">0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8</span> </p>
     <p>
     URLs:
-      <a href="https://www.myetherwallet.com" target="_blank">www.MyEtherWallet.com</a> &middot;
-      <a href="http://kvhnuke.github.io/etherwallet/" target="_blank">kvhnuke.github.io/etherwallet/</a>
+      <a href="https://www.ClassicEtherWallet.com" target="_blank">www.ClassicEtherWallet.com</a> &middot;
+      <a href="http://elaineo.github.io/etherwallet/" target="_blank">elaineo.github.io/etherwallet/</a>
     </p>
     <p>
       Source:
-        <a href="https://github.com/kvhnuke/etherwallet" target="_blank">MyEtherWallet.com & MyEtherWallet CX on github</a>
+        <a href="https://github.com/ethereumproject/etherwallet" target="_blank">ClassicEtherWallet.com & ClassicEtherWallet CX on github</a>
     </p>
     <p>Contact:
-      <a href="mailto:myetherwallet@gmail.com" target="_blank"> Email </a> &middot;
-      <a href="https://twitter.com/myetherwallet" target="_blank"> Twitter </a> &middot;
-      <a href="https://www.reddit.com/message/compose/?to=kvhnuke" target="_blank"> kvhnuke on reddit </a> &middot;
-      <a href="https://www.reddit.com/message/compose/?to=insomniasexx" target="_blank"> tayvano (insom) on reddit </a>
+      <a href="https://twitter.com/ClassicEtherWallet" target="_blank"> Twitter </a> &middot;
+      <a href="https://www.reddit.com/message/compose/?to=1dontpanic" target="_blank"> 1dontpanic on reddit </a> &middot;
     </p>
   </div>
 </footer>
 </body>
 </html>
-
