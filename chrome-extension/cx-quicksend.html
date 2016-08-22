@@ -2,7 +2,7 @@
 <html lang="en" ng-app="mewApp">
 <head>
   <meta charset="utf-8">
-  <title>MyEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
+  <title>ClassicEtherWallet: Open Source JavaScript Client-Side ETC Wallet</title>
   <link rel="stylesheet" href="../css/etherwallet-master.min.css">
   <script type="text/javascript" src="../js/etherwallet-static.min.js"></script>
   <script type="text/javascript" src="../js/etherwallet-master.js"></script>
@@ -29,7 +29,7 @@
 
     <div class="form-group">
       <label><strong> To Address </strong></label>
-      <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" id="sendtxaddress"/>
+      <input class="form-control" type="text" placeholder="0xCe5ED529977b08f87CBc207ebC216859820461eE" id="sendtxaddress"/>
       <div id="addressvalidate"></div>
     </div>
 
@@ -40,7 +40,7 @@
       </label>
       <input class="form-control" type="text" placeholder="Amount" id="sendtxamount" value="">
       <div class="radio">
-        <label><input type="radio" name="currencyRadio" checked value="ether">Ether</label>
+        <label><input type="radio" name="currencyRadio" checked value="ether">ETC</label>
         <label><input type="radio" name="currencyRadio" value="finney">Finney</label>
         <label><input type="radio" name="currencyRadio" value="szabo">Szabo</label>
         <div id="weiamount"></div>
@@ -59,14 +59,14 @@
     <p>
       You are about to send
       <strong id="confirmAmount" class="text-success"> 345 </strong>
-      <strong id="confirmCurrancy" class="text-success"> Ether </strong>
+      <strong id="confirmCurrancy" class="text-success"> ETC </strong>
       to address:
       <strong id="confirmAddress" class="text-danger word-wrap"> 0x928342938472938 </strong>
       from
       <strong id="popupNickName"> wallet nickname </strong>.
     </p>
     <label><strong>Enter Your Password:</strong></label>
-    <input class="form-control" type="password" placeholder="Your MyEtherWallet Password" id="sendTransactionPin">
+    <input class="form-control" type="password" placeholder="Your ClassicEtherWallet Password" id="sendTransactionPin">
     <div style="display: none;" id="accountAddress1"></div>
     <div class="text-center marg-v-sm">
       <a id="cancelTransaction" class="btn btn-default" style="width:49%"> Cancel </a>

@@ -2,7 +2,7 @@
 <html lang="en" ng-app="mewApp">
 <head>
   <meta charset="utf-8">
-  <title>MyEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
+  <title>Classic Ether Wallet: Open Source JavaScript Client-Side ETC Wallet</title>
   <link rel="stylesheet" href="../css/etherwallet-master.min.css">
   <script type="text/javascript" src="../js/etherwallet-static.min.js"></script>
   <script type="text/javascript" src="../js/etherwallet-master.js"></script>
@@ -28,7 +28,7 @@
             <td><input type="radio" name="selectedWallet" ng-model="$parent.selectedWallet" value="{{$index}}"></td>
             <td><div id="addressIdenticon" class="small" title="Address Indenticon" blockie-address="{{twallet.addr}}" watch-var="wallet"></div></td>
             <td><label>{{twallet.nick}}</label><small class="quicksend-address">{{twallet.addr}}</small></td>
-            <td>{{twallet.balanceR | number:2 | number}} ETH</td>
+            <td>{{twallet.balanceR | number:2 | number}} ETC</td>
           </tr>
       </tbody>
     </table>
