@@ -1,15 +1,15 @@
-## https://www.ethereumclassic.com - Content of ClassicEtherWallet.com is served directly from github.
+## http://classicetherwallet.com - Content of ClassicEtherWallet.com is served directly from github.
 
 ### ClassicEtherWallet
 
 ClassicEtherWallet is an open source, javascript, client-side tool for generating Ether wallets. It was forked from  [kvhnuke](https://github.com/kvhnuke).
 
-- Official link: https://www.ethereumclassic.com
+- Official link: http://classicetherwallet.com
 - Original, non-SSL link: http://elaineo.github.io/etherwallet/
 
 ### Purpose
 
-MyEtherWallet was created because many users were having immense trouble setting up the command-line ethereum client on their computers. Therefore, created this browser-based GUI wallet to...
+ClassicEtherWallet was created because many users were having immense trouble setting up the command-line ethereum client on their computers. Therefore, created this browser-based GUI wallet to...
 - Import client wallet files and presale wallet files.
 - Generate wallets completely client side and provide raw private keys, JSON files, and paper version of the account.
 - Bulk generate wallets
@@ -28,4 +28,3 @@ Version 2 expands on this vision to offer:
 ### Contact
 If you can think of any other features or run into bugs, let us know. 
 
-#### MyEtherWallet.com & MyEtherWallet CX are licensed under The MIT License (MIT).
