@@ -14,31 +14,31 @@ ajaxReq.config = {
 };
 ajaxReq.getBalance = function(addr, callback) {
 	this.post({
-		balance: addr
+		balance: addr,
 		isClassic: true
 	}, callback);
 }
 ajaxReq.getTransactionData = function(addr, callback) {
 	this.post({
-		txdata: addr
+		txdata: addr,
 		isClassic: true
 	}, callback);
 }
 ajaxReq.sendRawTx = function(rawTx, callback) {
 	this.post({
-		rawtx: rawTx
+		rawtx: rawTx,
 		isClassic: true
 	}, callback);
 }
 ajaxReq.getEstimatedGas = function(txobj, callback) {
 	this.post({
-		estimatedGas: txobj
+		estimatedGas: txobj,
 		isClassic: true
 	}, callback);
 }
 ajaxReq.getEthCall = function(txobj, callback) {
 	this.post({
-		ethCall: txobj
+		ethCall: txobj,
 		isClassic: true
 	}, callback);
 }
