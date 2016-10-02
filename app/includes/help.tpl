@@ -10,7 +10,7 @@
   <ul>
     <li><strong>Ethereum, MyEtherWallet.com & MyEtherWallet CX, and some of the underlying Javascript libraries we use are under active development.</strong> While we have tested thoroughly & tens of thousands of wallets have been successfully created by people all over the globe, there is always the remote possibility that something unexpected happens that causes your ETH to be lost. While do everything we can to ensure that this does not happen and are available via email/reddit/twitter to assist in every way we can, this possibility still exists. Please do not invest more than you are willing to lose and please be careful. If something were to happen, we are sorry, <strong>but we are not responsible for the lost Ether.</strong></li>
     <li>MyEtherWallet.com & MyEtherWallet CX are not "web wallets". You do not create an account or give us your Ether to hold onto. All data is created on our computer/your browser, not our servers. It's not a website where you put your Ether and we store them for you. We just make it easy for you to save your wallet information in your browser/on your computer. Then we give you a place you to access that information and do stuff with it.</li>
-    <li>Please, do not forget to save your private key & password when you create a new wallet. Back them up in multiple phsyical locations &ndash; not just on your computer!</li>
+    <li>Please, do not forget to save your private key & password when you create a new wallet. Back them up in multiple physical locations &ndash; not just on your computer!</li>
     <li>Please make sure you are sending to the correct address.</li>
     <li>Please reach out to us with any and all feedback you have, especially with things that confuse you or error messages that don't make sense.</li>
   </ul>
@@ -35,7 +35,7 @@
     <li> Type or copy the password from where you have saved it and paste it into the "Enter a password" field. </li>
     <li> Click "GENERATE". </li>
     <li> Your wallet has now been generated. But, you are NOT done yet! Back up your wallet now! See #2a. </li>
-    <li> Then: Verify that you can successfully access you wallet <strong>before</strong> sending any Ether to this wallet. See below. </li>
+    <li> Then: Verify that you can successfully access your wallet <strong>before</strong> sending any Ether to this wallet. See below. </li>
   </ol>
 
 
@@ -70,7 +70,7 @@
     <li>Save address as well. You will need to address to send ETH to yourself later.</li>
     <li>Store these papers / USBs in multiple physically separate locations.</li>
     <li>Go to the view wallet details tab and type in your private key / password from your piece of paper to ensure they are correct and access your wallet. Check that the address you wrote down is the same.</li>
-    <li>Refresh that page. Select the keystore file and enter the password to ensure it are correct and can access your wallet. Check that the address you saved on your computer or USB is the same.</li>
+    <li>Refresh that page. Select the keystore file and enter the password to ensure that it is correct, and that it can access your wallet. Check that the address you saved on your computer or USB is the same.</li>
   </ol>
   <p>Keep in mind, you must prevent loss of the keys and password due to loss or failure of you hard drive failure, or USB drive, or piece of paper. You also must keep in mind physical loss / damage of an entire area (think fire or flood). So. Multiple. Different. Physical. Locations. </p>
   }
