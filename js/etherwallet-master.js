@@ -4,8 +4,8 @@ var http;
 var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
-ajaxReq.SERVERURL = "https://wallet.elaineou.com:8080/api";
-ajaxReq.DAOPROPOSALSURL = "https://wallet.elaineou.com:8080/TheDAO"; //TODO: DAO
+ajaxReq.SERVERURL = "https://classicetherwallet.com:8081/api";
+ajaxReq.DAOPROPOSALSURL = "https://classicetherwallet.com:8081/TheDAO"; //TODO: DAO
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.pendingPosts = [];
 ajaxReq.config = {
