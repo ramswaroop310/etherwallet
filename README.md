@@ -1,11 +1,11 @@
-## http://classicetherwallet.com - Content of ClassicEtherWallet.com is served directly from github.
+## https://classicetherwallet.com - Content of ClassicEtherWallet.com is served directly from github.
 
 ### ClassicEtherWallet
 
 ClassicEtherWallet is an open source, javascript, client-side tool for generating Ether wallets. It was forked from  [kvhnuke](https://github.com/kvhnuke).
 
-- Official link: http://classicetherwallet.com
-- Original, non-SSL link: http://elaineo.github.io/etherwallet/
+- Official link: https://classicetherwallet.com
+- Served from github link: https://elaineo.github.io/etherwallet/
 
 ### Purpose
 
