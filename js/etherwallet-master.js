@@ -1835,7 +1835,8 @@ etherUnits.toWei = function(number, unit) {
 module.exports = etherUnits;
 },{}],25:[function(require,module,exports){
 'use strict';
-var globalFuncs = function() {}
+var globalFuncs = function() {};
+globalFuncs.lightMode = false;
 globalFuncs.getBlockie = function(address) {
 	return blockies.create({
 		seed: address.toLowerCase(),
@@ -1884,7 +1885,7 @@ globalFuncs.errorMsgs = [
 	 "A wallet with this address already exists in storage. Please check your wallets page. ",
    "You need to have at some ETH in your account to cover the cost of gas. .01ETH should be more than sufficient for a few sends and votes. ",
    "All gas would be used on this transaction. This means you have already voted on this proposal or the debate period has ended."];
-globalFuncs.successMsgs = ["Valid address", "Wallet successfully decrypted", "Transaction submitted. TX ID: ", "New wallet added: ", "You have successfully voted. Thank you for being an active participant in The DAO."];
+globalFuncs.successMsgs = ["Valid address", "Wallet successfully decrypted", "Transaction submitted. TX ID: ", "New wallet added: "];
 globalFuncs.scrypt = {
 	n: 1024
 };
@@ -1907,10 +1908,10 @@ globalFuncs.stripTags = function(str) {
 	return str;
 }
 globalFuncs.checkAndRedirectHTTPS = function() {
-	var host = "52.206.67.235:80";
+	var host = "classicetherwallet.com";
 	var githost = "elaineo.github.io";
 	var githostw = "www.elaineo.github.io";
-	var hostw = "52.206.67.235:80";
+	var hostw = "classicetherwallet.com";
 	if ((host == window.location.host || githost == window.location.host || hostw == window.location.host || githostw == window.location.host) && (window.location.protocol != "https:")) window.location.protocol = "https";
 }
 globalFuncs.isStrongPass = function(password) {
