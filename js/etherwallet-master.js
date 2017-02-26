@@ -2035,6 +2035,23 @@ Wallet.generate = function(icapDirect) {
 		return new Wallet(ethUtil.crypto.randomBytes(32))
 	}
 }
+Wallet.prototype.setBalance = function () {
+    var parentObj = this;
+    this.balance = this.usdBalance = this.eurBalance = this.btcBalance = this.chfBalance = this.repBalance = 'loading';
+    ajaxReq.getBalance(parentObj.getAddressString(), function (data) {
+        if (data.error) parentObj.balance = data.msg;else {
+            parentObj.balance = etherUnits.toEther(data.data.balance, 'wei');
+            ajaxReq.getETHvalue(function (data) {
+                parentObj.usdBalance = etherUnits.toFiat(parentObj.balance, 'ether', data.usd);
+                parentObj.eurBalance = etherUnits.toFiat(parentObj.balance, 'ether', data.eur);
+                parentObj.btcBalance = etherUnits.toFiat(parentObj.balance, 'ether', data.btc);
+            });
+        }
+    });
+};
+Wallet.prototype.getBalance = function () {
+    return this.balance;
+};
 Wallet.prototype.getPrivateKey = function() {
 	return this.privKey
 }
