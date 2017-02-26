@@ -772,7 +772,7 @@ contract ReplaySafeSend {
   <input class="form-control" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-class="Validator.isValidAddress(contract.address) ? 'is-valid' : 'is-invalid'" ng-model="contract.address"/>
 </section>
 
-<!-- Select Contract Dropdown -->
+<!-- Select Contract Dropdown (TODO)
 <section class="col-sm-6 clearfix">
   <h4 translate="CONTRACT_Title_2"> Select Existing Contract </h4>
   <div class="dropdown">
@@ -783,7 +783,7 @@ contract ReplaySafeSend {
       <li ng-repeat="abi in ajaxReq.abiList track by $index"><a ng-click="selectExistingAbi($index)">{{abi.name}} <small class="mono">{{abi.address}}</small></a></li>
     </ul>
   </div>
-</section>
+</section>-->
 
 <!-- ABI Textarea -->
 <section class="col-xs-12 clearfix">
