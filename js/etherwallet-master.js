@@ -1827,6 +1827,8 @@ var ajaxReq = require('./ajaxReq');
 window.ajaxReq = ajaxReq;
 var ethFuncs = require('./ethFuncs');
 window.ethFuncs = ethFuncs;
+var Validator = require('./validator');
+window.Validator = Validator;
 if(IS_CX){
     var cxFuncs = require('./cxFuncs');
     window.cxFuncs = cxFuncs;
@@ -1839,7 +1841,7 @@ var decryptWalletCtrl = require('./controllers/decryptWalletCtrl');
 var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
 //var digixCtrl = require('./controllers/digixCtrl');
-var theDaoCtrl = require('./controllers/theDaoCtrl');
+var contractsCtrl = require('./controllers/contractsCtrl');
 var replayProtectionCtrl = require('./controllers/replayProtectionCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
 var globalService = require('./services/globalService');
@@ -1875,7 +1877,7 @@ app.controller('decryptWalletCtrl', ['$scope','$sce','walletService', decryptWal
 app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
 //app.controller('digixCtrl', ['$scope','$sce','walletService', digixCtrl]);
-app.controller('theDaoCtrl', ['$scope','$sce','walletService', theDaoCtrl]);
+app.controller('contractsCtrl', ['$scope','$sce','walletService', contractsCtrl]);
 app.controller('replayProtectionCtrl', ['$scope','$sce','walletService', replayProtectionCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
 if(IS_CX){
@@ -1886,7 +1888,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/theDaoCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -2239,23 +2241,23 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "digix",
       mew: true,
       cx: true
-    },
+    },*/
     contracts: {
-      id: 9,
+      id: 8,
       name: "Contracts",
       url:"contracts",
-      mew: false,
+      mew: true,
       cx: false
-    },*/
+    },
     help: {
-      id: 8,
+      id: 9,
       name: "Help",
       url: "help",
       mew: true,
       cx: true
     }
   };
-  var currentTab = 7;
+  var currentTab = 5;
   if(typeof chrome != 'undefined')
     currentTab = chrome.windows === undefined ? 7 : 3;
   return {
@@ -7161,102 +7163,6 @@ function $AnchorScrollProvider() {
    * not some child element.
    * </div>
    *
-   * @example
-     <example module="anchorScrollExample">
-       <file name="index.html">
-         <div id="scrollArea" ng-controller="ScrollController">
-           <a ng-click="gotoBottom()">Go to bottom</a>
-           <a id="bottom"></a> You're at the bottom!
-         </div>
-       </file>
-       <file name="script.js">
-         angular.module('anchorScrollExample', [])
-           .controller('ScrollController', ['$scope', '$location', '$anchorScroll',
-             function ($scope, $location, $anchorScroll) {
-               $scope.gotoBottom = function() {
-                 // set the location.hash to the id of
-                 // the element you wish to scroll to.
-                 $location.hash('bottom');
-
-                 // call $anchorScroll()
-                 $anchorScroll();
-               };
-             }]);
-       </file>
-       <file name="style.css">
-         #scrollArea {
-           height: 280px;
-           overflow: auto;
-         }
-
-         #bottom {
-           display: block;
-           margin-top: 2000px;
-         }
-       </file>
-     </example>
-   *
-   * <hr />
-   * The example below illustrates the use of a vertical scroll-offset (specified as a fixed value).
-   * See {@link ng.$anchorScroll#yOffset $anchorScroll.yOffset} for more details.
-   *
-   * @example
-     <example module="anchorScrollOffsetExample">
-       <file name="index.html">
-         <div class="fixed-header" ng-controller="headerCtrl">
-           <a href="" ng-click="gotoAnchor(x)" ng-repeat="x in [1,2,3,4,5]">
-             Go to anchor {{x}}
-           </a>
-         </div>
-         <div id="anchor{{x}}" class="anchor" ng-repeat="x in [1,2,3,4,5]">
-           Anchor {{x}} of 5
-         </div>
-       </file>
-       <file name="script.js">
-         angular.module('anchorScrollOffsetExample', [])
-           .run(['$anchorScroll', function($anchorScroll) {
-             $anchorScroll.yOffset = 50;   // always scroll by 50 extra pixels
-           }])
-           .controller('headerCtrl', ['$anchorScroll', '$location', '$scope',
-             function ($anchorScroll, $location, $scope) {
-               $scope.gotoAnchor = function(x) {
-                 var newHash = 'anchor' + x;
-                 if ($location.hash() !== newHash) {
-                   // set the $location.hash to `newHash` and
-                   // $anchorScroll will automatically scroll to it
-                   $location.hash('anchor' + x);
-                 } else {
-                   // call $anchorScroll() explicitly,
-                   // since $location.hash hasn't changed
-                   $anchorScroll();
-                 }
-               };
-             }
-           ]);
-       </file>
-       <file name="style.css">
-         body {
-           padding-top: 50px;
-         }
-
-         .anchor {
-           border: 2px dashed DarkOrchid;
-           padding: 10px 10px 200px 10px;
-         }
-
-         .fixed-header {
-           background-color: rgba(0, 0, 0, 0.2);
-           height: 50px;
-           position: fixed;
-           top: 0; left: 0; right: 0;
-         }
-
-         .fixed-header > a {
-           display: inline-block;
-           margin: 5px 15px;
-         }
-       </file>
-     </example>
    */
   this.$get = ['$window', '$location', '$rootScope', function($window, $location, $rootScope) {
     var document = $window.document;
@@ -45645,7 +45551,55 @@ module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./_is-object":131}],90:[function(require,module,exports){
+},{"./_is-object":131}],87:[function(require,module,exports){
+'use strict';
+
+var validator = function validator() {};
+validator.isValidAddress = function (address) {
+    if (address) return ethFuncs.validateEtherAddress(address);
+    return false;
+};
+validator.isValidBTCAddress = function (address) {
+    return ethUtil.WAValidator.validate(address, 'BTC');
+};
+validator.isPositiveNumber = function (value) {
+    return globalFuncs.isNumeric(value) && parseFloat(value) >= 0;
+};
+validator.isValidHex = function (hex) {
+    return ethFuncs.validateHexString(hex);
+};
+validator.isValidPrivKey = function (privkeyLen) {
+    return privkeyLen == 64 || privkeyLen == 128 || privkeyLen == 132;
+};
+validator.isValidMnemonic = function (mnemonic) {
+    return hd.bip39.validateMnemonic(mnemonic);
+};
+validator.isPasswordLenValid = function (pass, len) {
+    if (pass === 'undefined' || pass == null) return false;
+    return pass.length > len;
+};
+validator.isAlphaNumeric = function (value) {
+    return globalFuncs.isAlphaNumeric(value);
+};
+validator.isAlphaNumericSpace = function (value) {
+    if (!value) return false;
+    return globalFuncs.isAlphaNumeric(value.replace(/ /g, ''));
+};
+validator.isJSON = function (json) {
+    return ethUtil.solidityUtils.isJson(json);
+};
+validator.isValidURL = function (str) {
+    var pattern = new RegExp('^(https?:\\/\\/)' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return pattern.test(str);
+};
+module.exports = validator;
+
+},{}],90:[function(require,module,exports){
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 'use strict';
 var toObject = require('./_to-object')
