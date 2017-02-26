@@ -68,11 +68,6 @@ ajaxReq.getETHvalue = function(callback) {
 		callback(priceObj);
 	});
 }
-ajaxReq.getDAOProposals = function(callback) {
-	this.http.get(this.DAOPROPOSALSURL).then(function(data) {
-		callback(data.data);
-	});
-}
 module.exports = ajaxReq;
 },{}],2:[function(require,module,exports){
 'use strict';
@@ -519,7 +514,14 @@ var quickSendCtrl = function($scope, $sce) {
 		$scope.wallet.getAddressString = function() {
 			return $scope.allWallets[$scope.selectedWallet].addr;
 		}
-		uiFuncs.transferAllBalance($scope, $sce);
+		uiFuncs.transferAllBalance($scope.wallet.getAddressString(), $scope.tx.gasLimit, function (resp) {
+			if (!resp.isError) {
+				$scope.tx.unit = resp.unit;
+				$scope.tx.value = resp.value;
+			} else {
+				$scope.validateTxStatus = $sce.trustAsHtml(resp.error);
+			}
+		});
 	}
 	$scope.prepTX = function() {
 		try {
@@ -791,7 +793,7 @@ var digixCtrl = function($scope, $sce, walletService) {
 	   // uiFuncs.generateTx($scope,$sce);
     }
 	$scope.sendTx = function() {
-		uiFuncs.sendTx($scope,$sce);
+		// uiFuncs.sendTx($scope,$sce);
 	}
 	$scope.onDonateClick = function() {
 		$scope.tokenTx.to = globalFuncs.donateAddress;
@@ -908,11 +910,16 @@ module.exports = sendOfflineTxCtrl;
 },{"buffer":82}],11:[function(require,module,exports){
 'use strict';
 var sendTxCtrl = function($scope, $sce, walletService) {
-	new Modal(document.getElementById('sendTransaction'));
+    $scope.ajaxReq = ajaxReq;
+    $scope.notifier = uiFuncs.notifier;
+    $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
+	$scope.sendTxModal = new Modal(document.getElementById('sendTransaction'));
 	walletService.wallet = null;
 	walletService.password = '';
 	$scope.showAdvance = false;
 	$scope.showRaw = false;
+	$scope.dropdownEnabled = true;
+    $scope.Validator = Validator;
 	$scope.tx = {
 		gasLimit: globalFuncs.urlGet('gaslimit') == null ? globalFuncs.defaultTxGasLimit : globalFuncs.urlGet('gaslimit'),
 		data: globalFuncs.urlGet('data') == null ? "" : globalFuncs.urlGet('data'),
@@ -985,18 +992,38 @@ var sendTxCtrl = function($scope, $sce, walletService) {
         });
     }
 	$scope.sendTx = function() {
-		uiFuncs.sendTx($scope,$sce);
+        $scope.sendTxModal.close();
+        uiFuncs.sendTx($scope.signedTx, function (resp) {
+            if (!resp.isError) {
+                var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr);
+                $scope.wallet.setBalance();
+            } else {
+                $scope.notifier.danger(resp.error);
+            }
+        });
 	}
 	$scope.transferAllBalance = function() {
-		uiFuncs.transferAllBalance($scope,$sce);
+		uiFuncs.transferAllBalance($scope.wallet.getAddressString(), $scope.tx.gasLimit, function (resp) {
+                if (!resp.isError) {
+                    $scope.tx.unit = resp.unit;
+                    $scope.tx.value = resp.value;
+                } else {
+                    $scope.showRaw = false;
+                    $scope.notifier.danger(resp.error);
+                }
+            });
 	}
 };
 module.exports = sendTxCtrl;
 
 },{}],12:[function(require,module,exports){
 'use strict';
-var tabsCtrl = function($scope, globalService) {
+var tabsCtrl = function($scope, globalService, $sce) {
 	$scope.tabNames = globalService.tabs;
+	$scope.notifier = uiFuncs.notifier;
+	$scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
+	$scope.Validator = Validator;
     var hval = window.location.hash;
     if(hval!=""){
         hval = hval.replace("#",'');
@@ -1025,6 +1052,8 @@ module.exports = tabsCtrl;
 
 var contractsCtrl = function contractsCtrl($scope, $sce, walletService) {
     $scope.ajaxReq = ajaxReq;
+    $scope.notifier = uiFuncs.notifier;
+    $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
     $scope.visibility = "interactView";
     $scope.sendContractModal = new Modal(document.getElementById('sendContract'));
@@ -1136,8 +1165,8 @@ var contractsCtrl = function contractsCtrl($scope, $sce, walletService) {
         $scope.sendContractModal.close();
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
-                var bExStr = $scope.ajaxReq.type != nodes.nodeTypes.Custom ? "<a href='" + $scope.ajaxReq.blockExplorerTX.replace("[[txHash]]", resp.data) + "' target='_blank'> View your transaction </a>" : '';
-                var contractAddr = $scope.tx.contractAddr != '' ? " & Contract Address <a href='" + ajaxReq.blockExplorerAddr.replace('[[address]]', $scope.tx.contractAddr) + "' target='_blank'>" + $scope.tx.contractAddr + "</a>" : '';
+                var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
+                var contractAddr = " & Contract Address <a href='http://etherhub.io/addr/" + $scope.tx.contractAddr + "' target='_blank'>" + $scope.tx.contractAddr + "</a>";
                 $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
             } else {
                 $scope.notifier.danger(resp.error);
@@ -1220,6 +1249,8 @@ var replayProtectionCtrl = function($scope, $sce, walletService) {
 	new Modal(document.getElementById('sendTransaction'));
 	walletService.wallet = null;
 	walletService.password = '';
+	$scope.notifier = uiFuncs.notifier;
+	$scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
 	$scope.showAdvance = false;
 	$scope.showRaw = false;
 	$scope.safeSendContract = "0x40ebf2d6e998a76a848c41908733b26e04adffe2"; 
@@ -2448,35 +2479,84 @@ uiFuncs.generateTx = function (txData, callback) {
         });
     }
 };
-uiFuncs.sendTx = function($scope, $sce) {
-    if(document.getElementById('sendTransaction')!=null)
-        new Modal(document.getElementById('sendTransaction')).close();
-	ajaxReq.sendRawTx($scope.signedTx, function(data) {
-		console.log(data);
-		if (data.error) {
-			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(data.msg));
-		} else {
-			if( $scope.setBalance !== undefined ) $scope.setBalance();
-			$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<a href='http://etherhub.io/tx/" + data.data + "' target='_blank'>" + data.data + "</a>"));
-		}
-	});
-}
-uiFuncs.transferAllBalance = function($scope, $sce) {
-	try {
-		ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
-			if (data.error) throw data.msg;
-			data = data.data;
-			var gasPrice = new BigNumber(ethFuncs.sanitizeHex(ethFuncs.addTinyMoreToGas(data.gasprice))).times($scope.tx.gasLimit);
-			var maxVal = new BigNumber(data.balance).minus(gasPrice);
-			$scope.tx.unit = "ether";
-			$scope.tx.value = etherUnits.toEther(maxVal, 'wei');
-            $scope.tx.value = $scope.tx.value < 0 ? 0 : $scope.tx.value;
-		});
-	} catch (e) {
-		$scope.showRaw = false;
-		$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(e));
-	}
-}
+uiFuncs.sendTx = function (signedTx, callback) {
+    ajaxReq.sendRawTx(signedTx, function (data) {
+        var resp = {};
+        if (data.error) {
+            resp = {
+                isError: true,
+                error: data.msg
+            };
+        } else {
+            resp = {
+                isError: false,
+                data: data.data
+            };
+        }
+        if (callback !== undefined) callback(resp);
+    });
+};
+uiFuncs.transferAllBalance = function (fromAdd, gasLimit, callback) {
+    try {
+        ajaxReq.getTransactionData(fromAdd, function (data) {
+            if (data.error) throw data.msg;
+            data = data.data;
+            var gasPrice = new BigNumber(ethFuncs.sanitizeHex(ethFuncs.addTinyMoreToGas(data.gasprice))).times(gasLimit);
+            var maxVal = new BigNumber(data.balance).minus(gasPrice);
+            maxVal = etherUnits.toEther(maxVal, 'wei') < 0 ? 0 : etherUnits.toEther(maxVal, 'wei');
+            if (callback !== undefined) callback({
+                isError: false,
+                unit: "ether",
+                value: maxVal
+            });
+        });
+    } catch (e) {
+        if (callback !== undefined) callback({
+            isError: true,
+            error: e
+        });
+    }
+};
+uiFuncs.notifier = {
+    show: false,
+    close: function close() {
+        this.show = false;if (!this.scope.$$phase) this.scope.$apply();
+    },
+    open: function open() {
+        this.show = true;
+    },
+    class: '',
+    message: '',
+    timer: null,
+    sce: null,
+    scope: null,
+    warning: function warning(msg) {
+        this.setClassAndOpen("alert-warning", msg);
+    },
+    info: function info(msg) {
+        this.setClassAndOpen("", msg);
+        this.setTimer();
+    },
+    danger: function danger(msg) {
+        this.setClassAndOpen("alert-danger", msg);
+    },
+    success: function success(msg) {
+        this.setClassAndOpen("alert-success", msg);
+    },
+    setClassAndOpen: function setClassAndOpen(_class, msg) {
+        this.class = _class;
+        this.message = msg.message ? this.sce.trustAsHtml(msg.message) : this.sce.trustAsHtml(msg);
+        this.open();
+    },
+    setTimer: function setTimer() {
+        var _this = this;
+        clearTimeout(_this.timer);
+        _this.timer = setTimeout(function () {
+            _this.show = false;
+            if (!_this.scope.$$phase) _this.scope.$apply();
+        }, 5000);
+    }
+};
 module.exports = uiFuncs;
 
 }).call(this,require("buffer").Buffer)
