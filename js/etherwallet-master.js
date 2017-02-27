@@ -1343,8 +1343,11 @@ module.exports = replayProtectionCtrl;
 
 },{}],14:[function(require,module,exports){
 'use strict';
-var viewCtrl = function($scope, globalService) {
+var viewCtrl = function($scope, globalService, $sce) {
 	$scope.globalService = globalService;
+    $scope.notifier = uiFuncs.notifier;
+    $scope.notifier.sce = $sce;
+    $scope.notifier.scope = $scope;
 };
 module.exports = viewCtrl;
 },{}],15:[function(require,module,exports){
