@@ -5,8 +5,8 @@ var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
 ajaxReq.SERVERURL = "https://classicetherwallet.com:8081/api";
-ajaxReq.DAOPROPOSALSURL = "https://classicetherwallet.com:8081/TheDAO"; //TODO: DAO
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
+ajaxReq.chainId = 61;
 ajaxReq.pendingPosts = [];
 ajaxReq.config = {
 	headers: {
@@ -867,7 +867,8 @@ var sendOfflineTxCtrl = function($scope, $sce, walletService) {
 				gasLimit: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.gasLimit)),
 				to: ethFuncs.sanitizeHex($scope.tx.to),
 				value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
-				data: ethFuncs.sanitizeHex($scope.tx.data)
+				data: ethFuncs.sanitizeHex($scope.tx.data),
+				chainId: ajaxReq.chainId
 			}
 			var eTx = new ethUtil.Tx(rawTx);
 			eTx.sign(new Buffer($scope.wallet.getPrivateKeyString(), 'hex'));
@@ -2478,9 +2479,9 @@ uiFuncs.generateTx = function (txData, callback) {
                 gasLimit: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(txData.gasLimit)),
                 to: ethFuncs.sanitizeHex(txData.to),
                 value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei(txData.value, txData.unit))),
-                data: ethFuncs.sanitizeHex(txData.data)
+                data: ethFuncs.sanitizeHex(txData.data),
+                chainId: ajaxReq.chainId
             };
-            // if (ajaxReq.eip155) rawTx.chainId = ajaxReq.chainId;
             var eTx = new ethUtil.Tx(rawTx);
             eTx.sign(new Buffer(txData.privKey, 'hex'));
             rawTx.rawTx = JSON.stringify(rawTx);
@@ -57799,21 +57800,22 @@ module.exports={
 module.exports = require('./params.json')
 
 },{"./params.json":413}],415:[function(require,module,exports){
-(function (global,Buffer){
-const ethUtil = require('ethereumjs-util')
-const fees = require('ethereum-common/params')
-const BN = ethUtil.BN
+(function (Buffer){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ethUtil = require('ethereumjs-util');
+var fees = require('ethereum-common/params.json');
+var BN = ethUtil.BN;
 
 // secp256k1n/2
-const N_DIV_2 = new BN('7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0', 16)
-
-// give browser access to Buffers
-global.Buffer = Buffer
-global.ethUtil = ethUtil
+var N_DIV_2 = new BN('7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0', 16);
 
 /**
  * Creates a new transaction object
- * @constructor
  * @class {Buffer|Array} data a transaction can be initiailized with either a buffer containing the RLP serialized transaction or an array of buffers relating to each of the tx Properties, listed in order below in the exmple. Or lastly an Object containing the Properties of the transaction like in the Usage example
  *
  * For Object and Arrays each of the elements can either be a Buffer, a hex-prefixed (0x) String , Number, or an object with a toBuffer method such as Bignum
@@ -57839,226 +57841,291 @@ global.ethUtil = ethUtil
  * @prop {Buffer} r EC signature parameter
  * @prop {Buffer} s EC recovery ID
  */
-var Transaction = module.exports = function (data) {
-  // Define Properties
-  const fields = [{
-    name: 'nonce',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }, {
-    name: 'gasPrice',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }, {
-    name: 'gasLimit',
-    alias: 'gas',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }, {
-    name: 'to',
-    allowZero: true,
-    length: 20,
-    default: new Buffer([])
-  }, {
-    name: 'value',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }, {
-    name: 'data',
-    alias: 'input',
-    allowZero: true,
-    default: new Buffer([])
-  }, {
-    name: 'v',
-    length: 1,
-    default: new Buffer([0x1c])
-  }, {
-    name: 'r',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }, {
-    name: 's',
-    length: 32,
-    allowLess: true,
-    default: new Buffer([])
-  }]
+module.exports = function () {
+  function Transaction(data) {
+    _classCallCheck(this, Transaction);
+
+    data = data || {};
+    // Define Properties
+    var fields = [{
+      name: 'nonce',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }, {
+      name: 'gasPrice',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }, {
+      name: 'gasLimit',
+      alias: 'gas',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }, {
+      name: 'to',
+      allowZero: true,
+      length: 20,
+      default: new Buffer([])
+    }, {
+      name: 'value',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }, {
+      name: 'data',
+      alias: 'input',
+      allowZero: true,
+      default: new Buffer([])
+    }, {
+      name: 'v',
+      length: 1,
+      default: new Buffer([0x1c])
+    }, {
+      name: 'r',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }, {
+      name: 's',
+      length: 32,
+      allowLess: true,
+      default: new Buffer([])
+    }];
+
+    /**
+     * Returns the rlp encoding of the transaction
+     * @method serialize
+     * @return {Buffer}
+     */
+    // attached serialize
+    ethUtil.defineProperties(this, fields, data);
+
+    /**
+     * @prop {Buffer} from (read only) sender address of this transaction, mathematically derived from other parameters.
+     */
+    Object.defineProperty(this, 'from', {
+      enumerable: true,
+      configurable: true,
+      get: this.getSenderAddress.bind(this)
+    });
+
+    // calculate chainId from signature
+    var sigV = ethUtil.bufferToInt(this.v);
+    var chainId = Math.floor((sigV - 35) / 2);
+    if (chainId < 0) chainId = 0;
+
+    // set chainId
+    this._chainId = chainId || data.chainId || 0;
+    this._homestead = true;
+  }
 
   /**
-   * Returns the rlp encoding of the transaction
-   * @method serialize
-   * @return {Buffer}
+   * If the tx's `to` is to the creation address
+   * @return {Boolean}
    */
-  // attached serialize
-  ethUtil.defineProperties(this, fields, data)
 
-  /**
-   * @prop {Buffer} from (read only) sender address of this transaction, mathematically derived from other parameters.
-   */
-  Object.defineProperty(this, 'from', {
-    enumerable: true,
-    configurable: true,
-    get: this.getSenderAddress.bind(this)
-  })
 
-  this._homestead = true
-}
+  _createClass(Transaction, [{
+    key: 'toCreationAddress',
+    value: function toCreationAddress() {
+      return this.to.toString('hex') === '';
+    }
 
-/**
- * If the tx's `to` is to the creation address
- * @method toCreationAddress
- * @return {Boolean}
- */
-Transaction.prototype.toCreationAddress = function () {
-  return this.to.toString('hex') === ''
-}
+    /**
+     * Computes a sha3-256 hash of the serialized tx
+     * @param {Boolean} [includeSignature=true] whether or not to inculde the signature
+     * @return {Buffer}
+     */
 
-/**
- * Computes a sha3-256 hash of the serialized tx
- * @method hash
- * @param {Boolean} [signature=true] whether or not to inculde the signature
- * @return {Buffer}
- */
-Transaction.prototype.hash = function (signature) {
-  var toHash
+  }, {
+    key: 'hash',
+    value: function hash(includeSignature) {
+      if (includeSignature === undefined) includeSignature = true;
 
-  if (typeof signature === 'undefined') {
-    signature = true
-  }
+      // EIP155 spec:
+      // when computing the hash of a transaction for purposes of signing or recovering,
+      // instead of hashing only the first six elements (ie. nonce, gasprice, startgas, to, value, data),
+      // hash nine elements, with v replaced by CHAIN_ID, r = 0 and s = 0
 
-  toHash = signature ? this.raw : this.raw.slice(0, 6)
+      var items = void 0;
+      if (includeSignature) {
+        items = this.raw;
+      } else {
+        if (this._chainId > 0) {
+          var raw = this.raw.slice();
+          this.v = this._chainId;
+          this.r = 0;
+          this.s = 0;
+          items = this.raw;
+          this.raw = raw;
+        } else {
+          items = this.raw.slice(0, 6);
+        }
+      }
 
-  // create hash
-  return ethUtil.rlphash(toHash)
-}
+      // create hash
+      return ethUtil.rlphash(items);
+    }
 
-/**
- * returns the sender's address
- * @method getSenderAddress
- * @return {Buffer}
- */
-Transaction.prototype.getSenderAddress = function () {
-  if (this._from) {
-    return this._from
-  }
-  var pubkey = this.getSenderPublicKey()
-  this._from = ethUtil.publicToAddress(pubkey)
-  return this._from
-}
+    /**
+     * returns the public key of the sender
+     * @return {Buffer}
+     */
 
-/**
- * returns the public key of the sender
- * @method getSenderPublicKey
- * @return {Buffer}
- */
-Transaction.prototype.getSenderPublicKey = function () {
-  if (!this._senderPubKey || !this._senderPubKey.length) {
-    this.verifySignature()
-  }
+  }, {
+    key: 'getChainId',
+    value: function getChainId() {
+      return this._chainId;
+    }
 
-  return this._senderPubKey
-}
+    /**
+     * returns the sender's address
+     * @return {Buffer}
+     */
 
-/**
- * Determines if the signature is valid
- * @method verifySignature
- * @return {Boolean}
- */
-Transaction.prototype.verifySignature = function () {
-  var msgHash = this.hash(false)
+  }, {
+    key: 'getSenderAddress',
+    value: function getSenderAddress() {
+      if (this._from) {
+        return this._from;
+      }
+      var pubkey = this.getSenderPublicKey();
+      this._from = ethUtil.publicToAddress(pubkey);
+      return this._from;
+    }
 
-  // All transaction signatures whose s-value is greater than secp256k1n/2 are considered invalid.
-  if (this._homestead && new BN(this.s).cmp(N_DIV_2) === 1) {
-    return false
-  }
+    /**
+     * returns the public key of the sender
+     * @return {Buffer}
+     */
 
-  try {
-    this._senderPubKey = ethUtil.ecrecover(msgHash, this.v, this.r, this.s)
-  } catch (e) {
-    return false
-  }
+  }, {
+    key: 'getSenderPublicKey',
+    value: function getSenderPublicKey() {
+      if (!this._senderPubKey || !this._senderPubKey.length) {
+        if (!this.verifySignature()) throw new Error('Invalid Signature');
+      }
+      return this._senderPubKey;
+    }
 
-  return !!this._senderPubKey
-}
+    /**
+     * Determines if the signature is valid
+     * @return {Boolean}
+     */
 
-/**
- * sign a transaction with a given a private key
- * @method sign
- * @param {Buffer} privateKey
- */
-Transaction.prototype.sign = function (privateKey) {
-  var msgHash = this.hash(false)
-  var sig = ethUtil.ecsign(msgHash, privateKey)
-  Object.assign(this, sig)
-}
+  }, {
+    key: 'verifySignature',
+    value: function verifySignature() {
+      var msgHash = this.hash(false);
+      // All transaction signatures whose s-value is greater than secp256k1n/2 are considered invalid.
+      if (this._homestead && new BN(this.s).cmp(N_DIV_2) === 1) {
+        return false;
+      }
 
-/**
- * The amount of gas paid for the data in this tx
- * @method getDataFee
- * @return {BN}
- */
-Transaction.prototype.getDataFee = function () {
-  const data = this.raw[5]
-  var cost = new BN(0)
-  for (var i = 0; i < data.length; i++) {
-    data[i] === 0 ? cost.iaddn(fees.txDataZeroGas.v) : cost.iaddn(fees.txDataNonZeroGas.v)
-  }
-  return cost
-}
+      try {
+        var v = ethUtil.bufferToInt(this.v);
+        if (this._chainId > 0) {
+          v -= this._chainId * 2 + 8;
+        }
+        this._senderPubKey = ethUtil.ecrecover(msgHash, v, this.r, this.s);
+      } catch (e) {
+        return false;
+      }
 
-/**
- * the minimum amount of gas the tx must have (DataFee + TxFee + Creation Fee)
- * @method getBaseFee
- * @return {BN}
- */
-Transaction.prototype.getBaseFee = function () {
-  var fee = this.getDataFee().iaddn(fees.txGas.v)
-  if (this._homestead && this.toCreationAddress()) {
-    fee.iaddn(fees.txCreation.v)
-  }
-  return fee
-}
+      return !!this._senderPubKey;
+    }
 
-/**
- * the up front amount that an account must have for this transaction to be valid
- * @method getUpfrontCost
- * @return {BN}
- */
-Transaction.prototype.getUpfrontCost = function () {
-  return new BN(this.gasLimit)
-    .imul(new BN(this.gasPrice))
-    .iadd(new BN(this.value))
-}
+    /**
+     * sign a transaction with a given a private key
+     * @param {Buffer} privateKey
+     */
 
-/**
- * validates the signature and checks to see if it has enough gas
- * @method validate
- * @param {Boolean} [stringError=false] whether to return a string with a dscription of why the validation failed or return a Bloolean
- * @return {Boolean|String}
- */
-Transaction.prototype.validate = function (stringError) {
-  var errors = []
-  if (!this.verifySignature()) {
-    errors.push('Invalid Signature')
-  }
+  }, {
+    key: 'sign',
+    value: function sign(privateKey) {
+      var msgHash = this.hash(false);
+      var sig = ethUtil.ecsign(msgHash, privateKey);
+      if (this._chainId > 0) {
+        sig.v += this._chainId * 2 + 8;
+      }
+      Object.assign(this, sig);
+    }
 
-  if (this.getBaseFee().cmp(new BN(this.gasLimit)) > 0) {
-    errors.push(['gas limit is to low. Need at least ' + this.getBaseFee()])
-  }
+    /**
+     * The amount of gas paid for the data in this tx
+     * @return {BN}
+     */
 
-  if (stringError === undefined || stringError === false) {
-    return errors.length === 0
-  } else {
-    return errors.join(' ')
-  }
-}
+  }, {
+    key: 'getDataFee',
+    value: function getDataFee() {
+      var data = this.raw[5];
+      var cost = new BN(0);
+      for (var i = 0; i < data.length; i++) {
+        data[i] === 0 ? cost.iaddn(fees.txDataZeroGas.v) : cost.iaddn(fees.txDataNonZeroGas.v);
+      }
+      return cost;
+    }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":82,"ethereum-common/params":414,"ethereumjs-util":416}],416:[function(require,module,exports){
+    /**
+     * the minimum amount of gas the tx must have (DataFee + TxFee + Creation Fee)
+     * @return {BN}
+     */
+
+  }, {
+    key: 'getBaseFee',
+    value: function getBaseFee() {
+      var fee = this.getDataFee().iaddn(fees.txGas.v);
+      if (this._homestead && this.toCreationAddress()) {
+        fee.iaddn(fees.txCreation.v);
+      }
+      return fee;
+    }
+
+    /**
+     * the up front amount that an account must have for this transaction to be valid
+     * @return {BN}
+     */
+
+  }, {
+    key: 'getUpfrontCost',
+    value: function getUpfrontCost() {
+      return new BN(this.gasLimit).imul(new BN(this.gasPrice)).iadd(new BN(this.value));
+    }
+
+    /**
+     * validates the signature and checks to see if it has enough gas
+     * @param {Boolean} [stringError=false] whether to return a string with a dscription of why the validation failed or return a Bloolean
+     * @return {Boolean|String}
+     */
+
+  }, {
+    key: 'validate',
+    value: function validate(stringError) {
+      var errors = [];
+      if (!this.verifySignature()) {
+        errors.push('Invalid Signature');
+      }
+
+      if (this.getBaseFee().cmp(new BN(this.gasLimit)) > 0) {
+        errors.push(['gas limit is to low. Need at least ' + this.getBaseFee()]);
+      }
+
+      if (stringError === undefined || stringError === false) {
+        return errors.length === 0;
+      } else {
+        return errors.join(' ');
+      }
+    }
+  }]);
+
+  return Transaction;
+}();
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":82,"ethereum-common/params.json":414,"ethereumjs-util":416}],416:[function(require,module,exports){
 (function (Buffer){
 const SHA3 = require('keccakjs')
 const secp256k1 = require('secp256k1')
