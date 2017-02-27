@@ -753,11 +753,9 @@ var digixCtrl = function($scope, $sce, walletService) {
 	}
 	$scope.$watch('tx', function() {
 		$scope.showRaw = false;
-		$scope.sendTxStatus = "";
 	}, true);
 	$scope.$watch('showSend', function() {
 		$scope.showRaw = false;
-		$scope.sendTxStatus = "";
 		if (!$scope.showSend) {
 			$scope.tx.data = $scope.digixClaim;
 			$scope.tx.to = $scope.digixContract;
@@ -847,7 +845,6 @@ var sendOfflineTxCtrl = function($scope, $sce, walletService) {
 	}
 	$scope.$watch('tx', function() {
 		$scope.showRaw = false;
-		$scope.sendTxStatus = "";
 	}, true);
 	$scope.validateAddress = function(address, status) {
 		if (ethFuncs.validateEtherAddress(address)) {
@@ -958,7 +955,6 @@ var sendTxCtrl = function($scope, $sce, walletService) {
 	}
 	$scope.$watch('tx', function() {
 		$scope.showRaw = false;
-		$scope.sendTxStatus = "";
 	}, true);
 	$scope.validateAddress = function() {
 		if (ethFuncs.validateEtherAddress($scope.tx.to)) {
@@ -1294,7 +1290,6 @@ var replayProtectionCtrl = function($scope, $sce, walletService) {
 	}
 	$scope.$watch('tx', function() {
 	  	$scope.showRaw = false;
-		$scope.sendTxStatus = "";
 	}, true);
 	$scope.validateAddress = function() {
 		console.log($scope.contractTx)

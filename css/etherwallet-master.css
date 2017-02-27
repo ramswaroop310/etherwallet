@@ -3339,6 +3339,18 @@ ul.nav {
   margin-top: 0;
   color: inherit;
 }
+.alert.popup {
+    position: fixed;
+    border-radius: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 0;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,.33);
+    transition: all .5s ease-in-out;
+    z-index: 1060;
+    margin: 0;
+}
 .alert .alert-link {
   font-weight: bold;
 }

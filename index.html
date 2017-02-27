@@ -404,7 +404,6 @@
           <div class="form-group col-xs-12" ng-show="showRaw">
             <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">SEND TRANSACTION</a>
           </div>
-          <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
 
           <!-- Modal -->
           <div class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendTransactionLabel">
@@ -677,7 +676,6 @@
       <div class="form-group col-xs-12" ng-show="showRaw">
         <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#sendTransaction">EXECUTE</a>
       </div>
-      <div class="form-group col-xs-12" ng-bind-html="sendTxStatus"></div>
 
       <!-- Modal -->
       <div class="modal fade" id="sendTransaction" tabindex="-1" role="dialog" aria-labelledby="sendContractLabel">
@@ -1485,10 +1483,9 @@ contract ReplaySafeSend {
   </div>
 
 
-  <div class="alert popup  animated-show-hide alert-success" ng-show="notifier.show" role="alert" aria-live="assertive">
-  <span class="sr-only ng-binding">alert-success</span><div class="container ng-binding" ng-bind-html="notifier.message">Transaction submitted. TX ID 
-  0x09331b34348db7e4d05084934da22bd8a5a10636554a29e16e857f85343bacc4<br><a href="https://gastracker.io/tx/0x09331b34348db7e4d05084934da22bd8a5a10636554a29e16e857f85343bacc4" target="_blank"> View your transaction </a></div>
-  <i tabindex="0" aria-label="dismiss" class="icon-close" ng-click="notifier.close()"></i>
+  <div class="alert popup {{notifier.class}} animated-show-hide" ng-show="notifier.show" role="alert" aria-live="assertive">
+    <span class="sr-only">{{notifier.class}}</span><div class="container" ng-bind-html="notifier.message"></div>
+    <i tabindex="0" aria-label="dismiss" class="icon-close" ng-click="notifier.close()"></i>
   </div>
 </section>
 
@@ -1496,7 +1493,7 @@ contract ReplaySafeSend {
   <div class="container">
     <p><a href="https://www.ClassicEtherWallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Ether Wallet" /></a></p>
 
-    <p>An open source, javascript, client-side tool for generating Ethererum Wallets & sending transactions. Forked from <a href="https://github.com/kvhnuke/etherwallet" target="_blank">MyEtherWallet</a>.</p>
+    <p>An open source, javascript, client-side tool for generating Ethererum Classic Wallets & sending transactions. Forked from <a href="https://github.com/kvhnuke/etherwallet" target="_blank">MyEtherWallet</a>.</p>
     <p class="wrap"> Donations go to Ethereum Classic: <span class="mono">0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9</span> </p>
     <p>
     URLs:
