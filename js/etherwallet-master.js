@@ -2369,7 +2369,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       id: 7,
       name: "Replay Protection",
       url: "replay-protection",
-      mew: true,
+      mew: false,
       cx: false
     },
     /*
