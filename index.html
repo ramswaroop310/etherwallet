@@ -311,7 +311,7 @@
 
     <!-- send transaction -->
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.sendTransaction.id">
-      <h2> Send Transaction </h2>
+      <h2> Send ETC & Tokens </h2>
       <div>
           
           
@@ -349,7 +349,7 @@
           </div>
         </div>
         <div class="col-sm-8">
-          <h4>Send Transaction</h4>
+          <h4>Send ETC & Tokens</h4>
           <div class="form-group col-xs-10">
             <label> To Address: </label>
             <input class="form-control"  type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="tx.to" ng-change="validateAddress()"/>
@@ -364,14 +364,20 @@
               <br />
             </label>
             <a class="pull-right" ng-click="transferAllBalance()">Transfer total available balance</a>
-            <input class="form-control" type="text" placeholder="Amount" ng-model="tx.value"/>
-            <div class="radio">
-              <label>
-                <input type="radio" name="currencyRadio" value="ether" ng-model="tx.unit"/>ETC</label>
-              <label>
-                <input type="radio" name="currencyRadio" value="finney" ng-model="tx.unit"/>Finney</label>
-              <label>
-                <input type="radio" name="currencyRadio" value="szabo" ng-model="tx.unit"/>Szabo</label>
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="Amount" ng-model="tx.value"/>
+              <div class="input-group-btn">
+                <a class="btn btn-default dropdown-toggle" class="dropdown-toggle" ng-click="dropdownAmount = !dropdownAmount" ng-class="dropdownEnabled ? '' : 'disabled'">
+                  {{unitReadable}}<i class="caret"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" ng-show="dropdownAmount">
+                  <li><a ng-class="{true:'active'}[tx.sendMode=='ether']" ng-click="setSendMode('ether')">{{ajaxReq.type}}</a></li>
+                  <li ng-repeat="token in wallet.tokenObjs track by $index" ng-show="token.balance!=0 && token.balance!='loading' || token.type!=='default' || tokenVisibility=='shown'">
+                    <a ng-class="{true:'active'}[unitReadable == token.getSymbol()]" ng-click="setSendMode('token', $index, token.getSymbol())"> {{token.getSymbol()}} </a>
+                  </li>
+
+                </ul>
+              </div>
             </div>
             <!-- advanced option panel -->
             <a ng-click="toggleShowAdvance()"><p class="strong"> + Advanced: Add More Gas or Data </p></a>
