@@ -7,6 +7,7 @@ ajaxReq.postSerializer = null;
 ajaxReq.SERVERURL = "https://classicetherwallet.com:8081/api";
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.chainId = 61;
+ajaxReq.type = "ETC";
 ajaxReq.pendingPosts = [];
 ajaxReq.config = {
 	headers: {
@@ -754,6 +755,7 @@ module.exports = sendOfflineTxCtrl;
 'use strict';
 var sendTxCtrl = function($scope, $sce, walletService) {
     $scope.ajaxReq = ajaxReq;
+    $scope.unitReadable = ajaxReq.type;
     $scope.notifier = uiFuncs.notifier;
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
 	$scope.sendTxModal = new Modal(document.getElementById('sendTransaction'));
@@ -763,6 +765,13 @@ var sendTxCtrl = function($scope, $sce, walletService) {
 	$scope.showRaw = false;
 	$scope.dropdownEnabled = true;
     $scope.Validator = Validator;
+    // Tokens
+    $scope.tokenVisibility = "hidden";
+    $scope.tokenTx = {
+        to: '',
+        value: 0,
+        id: -1
+    };
 	$scope.tx = {
 		gasLimit: globalFuncs.urlGet('gaslimit') == null ? globalFuncs.defaultTxGasLimit : globalFuncs.urlGet('gaslimit'),
 		data: globalFuncs.urlGet('data') == null ? "" : globalFuncs.urlGet('data'),
@@ -771,47 +780,108 @@ var sendTxCtrl = function($scope, $sce, walletService) {
 		value: globalFuncs.urlGet('value') == null ? "" : globalFuncs.urlGet('value'),
 		nonce: null,
 		gasPrice: null,
-		donate: false
+		donate: false,
+		tokenSymbol: globalFuncs.urlGet('tokenSymbol') == null ? false : globalFuncs.urlGet('tokenSymbol')
 	}
+    $scope.setSendMode = function (sendMode) {
+        var tokenId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+        var tokenSymbol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
-	globalFuncs.urlGet('gaslimit') == null ? '' : $scope.showAdvance = true
-	globalFuncs.urlGet('data') == null ? '' : $scope.showAdvance = true
-
+        $scope.tx.sendMode = sendMode;
+        $scope.unitReadable = '';
+        if (sendMode == 'ether') {
+            $scope.unitReadable = ajaxReq.type;
+        } else {
+            $scope.unitReadable = tokenSymbol;
+            $scope.tokenTx.id = tokenId;
+        }
+        $scope.dropdownAmount = false;
+    };
+    $scope.setTokenSendMode = function () {
+        if ($scope.tx.sendMode == 'token' && !$scope.tx.tokenSymbol) {
+            $scope.tx.tokenSymbol = $scope.wallet.tokenObjs[0].symbol;
+            $scope.wallet.tokenObjs[0].type = "custom";
+            $scope.setSendMode($scope.tx.sendMode, 0, $scope.tx.tokenSymbol);
+        } else if ($scope.tx.tokenSymbol) {
+            for (var i = 0; i < $scope.wallet.tokenObjs.length; i++) {
+                if ($scope.wallet.tokenObjs[i].symbol.toLowerCase().indexOf($scope.tx.tokenSymbol.toLowerCase()) !== -1) {
+                    $scope.wallet.tokenObjs[i].type = "custom";
+                    $scope.setSendMode('token', i, $scope.wallet.tokenObjs[i].symbol);
+                    break;
+                } else $scope.tokenTx.id = -1;
+            }
+        }
+        if ($scope.tx.sendMode != 'token') $scope.tokenTx.id = -1;
+    };
+    globalFuncs.urlGet('sendMode') == null ? $scope.setSendMode('ether') : $scope.setSendMode(globalFuncs.urlGet('sendMode'));
+    $scope.showAdvance = globalFuncs.urlGet('gaslimit') != null || globalFuncs.urlGet('gas') != null || globalFuncs.urlGet('data') != null;
+    if (globalFuncs.urlGet('data') || globalFuncs.urlGet('value') || globalFuncs.urlGet('to') || globalFuncs.urlGet('gaslimit') || globalFuncs.urlGet('sendMode') || globalFuncs.urlGet('gas') || globalFuncs.urlGet('tokenSymbol')) $scope.hasQueryString = true; // if there is a query string, show an warning at top of page
 	$scope.$watch(function() {
 		if (walletService.wallet == null) return null;
 		return walletService.wallet.getAddressString();
 	}, function() {
 		if (walletService.wallet == null) return;
 		$scope.wallet = walletService.wallet;
-		$scope.setBalance();
+		$scope.wallet.setBalance();
+		$scope.wallet.setTokens();
+		$scope.setTokenSendMode();
 	});
-	$scope.setBalance = function() {
-		ajaxReq.getBalance($scope.wallet.getAddressString(), function(data) {
-			if (data.error) {
-				$scope.etherBalance = data.msg;
-			} else {
-				$scope.etherBalance = etherUnits.toEther(data.data.balance, 'wei');
-				ajaxReq.getETHvalue(function(data) {
-					$scope.usdBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.usd);
-					$scope.eurBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.eur);
-					$scope.btcBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.btc);
-				});
-			}
-		});
-	}
-	$scope.$watch('tx', function() {
-		$scope.showRaw = false;
-	}, true);
-	$scope.validateAddress = function() {
-		if (ethFuncs.validateEtherAddress($scope.tx.to)) {
-			$scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[0]));
-		} else {
-			$scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getDangerText(globalFuncs.errorMsgs[5]));
-		}
-	}
-	$scope.toggleShowAdvance = function() {
-		$scope.showAdvance = !$scope.showAdvance;
-	}
+    $scope.$watch('ajaxReq.key', function () {
+        if ($scope.wallet) {
+            $scope.setSendMode('ether');
+            $scope.wallet.setBalance();
+            $scope.wallet.setTokens();
+        }
+    });
+    $scope.$watch('tokenTx', function () {
+        if ($scope.wallet && $scope.wallet.tokenObjs !== undefined && $scope.wallet.tokenObjs[$scope.tokenTx.id] !== undefined && $scope.Validator.isValidAddress($scope.tokenTx.to) && $scope.Validator.isPositiveNumber($scope.tokenTx.value)) {
+            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
+            $scope.estimateTimer = setTimeout(function () {
+                $scope.estimateGasLimit();
+            }, 500);
+        }
+    }, true);
+    $scope.$watch('tx', function (newValue, oldValue) {
+        $scope.showRaw = false;
+        if (oldValue.sendMode != newValue.sendMode && newValue.sendMode == 'ether') {
+            $scope.tx.data = "";
+            $scope.tx.gasLimit = globalFuncs.defaultTxGasLimit;
+        }
+        if (newValue.gasLimit == oldValue.gasLimit && $scope.wallet && $scope.Validator.isValidAddress($scope.tx.to) && $scope.Validator.isPositiveNumber($scope.tx.value) && $scope.Validator.isValidHex($scope.tx.data) && $scope.tx.sendMode != 'token') {
+            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
+            $scope.estimateTimer = setTimeout(function () {
+                $scope.estimateGasLimit();
+            }, 500);
+        }
+        if ($scope.tx.sendMode == 'token') {
+            $scope.tokenTx.to = $scope.tx.to;
+            $scope.tokenTx.value = $scope.tx.value;
+        }
+    }, true);
+    $scope.estimateGasLimit = function () {
+        if (globalFuncs.lightMode) {
+            $scope.tx.gasLimit = 100000;
+            return;
+        }
+        var estObj = {
+            to: $scope.tx.to,
+            from: $scope.wallet.getAddressString(),
+            value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit)))
+        };
+        if ($scope.tx.data != "") estObj.data = ethFuncs.sanitizeHex($scope.tx.data);
+        if ($scope.tx.sendMode == 'token') {
+            estObj.to = $scope.wallet.tokenObjs[$scope.tokenTx.id].getContractAddress();
+            estObj.data = $scope.wallet.tokenObjs[$scope.tokenTx.id].getData($scope.tokenTx.to, $scope.tokenTx.value).data;
+            estObj.value = '0x00';
+        }
+        ethFuncs.estimateGas(estObj, function (data) {
+            uiFuncs.notifier.close();
+            if (!data.error) {
+                if (data.data == '-1') $scope.notifier.danger(globalFuncs.errorMsgs[21]);
+                $scope.tx.gasLimit = data.data;
+            } else $scope.notifier.danger(data.msg);
+        });
+    };
 	$scope.onDonateClick = function() {
 		$scope.tx.to = globalFuncs.donateAddress;
 		$scope.tx.value = "0.5";
@@ -1790,6 +1860,8 @@ ethUtil.WAValidator = require('wallet-address-validator');
 window.ethUtil = ethUtil;
 var Wallet = require('./myetherwallet');
 window.Wallet = Wallet;
+var Token = require('./tokenlib');
+window.Token = Token;
 var globalFuncs = require('./globalFuncs');
 window.globalFuncs = globalFuncs;
 var uiFuncs = require('./uiFuncs');
@@ -1861,7 +1933,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"wallet-address-validator":571}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -1879,6 +1951,14 @@ Wallet.generate = function(icapDirect) {
 		return new Wallet(ethUtil.crypto.randomBytes(32))
 	}
 }
+Wallet.prototype.setTokens = function () {
+    this.tokenObjs = [];
+    var tokens = Token.popTokens;
+    for (var i = 0; i < tokens.length; i++) {
+        this.tokenObjs.push(new Token(tokens[i].address, this.getAddressString(), tokens[i].symbol, tokens[i].decimal, tokens[i].type));
+        this.tokenObjs[this.tokenObjs.length - 1].setBalance();
+    }
+};
 Wallet.prototype.setBalance = function () {
     var parentObj = this;
     this.balance = this.usdBalance = this.eurBalance = this.btcBalance = this.chfBalance = this.repBalance = 'loading';
@@ -70931,6 +71011,103 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })(undefined);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],562:[function(require,module,exports){
+'use strict';
+
+var Token = function Token(contractAddress, userAddress, symbol, decimal, type) {
+    this.contractAddress = contractAddress;
+    this.userAddress = userAddress;
+    this.symbol = symbol;;
+    this.decimal = decimal;
+    this.type = type;
+    this.balance = "loading";
+};
+Token.balanceHex = "0x70a08231";
+Token.transferHex = "0xa9059cbb";
+Token.popTokens = require("./tokens/etcTokens.json");
+Token.prototype.getContractAddress = function () {
+    return this.contractAddress;
+};
+Token.prototype.getUserAddress = function () {
+    return this.userAddress;
+};
+Token.prototype.setUserAddress = function (address) {
+    this.userAddress = address;
+};
+Token.prototype.getSymbol = function () {
+    return this.symbol;
+};
+Token.prototype.getDecimal = function () {
+    return this.decimal;
+};
+Token.prototype.getBalance = function () {
+    return this.balance;
+};
+Token.prototype.getBalanceBN = function () {
+    return this.balanceBN;
+};
+Token.prototype.setBalance = function () {
+    var balanceCall = ethFuncs.getDataObj(this.contractAddress, Token.balanceHex, [ethFuncs.getNakedAddress(this.userAddress)]);
+    var parentObj = this;
+    ajaxReq.getEthCall(balanceCall, function (data) {
+        try {
+            if (!data.error) {
+                parentObj.balance = new BigNumber(data.data).div(new BigNumber(10).pow(parentObj.getDecimal())).toString();
+                parentObj.balanceBN = new BigNumber(data.data).toString();
+            }
+        } catch (e) {
+            parentObj.balance = globalFuncs.errorMsgs[20];
+            parentObj.balanceBN = '0';
+        }
+    });
+};
+Token.getTokenByAddress = function (toAdd) {
+    toAdd = ethFuncs.sanitizeHex(toAdd);
+    for (var i = 0; i < Token.popTokens.length; i++) {
+        if (toAdd.toLowerCase() == Token.popTokens[i].address.toLowerCase()) return Token.popTokens[i];
+    }
+    return {
+        "address": toAdd,
+        "symbol": "Unknown",
+        "decimal": 0,
+        "type": "default"
+    };
+};
+Token.prototype.getData = function (toAdd, value) {
+    try {
+        if (!ethFuncs.validateEtherAddress(toAdd)) throw globalFuncs.errorMsgs[5];else if (!globalFuncs.isNumeric(value) || parseFloat(value) < 0) throw globalFuncs.errorMsgs[7];
+        var value = ethFuncs.padLeft(new BigNumber(value).times(new BigNumber(10).pow(this.getDecimal())).toString(16), 64);
+        var toAdd = ethFuncs.padLeft(ethFuncs.getNakedAddress(toAdd), 64);
+        var data = Token.transferHex + toAdd + value;
+        return {
+            isError: false,
+            data: data
+        };
+    } catch (e) {
+        return {
+            isError: true,
+            error: e
+        };
+    }
+};
+module.exports = Token;
+
+},{"./tokens/etcTokens.json":563}],563:[function(require,module,exports){
+module.exports=[
+  {
+    "address":"0x085fb4f24031eaedbc2b611aa528f22343eb52db",
+    "symbol":"BEC",
+    "decimal":8,
+    "type":"default"
+  },
+  {
+    "address":"0xbb9bc244d798123fde783fcc1c72d3bb8c189413",
+    "symbol":"DAO",
+    "decimal":16,
+    "type":"default"
+  }
+ ]
+
 },{}],571:[function(require,module,exports){
 'use strict';
 
