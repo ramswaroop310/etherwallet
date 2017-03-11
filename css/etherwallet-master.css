@@ -3941,6 +3941,20 @@ footer a:focus {
 #paneHelp h3 {
   margin-top: 2em;
 }
+.account-info {
+    padding-left: 1em;
+    margin: 0;
+}
+table.account-info {
+    font-weight: 200;
+    border-bottom: 0;
+    min-width: 200px;
+}
+.account-info li {
+    margin-bottom: 0;
+    list-style-type: none;
+    word-break: break-all;
+}
 .account-help-icon {
   position: relative;
   display: inline-block;
