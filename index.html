@@ -325,20 +325,7 @@
           <div>
             <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
             <br />
-            <p> Account Address: <br /> <strong style="margin-left: 1em" class="mono">{{wallet.getChecksumAddressString()}}</strong></p>
-
-            <p> Account Balance:
-              <br />
-              <strong style="margin-left: 1em"> {{etherBalance}} ETC</strong>
-            </p>
-            <p> Equivalent Values:
-              <br />
-              <strong style="margin-left: 1em"> {{usdBalance}} USD </strong>
-              <br />
-              <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong>
-              <br />
-              <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
-            </p>
+            <wallet-balance-drtv></wallet-balance-drtv>
             <p> See Transaction History: <br /> <a href="http://etherhub.io/addr/{{wallet.getAddressString()}}" target="_blank">http://etherhub.io/addr/ {{wallet.getAddressString()}}</a></p>
           </div>
           <br />
@@ -623,20 +610,7 @@
       <div>
         <div id="addressIdenticon" title="Address Indenticon" blockie-address="{{wallet.getAddressString()}}" watch-var="wallet"></div>
         <br />
-        <p> Account Address: <br /> <strong style="margin-left: 1em" class="mono">{{wallet.getChecksumAddressString()}}</strong></p>
-
-        <p> Account Balance:
-          <br />
-          <strong style="margin-left: 1em"> {{etherBalance}} ETC</strong>
-        </p>
-        <p> Equivalent Values:
-          <br />
-          <strong style="margin-left: 1em"> {{usdBalance}} USD </strong>
-          <br />
-          <strong style="margin-left: 1em"> {{eurBalance}} EUR </strong>
-          <br />
-          <strong style="margin-left: 1em"> {{btcBalance}} BTC </strong>
-        </p>
+        <wallet-balance-drtv></wallet-balance-drtv>
         <p> See Transaction History: <br /> <a href="http://etherhub.io/addr/{{wallet.getAddressString()}}" target="_blank">http://etherhub.io/addr/ {{wallet.getAddressString()}}</a></p>
       </div>
     </div>

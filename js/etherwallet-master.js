@@ -1885,10 +1885,10 @@ var bulkGenCtrl = require('./controllers/bulkGenCtrl');
 var decryptWalletCtrl = require('./controllers/decryptWalletCtrl');
 var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
-//var digixCtrl = require('./controllers/digixCtrl');
 var contractsCtrl = require('./controllers/contractsCtrl');
 var replayProtectionCtrl = require('./controllers/replayProtectionCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
+var walletBalanceCtrl = require('./controllers/walletBalanceCtrl');
 var globalService = require('./services/globalService');
 var walletService = require('./services/walletService');
 var blockiesDrtv = require('./directives/blockiesDrtv');
@@ -1896,6 +1896,7 @@ var QRCodeDrtv = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv = require('./directives/walletDecryptDrtv');
 var cxWalletDecryptDrtv = require('./directives/cxWalletDecryptDrtv');
 var fileReaderDrtv = require('./directives/fileReaderDrtv');
+var balanceDrtv = require('./directives/balanceDrtv');
 if(IS_CX){
     var addWalletCtrl = require('./controllers/CX/addWalletCtrl');
     var cxDecryptWalletCtrl = require('./controllers/CX/cxDecryptWalletCtrl');
@@ -1912,6 +1913,7 @@ app.factory('walletService', walletService);
 app.directive('blockieAddress', blockiesDrtv);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
+app.directive('walletBalanceDrtv', balanceDrtv);
 app.directive('walletDecryptDrtv', walletDecryptDrtv);
 app.directive('cxWalletDecryptDrtv', cxWalletDecryptDrtv);
 app.controller('tabsCtrl', ['$scope', 'globalService', tabsCtrl]);
@@ -1921,10 +1923,10 @@ app.controller('bulkGenCtrl', ['$scope', bulkGenCtrl]);
 app.controller('decryptWalletCtrl', ['$scope','$sce','walletService', decryptWalletCtrl]);
 app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
-//app.controller('digixCtrl', ['$scope','$sce','walletService', digixCtrl]);
 app.controller('contractsCtrl', ['$scope','$sce','walletService', contractsCtrl]);
 app.controller('replayProtectionCtrl', ['$scope','$sce','walletService', replayProtectionCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
+app.controller('walletBalanceCtrl', ['$scope', '$sce', walletBalanceCtrl]);
 if(IS_CX){
     app.controller('addWalletCtrl', ['$scope','$sce', addWalletCtrl]);
     app.controller('myWalletsCtrl', ['$scope','$sce', myWalletsCtrl]);
@@ -1933,7 +1935,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -68921,7 +68923,95 @@ exports.createContext = Script.createContext = function (context) {
     return copy;
 };
 
-},{"indexof":426}],542:[function(require,module,exports){
+},{"indexof":426}],522:[function(require,module,exports){
+'use strict';
+
+var walletBalanceCtrl = function walletBalanceCtrl($scope, $sce) {
+	$scope.ajaxReq = ajaxReq;
+	$scope.localToken = {
+		contractAdd: "",
+		symbol: "",
+		decimals: "",
+		type: "custom"
+	};
+	$scope.customTokenField = false;
+	$scope.saveTokenToLocal = function () {
+		globalFuncs.saveTokenToLocal($scope.localToken, function (data) {
+			if (!data.error) {
+				$scope.localToken = {
+					contractAdd: "",
+					symbol: "",
+					decimals: "",
+					type: "custom"
+				};
+				$scope.wallet.setTokens();
+				$scope.validateLocalToken = $sce.trustAsHtml('');
+				$scope.customTokenField = false;
+			} else {
+				$scope.notifier.danger(data.msg);
+			}
+		});
+	};
+	$scope.removeTokenFromLocal = function (tokenSymbol) {
+		globalFuncs.removeTokenFromLocal(tokenSymbol, $scope.wallet.tokenObjs);
+	};
+};
+module.exports = walletBalanceCtrl;
+
+},{}],526:[function(require,module,exports){
+'use strict';
+
+var balanceDrtv = function balanceDrtv() {
+  return {
+    restrict: "E",
+    template: '<aside ng-controller=\'walletBalanceCtrl\'>\n\
+                      <h5 translate=\"sidebar_AccountAddr\">Account Address:</h5>\n\
+                      <ul class=\"account-info\">\n\
+                        <div class=\"addressIdenticon med float\" title=\"Address Indenticon\" blockie-address=\"{{wallet.getAddressString()}}\" watch-var=\"wallet\"></div>\n\
+                        <span class=\"mono wrap\">{{wallet.getChecksumAddressString()}}</span>\n\
+                      </ul>\n\
+                      <hr />\n\
+                      <h5 translate=\"sidebar_AccountBal\">Account Balance:</h5>\n\
+                      <ul class=\"account-info\">\n\
+                        <li><span class=\"mono wrap\">{{wallet.balance}}</span> {{ajaxReq.type}}</li>\n\
+                      </ul>\n\
+                      <section class=\"token-balances\">\n\
+                        <h5 translate=\"sidebar_TokenBal\">Token Balances:</h5>\n\
+                        <table class=\"account-info\">\n\
+                          <tr ng-repeat=\"token in wallet.tokenObjs track by $index\" ng-show=\"token.balance!=0 \&\& token.balance!=\'loading\' || token.type!==\'default\' || tokenVisibility==\'shown\'\">\n\
+                            <td class=\"mono wrap\"><img src=\"images/icon-remove.svg\" class=\"token-remove\" title=\"Remove Token\" ng-click=\"removeTokenFromLocal(token.symbol)\" ng-show=\"token.type!==\'default\'\" />{{token.getBalance()}}</td>\n\
+                            <td>{{token.getSymbol()}} </td>\n\
+                          </tr>\n\
+                        </table>\n\
+                        <a class=\"btn btn-default btn-sm\" ng-click=\"tokenVisibility=\'shown\'\" ng-show=\"tokenVisibility==\'hidden\'\">Show All Tokens</a>\n\
+                        <a class=\"btn btn-default btn-sm\" ng-click=\"tokenVisibility=\'hidden\'\" ng-show=\"tokenVisibility==\'shown\'\">Hide Tokens</a>\n\
+                        <a class=\"btn btn-default btn-sm\" ng-click=\"customTokenField=!customTokenField\"><span translate=\"SEND_custom\"translate=\"SEND_custom\">Add Custom Token<\/span><\/a>\n \
+                        <div class=\"custom-token-fields\" ng-show=\"customTokenField\">\n\
+                          <label translate=\"TOKEN_Addr\">Address:</label>\n\
+                          <input class=\"form-control input-sm\" type=\"text\" ng-model=\"localToken.contractAdd\" ng-class=\"Validator.isValidAddress(localToken.contractAdd) ? \'is-valid\' : \'is-invalid\'\" />\n\
+                          <label translate=\"TOKEN_Symbol\">Token Symbol:</label>\n\
+                          <input class=\"form-control input-sm\" type=\"text\" ng-model=\"localToken.symbol\" ng-class=\"localToken.symbol!=\'\' ? \'is-valid\' : \'is-invalid\'\" />\n\
+                          <label translate=\"TOKEN_Dec\"> Decimals:</label>\n\
+                          <input class=\"form-control input-sm\" type=\"text\" ng-model=\"localToken.decimals\" ng-class=\"Validator.isPositiveNumber(localToken.decimals) ? \'is-valid\' : \'is-invalid\'\" />\n\
+                          <div class=\"btn btn-primary btn-sm\" ng-click=\"saveTokenToLocal()\" translate=\"x_Save\">Save</div>\n\
+                          <div ng-bind-html=\"validateLocalToken\"></div>\n\
+                        </div>\n\
+                      </section>\n\
+                      <hr />\n\
+                      <section ng-show=\"ajaxReq.type==\'ETC\'\">\n\
+                        <h5 translate=\"sidebar_Equiv\">Equivalent Values:</h5>\n\
+                        <ul class=\"account-info\">\n\
+                          <li><span class=\"mono wrap\">{{wallet.btcBalance}}</span> BTC</li>\n\
+                          <li><span class=\"mono wrap\">{{wallet.eurBalance}}</span> EUR</li>\n\
+                          <li><span class=\"mono wrap\">{{wallet.usdBalance}}</span> USD</li>\n\
+                        </ul>\n\
+                      </section>\n\
+                    </aside>'
+  };
+};
+module.exports = balanceDrtv;
+
+},{}],542:[function(require,module,exports){
 'use strict';
 
 var f = require('./formatters');
