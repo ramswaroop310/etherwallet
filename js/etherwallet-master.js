@@ -1053,7 +1053,7 @@ var contractsCtrl = function contractsCtrl($scope, $sce, walletService) {
                 if (data.error) throw data.msg;
                 data = data.data;
                 $scope.tx.to = $scope.tx.to == '' ? '0xCONTRACT' : $scope.tx.to;
-                $scope.tx.contractAddr = $scope.tx.to == '0xCONTRACT' ? ethFuncs.getDeteministicContractAddress($scope.wallet.getAddressString(), data.nonce) : '';
+                $scope.tx.contractAddr = $scope.tx.to == '0xCONTRACT' ? ethFuncs.getDeterministicContractAddress($scope.wallet.getAddressString(), data.nonce) : '';
                 var txData = uiFuncs.getTxData($scope);
                 uiFuncs.generateTx(txData, function (rawTx) {
                     if (!rawTx.isError) {
@@ -1623,6 +1623,10 @@ ethFuncs.contractOutToArray = function(hex) {
 }
 ethFuncs.getNakedAddress = function(address) {
 	return address.toLowerCase().replace('0x', '');
+}
+ethFuncs.getDeterministicContractAddress = function(address, nonce) {
+    address = address.substring(0, 2) == '0x' ? address : '0x' + address;
+    return '0x' + ethUtil.sha3(ethUtil.rlp.encode([address, nonce])).slice(12).toString('hex');
 }
 ethFuncs.padLeft = function(n, width, z) {
 	z = z || '0';
