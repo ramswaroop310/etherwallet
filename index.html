@@ -897,8 +897,6 @@ contract ReplaySafeSend {
 
                   <p>You are about to <strong>execute a function on contract</strong> on the <strong>{{ajaxReq.type}}</strong> chain.</p>
 
-                  <p> The <strong>{{ajaxReq.type}}</strong> node you are sending through is provided by <strong>{{ajaxReq.service}}</strong>.</p>
-
                   <label translate="SEND_amount"> Amount <em>In most cases you should leave this as 0.</em> </label>
                   <input class="form-control" type="text" placeholder="0" ng-model="tx.value" ng-class="Validator.isPositiveNumber(tx.value) ? 'is-valid' : 'is-invalid'"/>
 

@@ -1078,7 +1078,7 @@ var contractsCtrl = function contractsCtrl($scope, $sce, walletService) {
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
                 var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
-                var contractAddr = " & Contract Address <a href='http://etherhub.io/addr/" + $scope.contract.address + "' target='_blank'>" + $scope.contract.address + "</a>";
+                var contractAddr = " & Contract Address <a href='http://etherhub.io/addr/" + $scope.tx.contractAddr + "' target='_blank'>" + $scope.tx.contractAddr + "</a>";
                 $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
             } else {
                 $scope.notifier.danger(resp.error);
