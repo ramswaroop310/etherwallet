@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="mewApp">
+<html lang="en" ng-app="cewApp">
 <head>
   <meta charset="utf-8">
   <title>ClassicEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
@@ -58,7 +58,7 @@
 
 <section class="container" ng-controller='tabsCtrl'>
   <ul class="nav nav-tabs">
-    <li ng-repeat="tab in tabNames track by $index" ng-class="{active: $index==activeTab}" ng-show="{{tab.mew}}" ng-click="tabClick($index)"> <a>{{tab.name}} </a></li>
+    <li ng-repeat="tab in tabNames track by $index" ng-class="{active: $index==activeTab}" ng-show="{{tab.cew}}" ng-click="tabClick($index)"> <a>{{tab.name}} </a></li>
   </ul>
 </section>
 <br />
@@ -822,7 +822,7 @@
   <ol>
        <li> Go to the "Generate Wallet" tab.</li>
 
-    <li> Create a strong password. Save this somewhere safe. <em><small>The password encrypts the private key for this wallet. You will need this password to send transactions.</small></em></li>
+    <li> Create a strong password. Save this socewhere safe. <em><small>The password encrypts the private key for this wallet. You will need this password to send transactions.</small></em></li>
     <li> Type or copy the password from where you have saved it and paste it into the "Enter a password" field. </li>
     <li> Click "GENERATE". </li>
     <li> Your wallet has now been generated. But, you are NOT done yet! Back up your wallet now! See #2a. </li>

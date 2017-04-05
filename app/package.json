@@ -8,6 +8,6 @@
         "open": "0.0.5"
     },
     "bin": {
-        "mew": "bin/startCEW.js"
+        "cew": "bin/startCEW.js"
     }
 }

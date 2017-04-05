@@ -10,84 +10,84 @@ var tabs = {
     id: 0,
     name: "NAV_GenerateWallet",
     url: "generate-wallet",
-    mew: true,
+    cew: true,
     cx: false
   },
   myWallet: {
     id: 1,
     name: "NAV_MyWallets",
     url: "my-wallet",
-    mew: false,
+    cew: false,
     cx: true
   },
   addWallet: {
     id: 2,
     name: "NAV_AddWallet",
     url: "add-wallet",
-    mew: false,
+    cew: false,
     cx: true
   },
   sendTransaction: {
     id: 3,
     name: "NAV_SendEther",
     url: "send-transaction",
-    mew: true,
+    cew: true,
     cx: true
   },
   swap: {
     id: 4,
     name: "NAV_Swap",
     url: "swap",
-    mew: true,
+    cew: true,
     cx: true
   },
   offlineTransaction: {
     id: 5,
     name: "NAV_Offline",
     url:"offline-transaction",
-    mew: true,
+    cew: true,
     cx: false
   },
   contracts: {
     id: 6,
     name: "NAV_Contracts",
     url: "contracts",
-    mew: true,
+    cew: true,
     cx: true
   },
   /*ens: {
     id:7,
     name: "NAV_ENS",
     url: "ens",
-    mew: true,
+    cew: true,
     cx: true
   },*/
   viewWalletInfo: {
     id: 7,
     name: "NAV_ViewWallet",
     url: "view-wallet-info",
-    mew: true,
+    cew: true,
     cx: false
   },
   help: {
     id: 8,
     name: "NAV_Help",
     url: "help",
-    mew: true,
+    cew: true,
     cx: true
   },
   signMsg: {
     id: 9,
     name: "NAV_SignMsg",
     url: "sign-message",
-    mew: false,
+    cew: false,
     cx: false
   },
   bulkGenerate: {
     id: 10,
     name: "NAV_BulkGenerate",
     url: "bulk-generate",
-    mew: false,
+    cew: false,
     cx: false
   }
 };
