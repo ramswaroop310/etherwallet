@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="mewApp">
+<html lang="en" ng-app="cewApp">
 <head>
   <meta charset="utf-8">
-  <title>MyEtherWallet: Open Source JavaScript Client-Side Ether Wallet</title>
-  <link rel="canonical" href="https://www.myetherwallet.com" />
-  <meta name="description" content="Ether Wallet: Open Source JavaScript Client-Side Ether Wallet">
+  <title>ClassicEtherWallet: Client-Side Classic Ether Wallet</title>
+  <link rel="canonical" href="https://classicetherwallet.com/" />
+  <meta name="description" content="Classic Ether Wallet: Client-Side Classic Ether Wallet">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/etherwallet-master.min.css">
+  <link rel="stylesheet" href="css/etherwallet-master.css">
   <script type="text/javascript" src="js/etherwallet-static.min.js"></script>
   <script type="text/javascript" src="js/etherwallet-master.js"></script>
   <link rel="apple-touch-icon" sizes="60x60" href="images/fav/apple-touch-icon-60x60.png">
@@ -30,39 +30,60 @@
 
 <body>
 
-@@if (site === 'mew' ) {
-  <a href="https://www.myetherwallet.com" class="announcement annoucement-warning" target="_blank">
-    <div class="container">
-      MyEtherWallet is only served at www.myetherwallet.com and kvhnuke.github.io/etherwallet/. Beware of the phishing scams!
+<header aria-label="header" ng-controller='tabsCtrl' >
+  @@if (site === 'cx' ) {
+    <div class="small announcement annoucement-warning" target="_blank">
+      <div class="container" translate="CX_Warning_1">Make sure you have <strong>external backups</strong> of any wallets you store here. Many things could happen that would cause you to lose the data in this Chrome Extension, including uninstalling the extension. This extension is a way to easily access your wallets, <strong>not</strong> a way to back them up.</div>
     </div>
-  </a>
-  <a href="https://www.reddit.com/r/ethereum/comments/47nkoi/psa_check_your_ethaddressorg_wallets_and_any/d0eo45o" class="announcement annoucement-warning" target="_blank">
-    <div class="container">
-      If you created a wallet -or- downloaded the repo before <strong>Dec. 31st, 2015</strong>, please check your wallets & download a new version of the repo. Click for details.
-    </div>
-  </a>
-  <header class="container-fluid bg-gradient text-white">
+  }
+  <section class="bg-gradient header-branding">
     <section class="container">
-      <a href="https://www.myetherwallet.com/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="My Ether Wallet" /></a>
-      <p>Open Source JavaScript Client-Side Ether Wallet &middot; v2.8</p>
-    </section>
-  </header>
-}
 
-@@if (site === 'cx' ) {
-  <a href="https://www.reddit.com/r/ethereum/comments/47nkoi/psa_check_your_ethaddressorg_wallets_and_any/d0eo45o" class="announcement annoucement-warning" target="_blank">
-    <div class="container">
-      Make sure you have <strong>external backups</strong> of any wallets you store here. Many things could happen that would cause you to lose the data in this Chrome Extension, including uninstalling and reinstalling the extension. This extension is a way to easily access your wallets, <strong>not</strong> a way to back them up.
+      @@if (site === 'cew' ) { <a class="brand" href="https://www.classicetherwallet.com/" aria-label="Go to homepage"> <img src="images/logo-etherwallet.svg"   height="64px" width="245px" alt="ClassicEtherWallet" /></a> }
+      @@if (site === 'cx'  ) { <a class="brand" href="/cx-wallet.html" aria-label="Go to homepage">                <img src="images/logo-etherwalletcx.svg" height="64px" width="245px" alt="ClassicEtherWallet" /></a> }
+
+      <div class="tagline"><span style="max-width: 395px">Open-Source & Client-Side Ether Wallet</span>
+
+        &middot; v3.0.0 &nbsp;&nbsp;
+
+        <span class="dropdown" ng-cloak>
+          <a tabindex="0" aria-haspopup="true" aria-label="change node. current node {{curNode.name}} node by {{curNode.service}}" class="dropdown-toggle" ng-click="dropdownNode = !dropdownNode"> {{curNode.name}} <small>({{curNode.service}})</small><i class="caret"></i></a>
+          <ul class="dropdown-menu" ng-show="dropdownNode">
+            <li ng-repeat="(key, value) in nodeList"><a ng-class="{true:'active'}[curNode == key]" ng-click="changeNode(key)">
+              {{value.name}}
+              <small> ({{value.service}}) </small>
+              <img ng-show="value.service=='Custom'" img src="images/icon-remove.svg" class="node-remove" title="Remove Custom Node" ng-click="removeNodeFromLocal(value.name)"/>
+            </a></li>
+            <li><a ng-click="customNodeModal.open(); dropdownNode = !dropdownNode;"> Add Custom Node </a></li>
+          </ul>
+        </span>
+
+      </div>
+    </section>
+  </section>
+
+  <!-- TODO: turn this into notification -->
+  <div class="small announcement annoucement-warning" ng-show="!nodeIsConnected" ng-cloak>
+    <div class="container">Unable to connect to node. See the help page for troubleshooting suggestions.</div>
+  </div>
+  <!-- / TODO: turn this into notification -->
+
+  <nav role="navigation" aria-label="main navigation" class="container nav-container overflowing" >
+    <a aria-hidden="true" ng-show="showLeftArrow" class="nav-arrow-left" ng-click="scrollLeft(100);" ng-mouseover="scrollHoverIn(true,2);" ng-mouseleave="scrollHoverOut()">&#171;</a>
+    <div class="nav-scroll">
+      <ul class="nav-inner">
+        @@if (site === 'cew' ) {
+        <li ng-repeat="tab in tabNames track by $index" class="nav-item {{tab.name}}" ng-class="{active: $index==gService.currentTab}" ng-show="{{tab.cew}}" ng-click="tabClick($index)"> <a tabindex="0" aria-label="nav item: {{tab.name | translate}}" translate="{{tab.name}}"></a></li>
+        }
+        @@if (site === 'cx' ) {
+        <li ng-repeat="tab in tabNames track by $index" class="nav-item {{tab.name}}" ng-class="{active: $index==gService.currentTab}" ng-show="{{tab.cx}}" ng-click="tabClick($index)"> <a tabindex="0" aria-label="nav item: {{tab.name | translate}}" translate="{{tab.name}}"></a></li>
+        }
+      </ul>
     </div>
-  </a>
-  <header class="container-fluid bg-gradient text-white">
-    <section class="container">
-      <a href="/cx-wallet.html"><img src="images/etherwalletcx-logo.png" height="70px" width="auto" alt="My Ether Wallet" /></a>
-      <p>Open Source JavaScript Client-Side Ether Wallet Chrome Extension &middot; v2.8</p>
-    </section>
-  </header>
-}
+    <a aria-hidden="true" ng-show="showRightArrow" class="nav-arrow-right" ng-click="scrollRight(100);" ng-mouseover="scrollHoverIn(false,2);" ng-mouseleave="scrollHoverOut()">&#187;</a>
+  </nav>
 
+  @@if (site === 'cew' ) { @@include( './header-node-modal.tpl', { "site": "cew" } ) }
+  @@if (site === 'cx'  ) { @@include( './header-node-modal.tpl', { "site": "cx"  } ) }
 
-
-
+</header>

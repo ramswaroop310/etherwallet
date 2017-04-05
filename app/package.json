@@ -1,0 +1,13 @@
+{
+    "name": "ClassicEtherWallet",
+    "version": "3.0.0",
+    "description": "An NPM dist of ClassicEtherWallet. For easier downloading & updating via CLI.",
+    "author": "ClassicEtherWallet",
+    "license": "ISC",
+    "devDependencies": {
+        "open": "0.0.5"
+    },
+    "bin": {
+        "mew": "bin/startCEW.js"
+    }
+}

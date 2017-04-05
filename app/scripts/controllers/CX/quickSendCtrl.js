@@ -46,7 +46,14 @@ var quickSendCtrl = function($scope, $sce) {
 		$scope.wallet.getAddressString = function() {
 			return $scope.allWallets[$scope.selectedWallet].addr;
 		}
-		uiFuncs.transferAllBalance($scope, $sce);
+        uiFuncs.transferAllBalance($scope.wallet.getAddressString(), $scope.tx.gasLimit, function(resp) {
+			if (!resp.isError) {
+				$scope.tx.unit = resp.unit;
+				$scope.tx.value = resp.value;
+			} else {
+				$scope.validateTxStatus = $sce.trustAsHtml(resp.error);
+			}
+		});
 	}
 	$scope.prepTX = function() {
 		try {
@@ -60,9 +67,22 @@ var quickSendCtrl = function($scope, $sce) {
 	$scope.unlockAndSend = function() {
 		try {
 			$scope.decryptWallet();
-            $scope.autoSend = true;
-			uiFuncs.generateTx($scope, $sce);
-            $scope.validateTxStatus = "";
+			var txData = uiFuncs.getTxData($scope);
+			uiFuncs.generateTx(txData, function(rawTx) {
+				if (!rawTx.isError) {
+					uiFuncs.sendTx(rawTx.signedTx, function(resp) {
+						if (!resp.isError) {
+							$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br /><a href='http://etherscan.io/tx/" + resp.data + "' target='_blank'> ETH TX via EtherScan.io </a>"));
+							$scope.setBalance();
+						} else {
+							$scope.sendTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(resp.error));
+						}
+					});
+					$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(''));
+				} else {
+					$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(rawTx.error));
+				}
+			});
 		} catch (e) {
 			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(e));
 		}

@@ -1,4 +1,4 @@
-@@include( '../includes/headerEmbedded.tpl', { "site": "mew" } )
+@@include( '../includes/headerEmbedded.tpl', { "site": "cew" } )
 
   <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
 
@@ -6,13 +6,17 @@
 
     <div class="tab-content" >
 
-      @@include( '../includes/generateWalletEmbedded.tpl', { "site": "mew" } )
+      @@include( '../includes/generateWalletEmbedded.tpl', { "site": "cew" } )
 
     </div>
 
     <!-- /tab panes -->
-
+  <article class="alert popup {{notifier.class}} animated-show-hide" ng-show="notifier.show">
+    <div class="container" ng-bind-html="notifier.message"></div>
+    <i class="icon-close" ng-click="notifier.close()"></i>
+  </article>
+  
   </section>
 
 
-@@include( '../includes/footerEmbedded.tpl', { "site": "mew" } )
+@@include( '../includes/footerEmbedded.tpl', { "site": "cew" } )
