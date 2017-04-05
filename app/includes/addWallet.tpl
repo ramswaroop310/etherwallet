@@ -92,7 +92,7 @@
         </div>
         <div class="form-group">
           <label translate="ADD_Label_5"> Enter the Address: </label>
-          <input class="form-control" type="text" placeholder="0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8" ng-model="addAccount.address" ng-change="watchOnlyChange()" ng-keyup="$event.keyCode == 13 && addWatchOnly()"/>
+          <input class="form-control" type="text" placeholder="0xe9a7e26bf5c05fe3bae272d4c940bd7158611ce9" ng-model="addAccount.address" ng-change="watchOnlyChange()" ng-keyup="$event.keyCode == 13 && addWatchOnly()"/>
         </div>
       </div>
 
