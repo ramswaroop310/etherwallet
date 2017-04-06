@@ -36,20 +36,32 @@
       ClassicEtherWallet is only served at https://classicetherwallet.com/ and https://ethereumproject.github.io/etherwallet/. Beware of the phishing scams!
     </div>
   </a>
-  <header class="container-fluid text-white">
-    <section class="container">
-      <a href="https://ethereumproject.github.io/etherwallet/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Classic Ether Wallet" /></a>
-      <p>Client-Side Classic Ether Wallet &middot; v3.0</p>
+  <header aria-label="header" ng-controller='tabsCtrl'>
+    <section class="bg-gradient header-branding">
+    <section class="container">      
+      <a class="brand" href="https://ethereumproject.github.io/etherwallet/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Classic Ether Wallet" /></a>
+      <div class="tagline"><span style="max-width: 395px">Client-Side Classic Ether Wallet &middot; v3.0</span> &nbsp;&nbsp;
+      <span class="dropdown" ng-cloak>
+          <a tabindex="0" aria-haspopup="true" aria-label="change node. current node {{curNode.name}} node by {{curNode.service}}" class="dropdown-toggle" ng-click="dropdownNode = !dropdownNode"> <small>({{curNode.service}})</small><i class="caret"></i></a>
+          <ul class="dropdown-menu" ng-show="dropdownNode">
+            <li ng-repeat="(key, value) in nodeList"><a ng-class="{true:'active'}[curNode == key]" ng-click="changeNode(key)">
+              {{value.name}}
+              <small> ({{value.service}}) </small>
+            </a></li>
+          </ul>
+        </span>
+      </div>
     </section>
+    </section>
+    <section class="container ng-scope" >
+      <ul class="nav nav-tabs">
+        <li ng-repeat="tab in tabNames track by $index" ng-class="{active: $index==activeTab}" ng-show="{{tab.mew}}" ng-click="tabClick($index)"> <a>{{tab.name}} </a></li>
+      </ul>
+    </section>
+
+
   </header>
 
-
-  <section class="container" ng-controller='tabsCtrl'>
-    <ul class="nav nav-tabs">
-      <li ng-repeat="tab in tabNames track by $index" ng-class="{active: $index==activeTab}" ng-show="{{tab.mew}}" ng-click="tabClick($index)"> <a>{{tab.name}} </a></li>
-    </ul>
-  </section>
-  <br />
 
 <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
 
