@@ -4,7 +4,6 @@ var http;
 var ajaxReq = function() {}
 ajaxReq.http = null;
 ajaxReq.postSerializer = null;
-ajaxReq.SERVERURL = "https://classicetherwallet.com:8081/api";
 ajaxReq.COINMARKETCAPAPI = "https://coinmarketcap-nexuist.rhcloud.com/api/";
 ajaxReq.chainId = 61;
 ajaxReq.type = "ETC";
@@ -14,42 +13,95 @@ ajaxReq.config = {
 		'Content-Type': 'application/x-www-form-urlencoded'
 	}
 };
-ajaxReq.getBalance = function(addr, callback) {
-	this.post({
-		balance: addr
-	}, callback);
+ajaxReq.getCurrentBlock = function(callback) {
+    this.post({
+        "method": "eth_blockNumber"
+    }, callback);
 }
+ajaxReq.getBalance = function(addr, callback) {
+    this.post({
+        "method": "eth_getBalance",
+        "params": [addr, "latest"]
+    }, function(resp) {
+   		var data = resp; 
+   		data.address = addr;
+   		data.balance = resp.data.result;
+		callback({"data": data}) 
+	});	
+}
+
+/** TODO: Make this part compatible with Gastracker and Etherhub **/
 ajaxReq.getTransactionData = function(addr, callback) {
-	this.post({
-		txdata: addr
-	}, callback);
+	var response = { error: false, msg: '', data: { address: addr, balance: '', gasprice: '', nonce: '' } };
+    var parentObj = this;
+    var reqObj = [
+        { "id": 135, "jsonrpc": "2.0", "method": "eth_getBalance", "params": [addr, 'latest'] },
+        { "id": 136, "jsonrpc": "2.0", "method": "eth_gasPrice", "params": [] },
+        { "id": 137, "jsonrpc": "2.0", "method": "eth_getTransactionCount", "params": [addr, 'latest'] }
+    ];
+    this.http.post(this.SERVERURL, JSON.stringify(reqObj), this.config).then(function(resp) {
+        console.log(resp)
+        var data = resp.data;
+        for (var i in data) {
+            if (data[i].error) {
+                callback({ error: true, msg: data[i].error.message, data: '' });
+                return;
+            }
+        }
+        response.data.balance = new BigNumber(data[0].result).toString();
+        response.data.gasprice = data[1].result;
+        response.data.nonce = data[2].result;
+        callback(response);
+    }, function(data) {
+        callback({ error: true, msg: "connection error", data: "" });
+    });
 }
 ajaxReq.sendRawTx = function(rawTx, callback) {
 	this.post({
-		rawtx: rawTx
-	}, callback);
+        "method": "eth_sendRawTransaction",
+        "params": [rawTx]
+    }, function(resp) {
+    	callback({"data": resp.data.result})
+    });
 }
 ajaxReq.getEstimatedGas = function(txobj, callback) {
 	this.post({
-		estimatedGas: txobj
-	}, callback);
+        "method": "eth_estimateGas",
+        "params": [txobj]
+    }, function(resp) { 
+			callback({"data": resp.data.result} ) 
+		});	
 }
 ajaxReq.getEthCall = function(txobj, callback) {
 	this.post({
-		ethCall: txobj
-	}, callback);
+        "method": "eth_call",
+        "params": [txobj, "latest"]
+    }, function(resp) {
+    	callback({"data": resp.data.result})
+    });
+}
+ajaxReq.getTraceCall = function(txobj, callback) {
+    this.post({
+    	"method": "trace_call",
+        "params": [txobj, ["stateDiff", "trace", "vmTrace"]]
+    }, function(resp) {
+    	callback({"data": resp.data.result})
+    });
 }
 ajaxReq.queuePost = function() {
     var data = this.pendingPosts[0].data;
     var callback = this.pendingPosts[0].callback;
-	this.http.post(this.SERVERURL, this.postSerializer(data), this.config).then(function(data) {
-		callback(data.data);
+	this.http.post(this.SERVERURL, data, this.config).then(function(data) {
+		console.log(data)
+		callback(data);
         ajaxReq.pendingPosts.splice(0, 1);
         if(ajaxReq.pendingPosts.length>0)
             ajaxReq.queuePost();
 	});
 }
 ajaxReq.post = function(data, callback) {
+	data.id = 139; //globalFuncs.getRandomBytes(16).toString('hex');
+    data.jsonrpc = "2.0";
 	this.pendingPosts.push({
 		data: data,
 		callback: callback
@@ -682,7 +734,6 @@ var sendOfflineTxCtrl = function($scope, $sce, walletService) {
 			ajaxReq.getTransactionData($scope.tx.from, function(data) {
 				if (data.error) throw data.msg;
 				data = data.data;
-				console.log(data);
 				$scope.gasPriceDec = ethFuncs.hexToDecimal(ethFuncs.sanitizeHex(ethFuncs.addTinyMoreToGas(data.gasprice)));
 				$scope.nonceDec = ethFuncs.hexToDecimal(data.nonce);
 				$scope.showWalletInfo = true;
@@ -949,6 +1000,55 @@ var tabsCtrl = function($scope, globalService, $sce) {
     } else {
         	$scope.activeTab = globalService.currentTab;
     }
+    $scope.nodeList = {
+	    'etherhub': {
+	        'name': 'Etherhub',
+	        'blockExplorerTX': 'http://etherhub.io/tx/[[txHash]]',
+	        'blockExplorerAddr': 'http://etherhub.io/addr/[[address]]',
+	        'service': 'Etherhub.io',
+	        'SERVERURL': "https://mewapi.epool.io"
+	    },
+	    'gastracker': {
+	        'name': 'Gastracker',
+	        'blockExplorerTX': 'https://gastracker.io/tx/[[txHash]]',
+	        'blockExplorerAddr': 'https://gastracker.io/addr/[[address]]',
+	        'service': 'Gastracker.io',
+	        'SERVERURL': 'https://mewapi.epool.io'
+	    },
+	    'etc_epool': {
+	        'name': 'EPool',
+	        'blockExplorerTX': 'https://gastracker.io/tx/[[txHash]]',
+	        'blockExplorerAddr': 'https://gastracker.io/addr/[[address]]',
+	        'service': 'Epool.io',
+	        'SERVERURL': 'https://mewapi.epool.io'
+	    }
+	}
+    $scope.defaultNodeKey = 'etherhub';
+    $scope.nodeIsConnected = true;
+    $scope.changeNode = function(key) {
+        if ($scope.nodeList[key]) {
+            $scope.curNode = $scope.nodeList[key];
+        } else {
+            $scope.curNode = $scope.nodeList[$scope.defaultNodeKey];
+        }
+        $scope.dropdownNode = false;
+        ajaxReq['key'] = key;
+        for (var attrname in $scope.curNode)
+            if (attrname != 'name')
+                ajaxReq[attrname] = $scope.curNode[attrname];
+        localStorage.setItem('curNode', JSON.stringify({
+            key: key
+        }));
+        ajaxReq.getCurrentBlock(function(data) {
+            if (data.error) $scope.nodeIsConnected = false;
+            else $scope.nodeIsConnected = true;
+        });
+    }
+    $scope.changeNode($scope.defaultNodeKey);
+    $scope.checkNodeUrl = function(nodeUrl) {
+        return $scope.Validator.isValidURL(nodeUrl);
+    }
+
 	$scope.tabClick = function(id) {
 		$scope.activeTab = globalService.currentTab = id;
         for (var key in $scope.tabNames) {
@@ -1824,6 +1924,9 @@ globalFuncs.stripTags = function(str) {
 		str = str.replace(SCRIPT_REGEX, "");
 	}
 	return str;
+}
+globalFuncs.getRandomBytes = function(num) {
+    return ethUtil.crypto.randomBytes(num);
 }
 globalFuncs.checkAndRedirectHTTPS = function() {
 	var host = "classicetherwallet.com";
