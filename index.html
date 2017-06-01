@@ -1464,20 +1464,22 @@ contract ReplaySafeSend {
       <article class="row" ng-show="visibility=='fundView'">
         <div class="form-group col-xs-10 clearfix">
           <h4> Start your Crowdsale! </h4>
-          <div ng-show="!activeToken">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.</div>
+          <div ng-show="!activeToken && !wd">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.<br>
+          If you already have a token, unlock your wallet to start the ICO.
+          </div>
+          <div ng-show="wd && !activeToken">
+            It doesn't look like you have created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+          </div>
+          <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
+            <h4> Token Info: </h4>
+            <div>
+             {{activeToken}}
+            </div>
+          </div>
         </div>
 
         <section class="col-xs-12 clearfix" ng-show="wd">
           <!-- Token Info -->
-          <div class="form-group col-xs-10 clearfix">
-            <h4> Token Info: </h4>
-            <div ng-show="!activeToken">
-              It doesn't look like you have not created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
-            </div>
-            <div ng-show="activeToken">
-             {{activeToken}}
-            </div>
-          </div>
           <div class="form-group col-xs-6">
             <h4> Price per Token (in ether): </h4>
             <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
