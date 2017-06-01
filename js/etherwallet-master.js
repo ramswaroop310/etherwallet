@@ -1286,15 +1286,13 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     $scope.showRaw = false;
     $scope.$watch(function () {
         if (walletService.wallet == null) return null;
+        $scope.readFromToken(walletService.wallet.getAddressString());
         return walletService.wallet.getAddressString();
     }, function () {
         if (walletService.wallet == null) return;
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
-    }, function () {
-        if (($scope.activeToken !== null) || !($scope.wd)) return;
-        $scope.readFromToken(walletService.wallet.getAddressString())
     });
     $scope.readFromToken = function () {
         var addr = walletService.wallet.getAddressString();
@@ -1327,6 +1325,7 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             nonce: null,
             gasPrice: null
         };
+        if (walletService.wallet) $scope.readFromToken(walletService.wallet.getAddressString());
     });
     $scope.$watch('tx', function (newValue, oldValue) {
         $scope.showRaw = false;
