@@ -1464,7 +1464,7 @@ contract ReplaySafeSend {
       <article class="row" ng-show="visibility=='fundView'">
         <div class="form-group col-xs-10 clearfix">
           <h4> Start your Crowdsale! </h4>
-          Did you already create a token? If not, <span ng-click="setVisibility('launchView')">do that first</span>.
+          <div ng-show="!activeToken">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.</div>
         </div>
 
         <section class="col-xs-12 clearfix" ng-show="wd">
@@ -1472,7 +1472,7 @@ contract ReplaySafeSend {
           <div class="form-group col-xs-10 clearfix">
             <h4> Token Info: </h4>
             <div ng-show="!activeToken">
-              It doesn't look like you have created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+              It doesn't look like you have not created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
             </div>
             <div ng-show="activeToken">
              {{activeToken}}
@@ -1486,17 +1486,15 @@ contract ReplaySafeSend {
             <h4> Funding Goal (sale will end when goal is reached): </h4>
             <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
           </div>
+          <div class="form-group col-xs-10 clearfix">
+            <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
+          </div>
         </section>
 
 
         <!-- Button -->
         <section class="col-xs-12 clearfix" ng-show="wd">
           <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
-          <!-- Warning-->
-          <div class="alert alert-danger">
-              <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. Now go get your new Tesla you crazy kids!
-          </div>
-          <!-- end -->
         </section>
 
         <section class="col-xs-12">
@@ -1509,7 +1507,11 @@ contract ReplaySafeSend {
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                   <p>You are about to <strong>launch an ICO</strong> on the Ethereum Classic chain.</p>
-
+                  <!-- Warning-->
+                  <div class="alert alert-danger">
+                      <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. 
+                  </div>
+                  <!-- end -->
                   <h4> Are you sure you want to do this? </h4>
                 </div>
 
