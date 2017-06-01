@@ -3,17 +3,17 @@ pragma solidity ^0.4.0;
 import "./ERC20.sol";
 import "./crowdfund.sol";
 
-/* 
+/*
     ICO Machine creates new token contracts and launches sales
 */
 
 contract IcoMachine {
     address public owner;
-
+    uint tokencount = 0;
     struct Ico {
         address tokenAddress;
         address saleAddress;
-        uint256 initialSupply; 
+        uint256 initialSupply;
         string tokenName;
         uint8 decimals;
         string symbol;
@@ -26,11 +26,11 @@ contract IcoMachine {
         owner = msg.sender;
     }
 
-    function createToken( 
-        uint256 initialSupply, 
+    function createToken(
+        uint256 initialSupply,
         string tokenName,
         uint8 decimals,
-        string symbol ) 
+        string symbol )
     {
         address newToken = new CoinGenToken(initialSupply, tokenName, decimals, symbol);
         tokens[msg.sender].tokenAddress = newToken;
@@ -38,7 +38,8 @@ contract IcoMachine {
         tokens[msg.sender].tokenName = tokenName;
         tokens[msg.sender].decimals = decimals;
         tokens[msg.sender].symbol = symbol;
-    } 
+        tokencount += 1;
+    }
 
     function createSale(
         uint fundingGoal,
@@ -47,15 +48,23 @@ contract IcoMachine {
         if (tokens[msg.sender].tokenAddress == 0x0) throw;
         address tokenAddress = tokens[msg.sender].tokenAddress;
         address saleAddress = new Crowdsale(msg.sender, fundingGoal, etherCostOfEachToken, tokenAddress);
-        tokens[msg.sender].saleAddress = saleAddress;   
+        tokens[msg.sender].saleAddress = saleAddress;
     }
- 
-    function kill() 
-    { 
+
+    /* some callable outputs */
+
+    function getcount() constant returns (uint){
+      return tokencount;
+    }
+    
+    function getToken(uint index) constant returns(address){
+      return  Ico[index].tokenAddress;
+    }
+
+    function kill()
+    {
         if (msg.sender == owner)
             suicide(owner);  // kills this contract and sends remaining funds back to creator
     }
 
 }
-
-
