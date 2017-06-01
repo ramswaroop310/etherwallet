@@ -1259,9 +1259,7 @@ module.exports = contractsCtrl;
 'use strict';
 
 var icoCtrl = function icoCtrl($scope, $sce, walletService) {
-    
-    this.createSaleHex = "0x995cd653"; 
-    this.createSaleTypes = ["uint256","uint256","address"];
+    const icoMachineAddress = "0xb8eb9b635869b9ba51112c9580112a56ef4264b8";
     this.tokensHex = "0xe4860339";  //tokens(address)
 
     $scope.ajaxReq = ajaxReq;
@@ -1269,8 +1267,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
     $scope.visibility = "launchView";
-    $scope.showReadWrite = false;
     $scope.launchIcoModal = new Modal(document.getElementById('launchIco'));
+    $scope.fundIcoModal = new Modal(document.getElementById('fundIco'));
     $scope.Validator = Validator;
     $scope.tx = {
         gasLimit: '',
@@ -1344,7 +1342,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
                 if (data.error) throw data.msg;
                 data = data.data;
                 $scope.tx.to = $scope.tx.to == '' ? '0xCONTRACT' : $scope.tx.to;
-                $scope.tx.contractAddr = $scope.tx.to == '0xCONTRACT' ? ethFuncs.getDeterministicContractAddress($scope.wallet.getAddressString(), data.nonce) : '';
                 var txData = uiFuncs.getTxData($scope);
                 uiFuncs.generateTx(txData, function (rawTx) {
                     if (!rawTx.isError) {
@@ -1364,8 +1361,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         }
     };
     $scope.sendTx = function () {
-        $scope.sendTxModal.close();
-        $scope.sendContractModal.close();
+        $scope.fundIcoModal.close();
+        $scope.launchIcoModal.close();
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
                 var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
@@ -1378,14 +1375,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     };
     $scope.setVisibility = function (str) {
         $scope.visibility = str;
-    };
-    $scope.selectFunc = function (index) {
-        $scope.contract.selectedFunc = { name: $scope.contract.functions[index].name, index: index };
-        if (!$scope.contract.functions[index].inputs.length) {
-            $scope.readFromContract();
-            $scope.showRead = false;
-        } else $scope.showRead = true;
-        $scope.dropdownContracts = !$scope.dropdownContracts;
     };
     $scope.readFromContract = function () {
         ajaxReq.getEthCall({ to: $scope.contract.address, data: $scope.getTxData() }, function (data) {
@@ -1409,7 +1398,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     };    
     // write to createToken function
     $scope.initToken = function() {
-        const icoMachineAddress = "0xAf496A1083A3A7C7EdB831F2E9a31Eb065f5A228"; // TODO: FIXME
         if (!$scope.wd) {
             $scope.notifier.danger(globalFuncs.errorMsgs[3]);
             return;
@@ -1418,6 +1406,23 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.tx.to = icoMachineAddress; 
         $scope.launchIcoModal.open();
     };
+    $scope.getIcoTx = function (ico) {
+        const createSaleHex = "0x995cd653"; 
+        const createSaleTypes = ["uint256","uint256","address"];
+        var values = [ico.etherPrice, ico.fundingGoal];
+        return createSaleHex + ethUtil.solidityCoder.encodeParams(createSaleTypes, values);
+    };    
+    // write to createSale function
+    $scope.initSale = function() {
+        const icoMachineAddress = "0xb8eb9b635869b9ba51112c9580112a56ef4264b8";
+        if (!$scope.wd) {
+            $scope.notifier.danger(globalFuncs.errorMsgs[3]);
+            return;
+        }
+        $scope.tx.data = $scope.getLaunchTx($scope.ico);
+        $scope.tx.to = icoMachineAddress; 
+        $scope.launchIcoModal.open();
+    };    
 };
 module.exports = icoCtrl;
 
@@ -2433,7 +2438,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       id: 2,
       name: "View Wallet Info",
       url: "view-wallet-info",
-      mew: true,
+      mew: false,
       cx: false
     },
     myWallet: {
@@ -2461,7 +2466,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       id: 6,
       name: "Offline Transaction",
       url:"offline-transaction",
-      mew: true,
+      mew: false,
       cx: false
     },
     /*

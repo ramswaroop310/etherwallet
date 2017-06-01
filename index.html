@@ -1373,9 +1373,9 @@ contract ReplaySafeSend {
       <img class="col-md-5 col-sm-12 "src="images/ICOimg.png" />
       </div>
       <h1>
-        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Launch a Token </a>
+        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Create a Token </a>
         or
-        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Buy Tokens</a>
+        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Launch a Crowdsale</a>
       </h1>
 
       <!-- / Title -->
@@ -1469,47 +1469,28 @@ contract ReplaySafeSend {
       <!-- FundICO -->
       <article class="row" ng-show="visibility=='fundView'">
 
+        <!-- Token Info -->
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Token Info (TODO): </h4>
+          
+        </div>
+        <div class="form-group col-xs-6">
+          <h4> Price per Token (in ether): </h4>
+          <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
+        </div>
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Funding Goal (sale will end when goal is reached): </h4>
+          <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
+        </div>
+        
+
+
+        <!-- Button -->
+        <section class="col-xs-12 clearfix" ng-show="wd">
+          <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+        </section>
+
         <section class="col-xs-12">
-
-          <!-- Byte Code -->
-          <div class="form-group">
-            <h4 > Buy some scamcoins (TODO: dropdown of existing scamcoins)</h4>
-          </div>
-
-
-          <div class="dropdown">
-            <a class="btn btn-default dropdown-toggle" class="dropdown-toggle" ng-click="dropdownExistingIcos = !dropdownExistingIcos">
-              {{selectedIco.name}} <small class="mono">{{selectedIco.address}}</small><i class="caret"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-left" ng-show="dropdownExistingIcos">
-              <li ng-repeat="ico in ajaxReq.icoList track by $index"><a ng-click="selectExistingIco($index)">{{ico.name}} <small class="mono">{{ico.address}}</small></a></li>
-            </ul>
-          </div>
-
-          <!-- Sign TX Button (once wallet has been unlocked) -->
-          <div class="form-group">
-            TODO: HOW MANY COINS DO YOU WANT TO BUY
-            <a class="btn btn-info btn-block" ng-click="generateTx()" ng-show="wd"> Sign Transaction </a>
-          </div>
-
-          <!-- TXs -->
-          <section class="row" ng-show="showRaw">
-            <!-- Raw TX -->
-            <div class="form-group col-sm-6">
-              <h4 translate="SEND_raw"> Raw Transaction </h4>
-              <textarea class="form-control" rows="4" readonly> {{rawTx}} </textarea>
-            </div>
-            <!-- Signed TX -->
-            <div class="form-group col-sm-6">
-              <h4 translate="SEND_signed"> Signed Transaction </h4>
-              <textarea class="form-control" rows="4" readonly> {{signedTx}} </textarea>
-            </div>
-          </section>
-
-          <!-- Send Money Button (once tx has been signed) -->
-          <div class="form-group" ng-show="showRaw">
-            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#fundIco"> Send Money </a>
-          </div>
 
           <article class="modal fade" id="fundIco" tabindex="-1">
             <section class="modal-dialog">
@@ -1518,19 +1499,17 @@ contract ReplaySafeSend {
                 <div class="modal-body">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-                  <h2 class="modal-title text-danger">Warning!</h2>
-
-                  <p>You are about to <strong>buy some scamcoins</strong> on the Ethereum Classic chain.</p>
+                  <p>You are about to <strong>launch an ICO</strong> on the Ethereum Classic chain.</p>
 
                   <h4> Are you sure you want to do this? </h4>
                 </div>
 
                 <div class="modal-footer">
-                  <button class="btn btn-default" data-dismiss="modal" translate="SENDModal_No">
+                  <button class="btn btn-default" data-dismiss="modal">
                     No, get me out of here!
                   </button>
-                  <button class="btn btn-primary" ng-click="sendTx()" translate="SENDModal_Yes">
-                    Yes, I am sure! Make transaction.
+                  <button class="btn btn-primary" ng-click="sendTx()">
+                    Yes, open the floodgates!
                   </button>
                 </div>
 
@@ -1545,26 +1524,12 @@ contract ReplaySafeSend {
 
 
       </article>
-      <!-- / Fund ICO -->
+      <!-- / Launch ICO -->
 
       <!--wallet decrypt-->
       <article class="form-group" ng-show="!wd">
             <wallet-decrypt-drtv></wallet-decrypt-drtv>
       </article>
-
-      <article ng-show="contract.selectedFunc!=null">
-
-        <button class="btn btn-primary" ng-click="readFromContract()" ng-show="contract.functions[contract.selectedFunc.index].constant && showRead">
-          <span > READ</span>
-        </button>
-
-        <button class="btn btn-primary" ng-click="generateContractTx()" ng-show="!contract.functions[contract.selectedFunc.index].constant">
-          <span > WRITE</span>
-        </button>
-
-        </br>
-      </article>
-
 
 
     </div>
