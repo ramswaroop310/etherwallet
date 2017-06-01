@@ -1421,7 +1421,7 @@ contract ReplaySafeSend {
 
                   <h2 class="modal-title text-danger" >Warning!</h2>
 
-                  <p>You are about to <strong>Launch a Token</strong> on the <strong>Ethereum Classic</strong> chain.</p>
+                  <p>You are about to <strong>Create a Token</strong> on the <strong>Ethereum Classic</strong> chain.</p>
 
                   <label> Gas </label>
                   <input class="form-control" type="text" placeholder="300000" ng-model="tx.gasLimit" ng-class="Validator.isPositiveNumber(tx.gasLimit) ? 'is-valid' : 'is-invalid'"/>
@@ -1448,10 +1448,10 @@ contract ReplaySafeSend {
 
               <div class="modal-footer" ng-show="showRaw">
                 <button class="btn btn-default" data-dismiss="modal">
-                  No, cancel!
+                  cancel
                 </button>
-                <button class="btn btn-primary" ng-click='sendTx("Your token contract will take a minute to mine. Once it is live, you can launch your crowdsale!")'>
-                  YES! Launch the Token!
+                <button class="btn btn-primary" ng-click='sendTx("Your token contract will take a minute to mine. Once it is live, you can start your crowdsale!")'>
+                  Create the Token!
                 </button>
               </div>
 
@@ -1468,21 +1468,27 @@ contract ReplaySafeSend {
 
       <!-- FundICO -->
       <article class="row" ng-show="visibility=='fundView'">
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Start your Crowdsale! </h4>
+          Did you already create a token? If not, <span ng-click="setVisibility('launchView')">do that first</span>.
+        </div>
 
-        <!-- Token Info -->
-        <div class="form-group col-xs-10 clearfix">
-          <h4> Token Info (TODO): </h4>
-          
-        </div>
-        <div class="form-group col-xs-6">
-          <h4> Price per Token (in ether): </h4>
-          <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
-        </div>
-        <div class="form-group col-xs-10 clearfix">
-          <h4> Funding Goal (sale will end when goal is reached): </h4>
-          <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
-        </div>
-        
+        <section class="col-xs-12 clearfix" ng-show="wd">
+          <!-- Token Info -->
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Token Info: </h4>
+            TODO: read public info from token contract<br>
+            It doesn't look like you have created any tokens yet. Refresh
+          </div>
+          <div class="form-group col-xs-6">
+            <h4> Price per Token (in ether): </h4>
+            <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Funding Goal (sale will end when goal is reached): </h4>
+            <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
+          </div>
+        </section>
 
 
         <!-- Button -->

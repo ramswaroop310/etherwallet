@@ -1259,13 +1259,13 @@ module.exports = contractsCtrl;
 'use strict';
 
 var icoCtrl = function icoCtrl($scope, $sce, walletService) {
-    const icoMachineAddress = "0xb8eb9b635869b9ba51112c9580112a56ef4264b8";
-    this.tokensHex = "0xe4860339";  //tokens(address)
+    const icoMachineAddress = "0xb89a5e82aa223f6772649c24bace68a8588e05a7";    
 
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
+    $scope.activeToken = null;
     $scope.visibility = "launchView";
     $scope.launchIcoModal = new Modal(document.getElementById('launchIco'));
     $scope.fundIcoModal = new Modal(document.getElementById('fundIco'));
@@ -1292,7 +1292,22 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
+    }, function () {
+        if (($scope.activeToken !== null) || !($scope.wd)) return;
+        $scope.readFromToken(walletService.wallet.getAddressString())
     });
+    $scope.readFromToken = function (addr) {
+        const tokensHex = "0xe4860339";  //tokens(address)
+        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
+        var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
+        ajaxReq.getEthCall(tokenCall, function (data) {
+            if (!data.error) {
+                var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
+                console.log(decoded)
+            } else throw data.msg;
+        });
+    };
+
     $scope.$watch('visibility', function (newValue, oldValue) {
         $scope.tx = {
             gasLimit: '',
@@ -1313,16 +1328,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             }, 500);
         }
     }, true);
-    $scope.$watch('ico.address', function (newValue, oldValue) {
-        if ($scope.Validator.isValidAddress($scope.ico.address)) {
-            for (var i in ajaxReq.abiList) {
-                if (ajaxReq.abiList[i].address.toLowerCase() == $scope.contract.address.toLowerCase()) {
-                    $scope.contract.abi = ajaxReq.abiList[i].abi;
-                    break;
-                }
-            }
-        }
-    });
     $scope.estimateGasLimit = function () {
         var estObj = {
             from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
@@ -1406,9 +1411,9 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.launchIcoModal.open();
     };
     $scope.getIcoTx = function (ico) {
-        const createSaleHex = "0x995cd653"; 
+        const createSaleHex = "0x6019061b"; 
         const createSaleTypes = ["uint256","uint256","address"];
-        var values = [ico.etherPrice, ico.fundingGoal];
+        var values = [ico.fundingGoal, ico.etherPrice];
         return createSaleHex + ethUtil.solidityCoder.encodeParams(createSaleTypes, values);
     };    
     // write to createSale function
