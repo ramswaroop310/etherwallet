@@ -1259,13 +1259,18 @@ module.exports = contractsCtrl;
 'use strict';
 
 var icoCtrl = function icoCtrl($scope, $sce, walletService) {
+    
+    this.createSaleHex = "0x995cd653"; 
+    this.createSaleTypes = ["uint256","uint256","address"];
+    this.tokensHex = "0xe4860339";  //tokens(address)
+
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
     $scope.visibility = "launchView";
     $scope.showReadWrite = false;
-    $scope.sendIcoModal = new Modal(document.getElementById('launchIco'));
+    $scope.launchIcoModal = new Modal(document.getElementById('launchIco'));
     $scope.Validator = Validator;
     $scope.tx = {
         gasLimit: '',
@@ -1276,13 +1281,10 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         nonce: null,
         gasPrice: null
     };
-    $scope.contract = {
-        address: globalFuncs.urlGet('address') != null && $scope.Validator.isValidAddress(globalFuncs.urlGet('address')) ? globalFuncs.urlGet('address') : '',
-        abi: '',
-        functions: [],
-        selectedFunc: null
+    $scope.ico = {
+        decimals: 8,
+        symbol: "POOP"
     };
-    // $scope.selectedAbi = ajaxReq.abiList[0];
     $scope.showRaw = false;
     $scope.$watch(function () {
         if (walletService.wallet == null) return null;
@@ -1313,8 +1315,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             }, 500);
         }
     }, true);
-    $scope.$watch('contract.address', function (newValue, oldValue) {
-        if ($scope.Validator.isValidAddress($scope.contract.address)) {
+    $scope.$watch('ico.address', function (newValue, oldValue) {
+        if ($scope.Validator.isValidAddress($scope.ico.address)) {
             for (var i in ajaxReq.abiList) {
                 if (ajaxReq.abiList[i].address.toLowerCase() == $scope.contract.address.toLowerCase()) {
                     $scope.contract.abi = ajaxReq.abiList[i].abi;
@@ -1323,12 +1325,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             }
         }
     });
-    /*
-    $scope.selectExistingAbi = function (index) {
-        $scope.selectedAbi = ajaxReq.abiList[index];
-        $scope.contract.address = $scope.selectedAbi.address;
-        $scope.dropdownExistingContracts = false;
-    };*/
     $scope.estimateGasLimit = function () {
         var estObj = {
             from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
@@ -1391,21 +1387,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         } else $scope.showRead = true;
         $scope.dropdownContracts = !$scope.dropdownContracts;
     };
-    $scope.getTxData = function () {
-        var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
-        var fullFuncName = ethUtil.solidityUtils.transformToFullName(curFunc);
-        var funcSig = ethFuncs.getFunctionSignature(fullFuncName);
-        var typeName = ethUtil.solidityUtils.extractTypeName(fullFuncName);
-        var types = typeName.split(',');
-        types = types[0] == "" ? [] : types;
-        var values = [];
-        for (var i in curFunc.inputs) {
-            if (curFunc.inputs[i].value) {
-                if (curFunc.inputs[i].type.indexOf('[') !== -1 && curFunc.inputs[i].type.indexOf(']') !== -1) values.push(curFunc.inputs[i].value.split(','));else values.push(curFunc.inputs[i].value);
-            } else values.push('');
-        }
-        return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, values);
-    };
     $scope.readFromContract = function () {
         ajaxReq.getEthCall({ to: $scope.contract.address, data: $scope.getTxData() }, function (data) {
             if (!data.error) {
@@ -1420,31 +1401,22 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             } else throw data.msg;
         });
     };
-    $scope.initContract = function () {
-        try {
-            if (!$scope.Validator.isValidAddress($scope.contract.address)) throw globalFuncs.errorMsgs[5];else if (!$scope.Validator.isJSON($scope.contract.abi)) throw globalFuncs.errorMsgs[26];
-            $scope.contract.functions = [];
-            var tAbi = JSON.parse($scope.contract.abi);
-            for (var i in tAbi) {
-                if (tAbi[i].type == "function") {
-                    tAbi[i].inputs.map(function (i) {
-                        i.value = '';
-                    });
-                    $scope.contract.functions.push(tAbi[i]);
-                }
-            }$scope.showReadWrite = true;
-        } catch (e) {
-            $scope.notifier.danger(e);
-        }
-    };
-    $scope.generateContractTx = function () {
+    $scope.getLaunchTx = function (ico) {
+        const createTokenHex = "0x95de8674"; 
+        const createTokenTypes = ["uint256","string","uint8","string"];
+        var values = [ico.totalSupply, ico.name, ico.decimals, ico.symbol];
+        return createTokenHex + ethUtil.solidityCoder.encodeParams(createTokenTypes, values);
+    };    
+    // write to createToken function
+    $scope.initToken = function() {
+        const icoMachineAddress = "0xAf496A1083A3A7C7EdB831F2E9a31Eb065f5A228"; // TODO: FIXME
         if (!$scope.wd) {
             $scope.notifier.danger(globalFuncs.errorMsgs[3]);
             return;
         }
-        $scope.tx.data = $scope.getTxData();
-        $scope.tx.to = $scope.contract.address;
-        $scope.sendContractModal.open();
+        $scope.tx.data = $scope.getLaunchTx($scope.ico);
+        $scope.tx.to = icoMachineAddress; 
+        $scope.launchIcoModal.open();
     };
 };
 module.exports = icoCtrl;
