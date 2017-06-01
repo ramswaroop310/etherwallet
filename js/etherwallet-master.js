@@ -1432,13 +1432,14 @@ module.exports = icoCtrl;
 'use strict';
 
 var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
+    const icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";   
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
-    $scope.activeToken = null;
+    $scope.token = null;
     $scope.Validator = Validator;
-    $scope.crowdsale = {};
+    $scope.crowdsale = null;
     $scope.tx = {
         gasLimit: '',
         data: '',
@@ -1474,7 +1475,7 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
             if (!data.error) {
                 var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
                 console.log(decoded);
-                $scope.activeToken = { 
+                $scope.token = { 
                     "tokenAddress": decoded[0], 
                     "saleAddress": decoded[1],
                     "initialSupply": decoded[2].toString(10),
@@ -1504,8 +1505,8 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
             ajaxReq.getEthCall(crowdCall, function (data) {
                 if (!data.error) {
                     var decoded = ethUtil.solidityCoder.decodeParams([k.type], data.data.replace('0x', ''));
-                    console.log(decoded);
                     $scope.crowdsale[k.name] = decoded[0];
+                    if (k.name == "beneficiary") $scope.readOwnerToken(decoded[0]);
                 } else throw data.msg;
             });
         })

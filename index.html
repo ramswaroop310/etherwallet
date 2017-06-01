@@ -1630,7 +1630,7 @@ contract ReplaySafeSend {
     <!-- BUY ICO -->
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.buyIco.id" ng-controller='buyIcoCtrl' ng-cloak>
 
-      <h1>Buy ICOs</h1>
+      <h1>Buy Tokens</h1>
  
       <div ng-show="!activeToken" class="row">
         <!-- This is where money is collected -->
@@ -1643,23 +1643,36 @@ contract ReplaySafeSend {
         </div>
       </div>
 
-      <div ng-show="crowdsale" class="form-group col-xs-10 clearfix">
-        <h4> Crowdsale Info: {{crowdsale}} </h4>
+      <div ng-show="crowdsale.tokenReward" class="form-group col-xs-10 clearfix">
         <div>
-
+          <br><strong style="margin-left: 1em"> Crowdsale Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.address}}">{{crowdsale.address}}</a></strong>
+          <br><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.tokenReward}}">{{crowdsale.tokenReward}}</a></strong>
+          <br><strong style="margin-left: 1em"> Beneficiary: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.beneficiary}}">{{crowdsale.beneficiary}}</a></strong>
+         <br /><strong style="margin-left: 1em"> Funding Goal: {{crowdsale.fundingGoal}}</strong>
+         <br /><strong style="margin-left: 1em"> Amount Raised: {{crowdsale.amountRaised}}</strong>
+         <br /><strong style="margin-left: 1em"> Token Price: {{crowdsale.tokenPrice}}</strong>
         </div>
       </div>
-      <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
-        <h4> Token Info: {{activeToken}} </h4>
-        <div>
-         <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
-         <strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
-         <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
-        </div>
+      <div ng-show="token" class="form-group col-xs-10 clearfix">
+         <h4>{{token.name}} ({{token.symbol}})</h4>
+         <strong style="margin-left: 1em"> Total Token Supply: {{token.initialSupply}}</strong>
+      </div>
+      <div ng-show="token" class="form-group col-xs-10 clearfix">
+         <!--wallet decrypt-->
+        <article class="form-group" ng-show="!wd">
+            <wallet-decrypt-drtv></wallet-decrypt-drtv>
+        </article>
+        <article class="form-group" ng-show="wd">
+           <h4>Amount to Buy</h4>
+           <div class="col-xs-12">
+             <input class="form-control" type="text" placeholder="Amount" ng-model="tx.value"/>
+           </div>
+           <div class="col-xs-12">
+            <a class="btn btn-info btn-block" ng-click="generateTx()">GENERATE TRANSACTION</a>
+          </div>
+         </article>
       </div>
     
-      <img class="col-sm-4 col-md-3"src="images/pennyscam.gif" />
-
     </div>
     <!-- end BUY ICO -->    
 
