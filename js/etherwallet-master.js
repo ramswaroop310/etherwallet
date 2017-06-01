@@ -1259,7 +1259,7 @@ module.exports = contractsCtrl;
 'use strict';
 
 var icoCtrl = function icoCtrl($scope, $sce, walletService) {
-    const icoMachineAddress = "0xb89a5e82aa223f6772649c24bace68a8588e05a7";    
+    const icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";    
 
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
@@ -1379,8 +1379,11 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.launchIcoModal.close();
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
-                var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
-                $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + msg);
+                var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'><b> View your transaction </b></a>";
+                if ($scope.activeToken) 
+                    bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='http://gastracker.io/addr/" + $scope.activeToken.tokenAddress + "' target='_blank'>here</a> ";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr + msg);
+                $scope.setVisibility("fundView");
             } else {
                 $scope.notifier.danger(resp.error);
             }

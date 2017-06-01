@@ -1468,13 +1468,13 @@ contract ReplaySafeSend {
           If you already have a token, unlock your wallet to start the ICO.
           </div>
           <div ng-show="wd && !activeToken">
-            It doesn't look like you have created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+            I can't find your token on the blockchain yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
           </div>
           <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
             <h4> Token Info: </h4>
             <div>
              <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
-             <br /><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
+             <strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
              <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
             </div>
           </div>
@@ -1516,14 +1516,33 @@ contract ReplaySafeSend {
                       <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. 
                   </div>
                   <!-- end -->
-                  <h4> Are you sure you want to do this? </h4>
+                
+                  <label> Gas </label>
+                  <input class="form-control" type="text" placeholder="300000" ng-model="tx.gasLimit" ng-class="Validator.isPositiveNumber(tx.gasLimit) ? 'is-valid' : 'is-invalid'"/>
+
+                  <a class="btn btn-info btn-block" ng-click="generateTx()"> GENERATE TRANSACTION </a>
+
+                  <!-- Data -->
+                  <section class="row" ng-show="showRaw">
+                    <!-- Raw TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 > Raw Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{rawTx}}</textarea>
+                    </div>
+                    <!-- Singed TX -->
+                    <div class="form-group col-sm-6">
+                      <h4> Signed Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{signedTx}}</textarea>
+                    </div>
+                  </section>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer" ng-show="showRaw">
+                  <h4> Are you sure you want to do this? </h4>
                   <button class="btn btn-default" data-dismiss="modal">
                     No, get me out of here!
                   </button>
-                  <button class="btn btn-primary" ng-click="sendTx()">
+                  <button class="btn btn-primary" ng-click='sendTx("HELL YEAH!")'>
                     Yes, open the floodgates!
                   </button>
                 </div>
