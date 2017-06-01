@@ -1296,14 +1296,23 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         if (($scope.activeToken !== null) || !($scope.wd)) return;
         $scope.readFromToken(walletService.wallet.getAddressString())
     });
-    $scope.readFromToken = function (addr) {
+    $scope.readFromToken = function () {
+        var addr = walletService.wallet.getAddressString();
         const tokensHex = "0xe4860339";  //tokens(address)
         const readTokensTypes = ["address","address","uint256","string","uint8","string"];
         var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
         ajaxReq.getEthCall(tokenCall, function (data) {
             if (!data.error) {
                 var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
-                console.log(decoded)
+                console.log(decoded);
+                $scope.activeToken = { 
+                    "tokenAddress": decoded[0], 
+                    "saleAddress": decoded[1],
+                    "initialSupply": decoded[2].toString(10),
+                    "name": decoded[3],
+                    "decimals": decoded[4].toString(10),
+                    "symbol": decoded[5]
+                }
             } else throw data.msg;
         });
     };
@@ -1379,20 +1388,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     };
     $scope.setVisibility = function (str) {
         $scope.visibility = str;
-    };
-    $scope.readFromContract = function () {
-        ajaxReq.getEthCall({ to: $scope.contract.address, data: $scope.getTxData() }, function (data) {
-            if (!data.error) {
-                var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
-                var outTypes = curFunc.outputs.map(function (i) {
-                    return i.type;
-                });
-                var decoded = ethUtil.solidityCoder.decodeParams(outTypes, data.data.replace('0x', ''));
-                for (var i in decoded) {
-                    if (decoded[i] instanceof BigNumber) curFunc.outputs[i].value = decoded[i].toFixed(0);else curFunc.outputs[i].value = decoded[i];
-                }
-            } else throw data.msg;
-        });
     };
     $scope.getLaunchTx = function (ico) {
         const createTokenHex = "0x95de8674"; 

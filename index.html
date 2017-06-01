@@ -1477,8 +1477,12 @@ contract ReplaySafeSend {
           <!-- Token Info -->
           <div class="form-group col-xs-10 clearfix">
             <h4> Token Info: </h4>
-            TODO: read public info from token contract<br>
-            It doesn't look like you have created any tokens yet. Refresh
+            <div ng-show="!activeToken">
+              It doesn't look like you have created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+            </div>
+            <div ng-show="activeToken">
+             {{activeToken}}
+            </div>
           </div>
           <div class="form-group col-xs-6">
             <h4> Price per Token (in ether): </h4>
