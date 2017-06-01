@@ -1363,31 +1363,38 @@ contract ReplaySafeSend {
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.ico.id" ng-controller='icoCtrl' ng-cloak>
       <!-- Title -->
       <h1>
-        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Let's do an ICO </a>
+        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Launch an ICO </a>
         or
         <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Buy some Scamcoins</a>
       </h1>
       <!-- / Title -->
 
-      <!-- Interact Contracts -->
+      <!-- Launch an ICO -->
       <article class="row" ng-show="visibility=='launchView'">
 
          
-        <!-- Address -->
-        <section class="col-sm-6 clearfix">
-          <h4 > Contract Address</h4> 
-          <input class="form-control" placeholder="0xcf0e737cbe5879ae8973f4e32ada83daf92f657e" ng-class="Validator.isValidAddress(contract.address) ? 'is-valid' : 'is-invalid'" ng-model="contract.address"/>
-        </section>
+        <!-- Token Info -->
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Token Name: </h4>
+          <input class="form-control" placeholder="Shitcoin" ng-model="ico.name"/>
+        </div>
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Number of Tokens: </h4>
+          <input class="form-control" placeholder="1000000" ng-model="ico.totalSupply"/>
+        </div>
+        <div class="form-group col-xs-6">
+          <h4> Token Symbol (optional): </h4>
+          <input class="form-control" placeholder="SHIT" ng-model="ico.symbol"/>
+        </div>
+        <div class="form-group col-xs-6">
+          <h4> Decimal Places (optional): </h4>
+          <input class="form-control" placeholder="8" ng-model="ico.decimals"/>
+        </div>
 
-        <!-- ABI Textarea -->
-        <section class="col-xs-12 clearfix">
-          <h4 > ABI / JSON Interface </h4>
-          <textarea class="form-control" rows="6" placeholder='[{ "type":"contructor", "inputs": [{ "name":"param1", "type":"uint256", "indexed":true }], "name":"Event" }, { "type":"function", "inputs": [{"name":"a", "type":"uint256"}], "name":"foo", "outputs": [] }] ' ng-class="Validator.isJSON(contract.abi) ? 'is-valid' : 'is-invalid'" ng-model="contract.abi"></textarea>
-        </section>
 
         <!-- Button -->
         <section class="col-xs-12 clearfix">
-          <button class="btn btn-primary" ng-click="initContract()" translate="x_Access"> ACCESS </button>
+          <button class="btn btn-primary" ng-click="initIco()"> LET'S DO THIS </button>
         </section>
      
         
@@ -1580,7 +1587,7 @@ contract ReplaySafeSend {
 
           <!-- Sign TX Button (once wallet has been unlocked) -->
           <div class="form-group">
-            HOW MANY COINS DO YOU WANT TO BUY
+            TODO: HOW MANY COINS DO YOU WANT TO BUY
             <a class="btn btn-info btn-block" ng-click="generateTx()" ng-show="wd"> Sign Transaction </a>
           </div>
 
