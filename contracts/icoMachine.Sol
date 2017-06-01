@@ -1,8 +1,6 @@
 pragma solidity ^0.4.0;
 
-import "./ERC20.abi";
 import "./ERC20.sol";
-import "./crowd.abi";
 import "./crowdfund.sol";
 
 /* 
@@ -35,10 +33,10 @@ contract IcoMachine {
     function createSale(
         uint fundingGoal,
         uint etherCostOfEachToken,
-        address tokenAddress ) returns (address _saleAddress) 
+        token tokenAddress ) returns (address _saleAddress) 
     {
         address beneficiary = tokens[tokenAddress];
-        address saleAddress = new CrowdSale(beneficiary, fundingGoal, etherCostOfEachToken, tokenAddress);
+        address saleAddress = new Crowdsale(beneficiary, fundingGoal, etherCostOfEachToken, tokenAddress);
         _saleAddress = saleAddress;
         return _saleAddress;
     }
