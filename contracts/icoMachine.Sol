@@ -8,14 +8,12 @@ import "./crowdfund.sol";
 */
 
 contract IcoMachine {
-    uint256 public value; 
     address public owner;
 
     mapping (address => address) public tokens; // map token addresses to creator address
 
     function IcoMachine() {
         owner = msg.sender;
-        value = msg.value;
     }
 
     function createToken( 
@@ -35,6 +33,7 @@ contract IcoMachine {
         uint etherCostOfEachToken,
         token tokenAddress ) returns (address _saleAddress) 
     {
+        if (tokens[tokenAddress] == 0x0) throw;
         address beneficiary = tokens[tokenAddress];
         address saleAddress = new Crowdsale(beneficiary, fundingGoal, etherCostOfEachToken, tokenAddress);
         _saleAddress = saleAddress;
