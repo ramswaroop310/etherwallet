@@ -1627,6 +1627,25 @@ contract ReplaySafeSend {
     <!-- end ICO-->
 
 
+    <!-- BUY ICO -->
+    <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.buyIco.id" ng-controller='buyIcoCtrl' ng-cloak>
+
+      <h1>Buy ICOs</h1>
+ 
+      <article class="row">
+        <!-- Address -->
+        <section class="col-sm-6 clearfix">
+          <h4 > Token Address</h4> 
+          <input class="form-control" placeholder="0xcf0e737cbe5879ae8973f4e32ada83daf92f657e" ng-class="Validator.isValidAddress(token.address) ? 'is-valid' : 'is-invalid'" ng-model="token.address"/>
+        </section>
+      </article>
+    
+      <img class="col-sm-4 col-md-3"src="images/pennyscam.gif" />
+
+    </div>
+    <!-- end BUY ICO -->    
+
+
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.bulkGenerate.id" ng-controller='bulkGenCtrl'>
 
       <!-- Top - Bulk Generate -->

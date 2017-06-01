@@ -2512,6 +2512,13 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "ico",
       mew: true,
       cx: true
+    },
+    buyIco: {
+      id: 10,
+      name: "BUY TOKENS",
+      url: "buy-ico",
+      mew: true,
+      cx: true
     }
 
   };
