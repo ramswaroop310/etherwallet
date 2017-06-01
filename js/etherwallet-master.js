@@ -1360,14 +1360,13 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             $scope.notifier.danger(e);
         }
     };
-    $scope.sendTx = function () {
+    $scope.sendTx = function (msg) {
         $scope.fundIcoModal.close();
         $scope.launchIcoModal.close();
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
-                var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
-                var contractAddr = " & Contract Address <a href='http://etherhub.io/addr/" + $scope.tx.contractAddr + "' target='_blank'>" + $scope.tx.contractAddr + "</a>";
-                $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
+                var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + msg);
             } else {
                 $scope.notifier.danger(resp.error);
             }
@@ -1414,14 +1413,13 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     };    
     // write to createSale function
     $scope.initSale = function() {
-        const icoMachineAddress = "0xb8eb9b635869b9ba51112c9580112a56ef4264b8";
         if (!$scope.wd) {
             $scope.notifier.danger(globalFuncs.errorMsgs[3]);
             return;
         }
-        $scope.tx.data = $scope.getLaunchTx($scope.ico);
+        $scope.tx.data = $scope.getIcoTx($scope.ico);
         $scope.tx.to = icoMachineAddress; 
-        $scope.launchIcoModal.open();
+        $scope.fundIcoModal.open();
     };    
 };
 module.exports = icoCtrl;
