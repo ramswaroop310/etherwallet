@@ -1473,7 +1473,9 @@ contract ReplaySafeSend {
           <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
             <h4> Token Info: </h4>
             <div>
-             {{activeToken}}
+             <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
+             <br /><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
+             <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
             </div>
           </div>
         </div>
