@@ -3,7 +3,10 @@ contract token { function transfer(address receiver, uint amount){  } }
 
 contract Crowdsale {
     address public beneficiary;
-    uint public fundingGoal; uint public amountRaised; uint public deadline; uint public price;
+    uint public fundingGoal;
+    uint public amountRaised;
+    uint public deadline;
+    uint public price;
     token public tokenReward;
     mapping(address => uint256) public balanceOf;
     bool fundingGoalReached = false;
@@ -17,13 +20,11 @@ contract Crowdsale {
     function Crowdsale(
         address ifSuccessfulSendTo,
         uint fundingGoalInEthers,
-        uint durationInMinutes,
         uint etherCostOfEachToken,
         token addressOfTokenUsedAsReward
     ) {
         beneficiary = ifSuccessfulSendTo;
         fundingGoal = fundingGoalInEthers * 1 ether;
-        deadline = now + durationInMinutes * 1 minutes;
         price = etherCostOfEachToken * 1 ether;
         tokenReward = token(addressOfTokenUsedAsReward);
     }
@@ -38,19 +39,17 @@ contract Crowdsale {
         FundTransfer(msg.sender, amount, true);
     }
 
-    modifier afterDeadline() { if (now >= deadline) _; }
+    modifier afterFundingGoal() { if (amountRaised >= fundingGoal) _; }
 
     /* checks if the goal or time limit has been reached and ends the campaign */
-    function checkGoalReached() afterDeadline {
-        if (amountRaised >= fundingGoal){
+    function checkGoalReached() afterFundingGoal() {
             fundingGoalReached = true;
             GoalReached(beneficiary, amountRaised);
-        }
-        crowdsaleClosed = true;
+            crowdsaleClosed = true;
     }
 
 
-    function safeWithdrawal() afterDeadline {
+    function safeWithdrawal() afterFundingGoal() {
         if (!fundingGoalReached) {
             uint amount = balanceOf[msg.sender];
             balanceOf[msg.sender] = 0;
