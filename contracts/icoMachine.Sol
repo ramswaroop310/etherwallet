@@ -13,6 +13,10 @@ contract IcoMachine {
     struct Ico {
         address tokenAddress;
         address saleAddress;
+        uint256 initialSupply; 
+        string tokenName;
+        uint8 decimals;
+        string symbol;
     }
 
     mapping (address => Ico) public tokens; // map creator address to token address
@@ -25,11 +29,15 @@ contract IcoMachine {
     function createToken( 
         uint256 initialSupply, 
         string tokenName,
-        uint8 decimalUnits,
-        string tokenSymbol ) 
+        uint8 decimals,
+        string symbol ) 
     {
-        address newToken = new CoinGenToken(initialSupply, tokenName, decimalUnits, tokenSymbol);
+        address newToken = new CoinGenToken(initialSupply, tokenName, decimals, symbol);
         tokens[msg.sender].tokenAddress = newToken;
+        tokens[msg.sender].initialSupply = initialSupply;
+        tokens[msg.sender].tokenName = tokenName;
+        tokens[msg.sender].decimals = decimals;
+        tokens[msg.sender].symbol = symbol;
     } 
 
     function createSale(
