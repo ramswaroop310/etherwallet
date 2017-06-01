@@ -1,0 +1,48 @@
+pragma solidity ^0.4.0;
+
+import "./ERC20.abi";
+import "./ERC20.sol";
+
+/* 
+    ICO Machine creates new token contracts and launches sales
+*/
+
+contract IcoMachine {
+    uint256 public value; 
+    address public owner;
+
+    mapping (address => address) public tokens; // map token addresses to creator address
+
+    function IcoMachine() {
+        owner = msg.sender;
+        value = msg.value;
+    }
+
+    function createToken( 
+      uint256 initialSupply, 
+      string tokenName,
+      uint8 decimalUnits,
+      string tokenSymbol ) returns (address _tokenAddress) {
+        address newToken = new CoinGenToken(initialSupply, tokenName, decimalUnits, tokenSymbol);
+        tokens[newToken] = msg.sender;
+        _tokenAddress = newToken;
+        return _tokenAddress;                                                   
+    } 
+
+    function createSale(
+      uint etherCostOfEachToken,
+      token tokenAddress ) returns (address _saleAddress) {
+      address saleAddress = new CrowdSale(etherCostOfEachToken, tokenAddress);
+      _saleAddress = saleAddress;
+      return _saleAddress;
+    }
+ 
+    function kill() 
+    { 
+        if (msg.sender == owner)
+            suicide(owner);  // kills this contract and sends remaining funds back to creator
+    }
+
+}
+
+
