@@ -1365,7 +1365,7 @@ contract ReplaySafeSend {
       <h1>
         <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Let's do an ICO </a>
         or
-        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Buy into ICO </a>
+        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Buy some Scamcoins</a>
       </h1>
       <!-- / Title -->
 
@@ -1375,13 +1375,13 @@ contract ReplaySafeSend {
          
         <!-- Address -->
         <section class="col-sm-6 clearfix">
-          <h4 translate="CONTRACT_Title"> Contract Address</h4> <!--<small style="float: right; margin-top: -2rem;"> or </small>-->
+          <h4 > Contract Address</h4> 
           <input class="form-control" placeholder="0xcf0e737cbe5879ae8973f4e32ada83daf92f657e" ng-class="Validator.isValidAddress(contract.address) ? 'is-valid' : 'is-invalid'" ng-model="contract.address"/>
         </section>
 
         <!-- ABI Textarea -->
         <section class="col-xs-12 clearfix">
-          <h4 translate="CONTRACT_Json"> ABI / JSON Interface </h4>
+          <h4 > ABI / JSON Interface </h4>
           <textarea class="form-control" rows="6" placeholder='[{ "type":"contructor", "inputs": [{ "name":"param1", "type":"uint256", "indexed":true }], "name":"Event" }, { "type":"function", "inputs": [{"name":"a", "type":"uint256"}], "name":"foo", "outputs": [] }] ' ng-class="Validator.isJSON(contract.abi) ? 'is-valid' : 'is-invalid'" ng-model="contract.abi"></textarea>
         </section>
 
@@ -1558,8 +1558,89 @@ contract ReplaySafeSend {
       <!-- / Launch ICO -->
 
 
+      <!-- FundICO -->
+      <article class="row" ng-show="visibility=='fundView'">
+
+        <section class="col-xs-12">
+
+          <!-- Byte Code -->
+          <div class="form-group">
+            <h4 > Buy some scamcoins (TODO: dropdown of existing scamcoins)</h4>
+          </div>
+
+
+          <div class="dropdown">
+            <a class="btn btn-default dropdown-toggle" class="dropdown-toggle" ng-click="dropdownExistingIcos = !dropdownExistingIcos">
+              {{selectedIco.name}} <small class="mono">{{selectedIco.address}}</small><i class="caret"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-left" ng-show="dropdownExistingIcos">
+              <li ng-repeat="ico in ajaxReq.icoList track by $index"><a ng-click="selectExistingIco($index)">{{ico.name}} <small class="mono">{{ico.address}}</small></a></li>
+            </ul>
+          </div>    
+
+          <!-- Sign TX Button (once wallet has been unlocked) -->
+          <div class="form-group">
+            HOW MANY COINS DO YOU WANT TO BUY
+            <a class="btn btn-info btn-block" ng-click="generateTx()" ng-show="wd"> Sign Transaction </a>
+          </div>
+
+          <!-- TXs -->
+          <section class="row" ng-show="showRaw">
+            <!-- Raw TX -->
+            <div class="form-group col-sm-6">
+              <h4 translate="SEND_raw"> Raw Transaction </h4>
+              <textarea class="form-control" rows="4" readonly> {{rawTx}} </textarea>
+            </div>
+            <!-- Signed TX -->
+            <div class="form-group col-sm-6">
+              <h4 translate="SEND_signed"> Signed Transaction </h4>
+              <textarea class="form-control" rows="4" readonly> {{signedTx}} </textarea>
+            </div>
+          </section>
+
+          <!-- Send Money Button (once tx has been signed) -->
+          <div class="form-group" ng-show="showRaw">
+            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#fundIco"> Send Money </a>
+          </div>
+
+          <article class="modal fade" id="fundIco" tabindex="-1">
+            <section class="modal-dialog">
+              <section class="modal-content">
+
+                <div class="modal-body">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                  <h2 class="modal-title text-danger">Warning!</h2>
+
+                  <p>You are about to <strong>buy some scamcoins</strong> on the Ethereum Classic chain.</p>
+
+                  <h4 translate="SENDModal_Content_3"> Are you sure you want to do this? </h4>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-default" data-dismiss="modal" translate="SENDModal_No">
+                    No, get me out of here!
+                  </button>
+                  <button class="btn btn-primary" ng-click="sendTx()" translate="SENDModal_Yes">
+                    Yes, I am sure! Make transaction.
+                  </button>
+                </div>
+
+              </section>
+            </section>
+          </article>
+     
+      
+
+        </section>
+     
+        
+
+      </article>
+      <!-- / Fund ICO -->
+
       <!--wallet decrypt-->
-      <article class="form-group" ng-show="(!wd && visibility=='launchView') || (!wd && visibility=='fundView' && contract.selectedFunc && !contract.functions[contract.selectedFunc.index].constant)">
+      <article class="form-group" ng-show="(!wd && visibility=='launchView') || (!wd && visibility=='fundView')">
           
             <wallet-decrypt-drtv></wallet-decrypt-drtv>         
       </article>
@@ -1567,11 +1648,11 @@ contract ReplaySafeSend {
       <article ng-show="contract.selectedFunc!=null">
 
         <button class="btn btn-primary" ng-click="readFromContract()" ng-show="contract.functions[contract.selectedFunc.index].constant && showRead">
-          <span translate="CONTRACT_Read"> READ</span>
+          <span > READ</span>
         </button>
 
         <button class="btn btn-primary" ng-click="generateContractTx()" ng-show="!contract.functions[contract.selectedFunc.index].constant">
-          <span translate="CONTRACT_Write"> WRITE</span>
+          <span > WRITE</span>
         </button>
 
         </br>
