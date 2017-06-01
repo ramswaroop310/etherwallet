@@ -1257,104 +1257,197 @@ module.exports = contractsCtrl;
 
 },{}],9:[function(require,module,exports){
 'use strict';
-var replayProtectionCtrl = function($scope, $sce, walletService) {
-	new Modal(document.getElementById('sendTransaction'));
-	walletService.wallet = null;
-	walletService.password = '';
-	$scope.notifier = uiFuncs.notifier;
-	$scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
-	$scope.showAdvance = false;
-	$scope.showRaw = false;
-	$scope.safeSendContract = "0x40ebf2d6e998a76a848c41908733b26e04adffe2"; 
-	$scope.safeSend = "0x4401a6e4";
-	$scope.tx = {
-		gasLimit: 90000,
-		data: '',
-		to: $scope.replaySafeSendContract,
-		unit: "ether",
-		value: 0,
-		nonce: null,
-		gasPrice: null,
-		donate: false
-	}
-	$scope.contractTx = {
-		to: '',
-		value: 0,
-		unit: "ether"
-	}
-	$scope.$watch(function() {
-		if (walletService.wallet == null) return null;
-		return walletService.wallet.getAddressString();
-	}, function() {
-		if (walletService.wallet == null) return;
-		$scope.wallet = walletService.wallet;
-		$scope.setBalance();
-	});
-	$scope.setBalance = function() {
-		ajaxReq.getBalance($scope.wallet.getAddressString(), function(data) {
-			if (data.error) {
-				$scope.etherBalance = data.msg;
-			} else {
-				$scope.etherBalance = etherUnits.toEther(data.data.balance, 'wei');
-				ajaxReq.getETHvalue(function(data) {
-					$scope.usdBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.usd);
-					$scope.eurBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.eur);
-					$scope.btcBalance = etherUnits.toFiat($scope.etherBalance, 'ether', data.btc);
-				});
-			}
-		});
-	}
-	$scope.$watch('tx', function() {
-	  	$scope.showRaw = false;
-	}, true);
-	$scope.validateAddress = function() {
-		console.log($scope.contractTx)
-		if (ethFuncs.validateEtherAddress($scope.contractTx.to)) {
-		  $scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getSuccessText(globalFuncs.successMsgs[0]));
-		} else {
-		  $scope.validateAddressStatus = $sce.trustAsHtml(globalFuncs.getDangerText(globalFuncs.errorMsgs[5]));
-		}
-	}
 
-	// sending
-	$scope.generateSafeTx = function() {
-		try {
-			if (!ethFuncs.validateEtherAddress($scope.contractTx.to)) throw globalFuncs.errorMsgs[5];
-			else if (!globalFuncs.isNumeric($scope.contractTx.value) || parseFloat($scope.contractTx.value) < 0) throw globalFuncs.errorMsgs[7];
-			$scope.tx.to = $scope.safeSendContract;
-
-			var value = ethFuncs.padLeft(new BigNumber($scope.contractTx.value).times(etherUnits.toWei($scope.contractTx.value, $scope.contractTx.unit)).toString(16), 64);
-			var toAdd = ethFuncs.padLeft(ethFuncs.getNakedAddress($scope.contractTx.to), 64);
-			$scope.tx.data = $scope.safeSend + toAdd;
-			$scope.tx.value = $scope.contractTx.value;
-			$scope.tx.unit = $scope.contractTx.unit;
-			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(''));
-			$scope.generateTx();
-		} catch (e) {
-			$scope.showRaw = false;
-			$scope.validateTxStatus = $sce.trustAsHtml(globalFuncs.getDangerText(e));
-		}
-	};
-	$scope.generateTx = function() {
-		var txData = uiFuncs.getTxData($scope);
-        uiFuncs.generateTx(txData, function (rawTx) {
-            if (!rawTx.isError) {
-                $scope.rawTx = rawTx.rawTx;
-                $scope.signedTx = rawTx.signedTx;
-
-                $scope.showRaw = true;
-            } else {
-                $scope.showRaw = false;
-                $scope.notifier.danger(rawTx.error);
+var icoCtrl = function icoCtrl($scope, $sce, walletService) {
+    $scope.ajaxReq = ajaxReq;
+    $scope.notifier = uiFuncs.notifier;
+    $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
+    walletService.wallet = null;
+    $scope.visibility = "launchView";
+    $scope.showReadWrite = false;
+    $scope.sendIcoModal = new Modal(document.getElementById('launchIco'));
+    $scope.Validator = Validator;
+    $scope.tx = {
+        gasLimit: '',
+        data: '',
+        to: '',
+        unit: "ether",
+        value: 0,
+        nonce: null,
+        gasPrice: null
+    };
+    $scope.contract = {
+        address: globalFuncs.urlGet('address') != null && $scope.Validator.isValidAddress(globalFuncs.urlGet('address')) ? globalFuncs.urlGet('address') : '',
+        abi: '',
+        functions: [],
+        selectedFunc: null
+    };
+    // $scope.selectedAbi = ajaxReq.abiList[0];
+    $scope.showRaw = false;
+    $scope.$watch(function () {
+        if (walletService.wallet == null) return null;
+        return walletService.wallet.getAddressString();
+    }, function () {
+        if (walletService.wallet == null) return;
+        $scope.wallet = walletService.wallet;
+        $scope.wd = true;
+        $scope.tx.nonce = 0;
+    });
+    $scope.$watch('visibility', function (newValue, oldValue) {
+        $scope.tx = {
+            gasLimit: '',
+            data: '',
+            to: '',
+            unit: "ether",
+            value: 0,
+            nonce: null,
+            gasPrice: null
+        };
+    });
+    $scope.$watch('tx', function (newValue, oldValue) {
+        $scope.showRaw = false;
+        if (newValue.gasLimit == oldValue.gasLimit && $scope.Validator.isValidHex($scope.tx.data) && $scope.tx.data != '' && $scope.Validator.isPositiveNumber($scope.tx.value)) {
+            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
+            $scope.estimateTimer = setTimeout(function () {
+                $scope.estimateGasLimit();
+            }, 500);
+        }
+    }, true);
+    $scope.$watch('contract.address', function (newValue, oldValue) {
+        if ($scope.Validator.isValidAddress($scope.contract.address)) {
+            for (var i in ajaxReq.abiList) {
+                if (ajaxReq.abiList[i].address.toLowerCase() == $scope.contract.address.toLowerCase()) {
+                    $scope.contract.abi = ajaxReq.abiList[i].abi;
+                    break;
+                }
             }
-            if (!$scope.$$phase) $scope.$apply();
+        }
+    });
+    /*
+    $scope.selectExistingAbi = function (index) {
+        $scope.selectedAbi = ajaxReq.abiList[index];
+        $scope.contract.address = $scope.selectedAbi.address;
+        $scope.dropdownExistingContracts = false;
+    };*/
+    $scope.estimateGasLimit = function () {
+        var estObj = {
+            from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
+            value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
+            data: ethFuncs.sanitizeHex($scope.tx.data)
+        };
+        if ($scope.tx.to != '') estObj.to = $scope.tx.to;
+        ethFuncs.estimateGas(estObj, function (data) {
+            if (!data.error) $scope.tx.gasLimit = data.data;
         });
-	}
-	$scope.sendTx = function() {
-		uiFuncs.sendTx($scope, $sce);
-	}
+    };
+    $scope.generateTx = function () {
+        try {
+            if ($scope.wallet == null) throw globalFuncs.errorMsgs[3];else if (!ethFuncs.validateHexString($scope.tx.data)) throw globalFuncs.errorMsgs[9];else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0) throw globalFuncs.errorMsgs[8];
+            $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
+            ajaxReq.getTransactionData($scope.wallet.getAddressString(), function (data) {
+                if (data.error) throw data.msg;
+                data = data.data;
+                $scope.tx.to = $scope.tx.to == '' ? '0xCONTRACT' : $scope.tx.to;
+                $scope.tx.contractAddr = $scope.tx.to == '0xCONTRACT' ? ethFuncs.getDeterministicContractAddress($scope.wallet.getAddressString(), data.nonce) : '';
+                var txData = uiFuncs.getTxData($scope);
+                uiFuncs.generateTx(txData, function (rawTx) {
+                    if (!rawTx.isError) {
+                        $scope.rawTx = rawTx.rawTx;
+                        $scope.signedTx = rawTx.signedTx;
+
+                        $scope.showRaw = true;
+                    } else {
+                        $scope.showRaw = false;
+                        $scope.notifier.danger(rawTx.error);
+                    }
+                    if (!$scope.$$phase) $scope.$apply();
+                });
+            });
+        } catch (e) {
+            $scope.notifier.danger(e);
+        }
+    };
+    $scope.sendTx = function () {
+        $scope.sendTxModal.close();
+        $scope.sendContractModal.close();
+        uiFuncs.sendTx($scope.signedTx, function (resp) {
+            if (!resp.isError) {
+                var bExStr = "<a href='http://etherhub.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
+                var contractAddr = " & Contract Address <a href='http://etherhub.io/addr/" + $scope.tx.contractAddr + "' target='_blank'>" + $scope.tx.contractAddr + "</a>";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
+            } else {
+                $scope.notifier.danger(resp.error);
+            }
+        });
+    };
+    $scope.setVisibility = function (str) {
+        $scope.visibility = str;
+    };
+    $scope.selectFunc = function (index) {
+        $scope.contract.selectedFunc = { name: $scope.contract.functions[index].name, index: index };
+        if (!$scope.contract.functions[index].inputs.length) {
+            $scope.readFromContract();
+            $scope.showRead = false;
+        } else $scope.showRead = true;
+        $scope.dropdownContracts = !$scope.dropdownContracts;
+    };
+    $scope.getTxData = function () {
+        var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
+        var fullFuncName = ethUtil.solidityUtils.transformToFullName(curFunc);
+        var funcSig = ethFuncs.getFunctionSignature(fullFuncName);
+        var typeName = ethUtil.solidityUtils.extractTypeName(fullFuncName);
+        var types = typeName.split(',');
+        types = types[0] == "" ? [] : types;
+        var values = [];
+        for (var i in curFunc.inputs) {
+            if (curFunc.inputs[i].value) {
+                if (curFunc.inputs[i].type.indexOf('[') !== -1 && curFunc.inputs[i].type.indexOf(']') !== -1) values.push(curFunc.inputs[i].value.split(','));else values.push(curFunc.inputs[i].value);
+            } else values.push('');
+        }
+        return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, values);
+    };
+    $scope.readFromContract = function () {
+        ajaxReq.getEthCall({ to: $scope.contract.address, data: $scope.getTxData() }, function (data) {
+            if (!data.error) {
+                var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
+                var outTypes = curFunc.outputs.map(function (i) {
+                    return i.type;
+                });
+                var decoded = ethUtil.solidityCoder.decodeParams(outTypes, data.data.replace('0x', ''));
+                for (var i in decoded) {
+                    if (decoded[i] instanceof BigNumber) curFunc.outputs[i].value = decoded[i].toFixed(0);else curFunc.outputs[i].value = decoded[i];
+                }
+            } else throw data.msg;
+        });
+    };
+    $scope.initContract = function () {
+        try {
+            if (!$scope.Validator.isValidAddress($scope.contract.address)) throw globalFuncs.errorMsgs[5];else if (!$scope.Validator.isJSON($scope.contract.abi)) throw globalFuncs.errorMsgs[26];
+            $scope.contract.functions = [];
+            var tAbi = JSON.parse($scope.contract.abi);
+            for (var i in tAbi) {
+                if (tAbi[i].type == "function") {
+                    tAbi[i].inputs.map(function (i) {
+                        i.value = '';
+                    });
+                    $scope.contract.functions.push(tAbi[i]);
+                }
+            }$scope.showReadWrite = true;
+        } catch (e) {
+            $scope.notifier.danger(e);
+        }
+    };
+    $scope.generateContractTx = function () {
+        if (!$scope.wd) {
+            $scope.notifier.danger(globalFuncs.errorMsgs[3]);
+            return;
+        }
+        $scope.tx.data = $scope.getTxData();
+        $scope.tx.to = $scope.contract.address;
+        $scope.sendContractModal.open();
+    };
 };
-module.exports = replayProtectionCtrl;
+module.exports = icoCtrl;
 
 
 },{}],14:[function(require,module,exports){
@@ -1993,7 +2086,7 @@ var decryptWalletCtrl = require('./controllers/decryptWalletCtrl');
 var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
 var contractsCtrl = require('./controllers/contractsCtrl');
-var replayProtectionCtrl = require('./controllers/replayProtectionCtrl');
+var icoCtrl = require('./controllers/icoCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
 var walletBalanceCtrl = require('./controllers/walletBalanceCtrl');
 var globalService = require('./services/globalService');
@@ -2031,7 +2124,7 @@ app.controller('decryptWalletCtrl', ['$scope','$sce','walletService', decryptWal
 app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
 app.controller('contractsCtrl', ['$scope','$sce','walletService', contractsCtrl]);
-app.controller('replayProtectionCtrl', ['$scope','$sce','walletService', replayProtectionCtrl]);
+app.controller('icoCtrl', ['$scope','$sce','walletService', icoCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
 app.controller('walletBalanceCtrl', ['$scope', '$sce', walletBalanceCtrl]);
 if(IS_CX){
@@ -2042,7 +2135,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/replayProtectionCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/icoCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -2399,6 +2492,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       mew: true,
       cx: false
     },
+    /*
     replayProtection: {
       id: 7,
       name: "Replay Protection",
@@ -2406,7 +2500,6 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       mew: false,
       cx: false
     },
-    /*
     dao: {
       id: 7,
       name: "The DAO",
@@ -2422,21 +2515,21 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       cx: true
     },*/
     contracts: {
-      id: 8,
+      id: 7,
       name: "Contracts",
       url:"contracts",
       mew: true,
       cx: false
     },
     help: {
-      id: 9,
+      id: 8,
       name: "Help",
       url: "help",
       mew: true,
       cx: true
     },
     ico: {
-      id: 10,
+      id: 9,
       name: "theICO",
       url: "ico",
       mew: true,
