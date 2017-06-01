@@ -56,7 +56,7 @@ contract IcoMachine {
     function getcount() constant returns (uint){
       return tokencount;
     }
-    
+
     function getToken(uint index) constant returns(address){
       return  Ico[index].tokenAddress;
     }
