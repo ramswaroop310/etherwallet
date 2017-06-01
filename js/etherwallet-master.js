@@ -1428,6 +1428,169 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
 module.exports = icoCtrl;
 
 
+},{}],926:[function(require,module,exports){
+'use strict';
+
+var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
+    $scope.ajaxReq = ajaxReq;
+    $scope.notifier = uiFuncs.notifier;
+    $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
+    walletService.wallet = null;
+    $scope.activeToken = null;
+    $scope.Validator = Validator;
+    $scope.crowdsale = {};
+    $scope.tx = {
+        gasLimit: '',
+        data: '',
+        to: '',
+        unit: "ether",
+        value: 0,
+        nonce: null,
+        gasPrice: null
+    };
+    $scope.ico = {
+        decimals: 8,
+        symbol: "POOP"
+    };
+    $scope.showRaw = false;
+    $scope.$watch(function () {
+        if (walletService.wallet == null) return null;
+        return walletService.wallet.getAddressString();
+    }, function () {
+        if (walletService.wallet == null) return;
+        $scope.wallet = walletService.wallet;
+        $scope.wd = true;
+        $scope.tx.nonce = 0;
+    }, function () {
+        if (($scope.activeToken !== null) || !($scope.wd)) return;
+        $scope.readToken(walletService.wallet.getAddressString())
+    });
+    // get information from registry
+    $scope.readOwnerToken = function (addr) {
+        const tokensHex = "0xe4860339";  //tokens(address)
+        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
+        var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
+        ajaxReq.getEthCall(tokenCall, function (data) {
+            if (!data.error) {
+                var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
+                console.log(decoded);
+                $scope.activeToken = { 
+                    "tokenAddress": decoded[0], 
+                    "saleAddress": decoded[1],
+                    "initialSupply": decoded[2].toString(10),
+                    "name": decoded[3],
+                    "decimals": decoded[4].toString(10),
+                    "symbol": decoded[5]
+                }
+            } else throw data.msg;
+        });
+    };
+    $scope.readCrowdsale = function (addr) {
+        const amountRaisedHex = "0x7b3e5e7b";
+        const beneficiaryHex = "0x38af3eed"; //beneficiary()
+        const fundingGoalHex = "0x7a3a0e84"; //fundingGoal()
+        const priceHex = "0xa035b1fe"; //price()
+        const tokenRewardHex = "0x6e66f6e9"; //tokenReward()
+        const balanceOfHex = "0x70a08231"; //balanceOf(address)
+        const crowdsaleTypes = [
+            {"sig": amountRaisedHex, "type": "uint", "name": "amountRaised"},
+            {"sig": beneficiaryHex, "type": "address", "name": "beneficiary"},
+            {"sig": fundingGoalHex, "type": "uint", "name": "fundingGoal"},
+            {"sig": priceHex, "type": "uint", "name": "tokenPrice"},
+            {"sig": tokenRewardHex, "type": "address", "name": "tokenReward"}
+        ]
+        crowdsaleTypes.map(function(k) {
+            var crowdCall = ethFuncs.getDataObj(addr, k.sig, []);
+            ajaxReq.getEthCall(crowdCall, function (data) {
+                if (!data.error) {
+                    var decoded = ethUtil.solidityCoder.decodeParams([k.type], data.data.replace('0x', ''));
+                    console.log(decoded);
+                    $scope.crowdsale[k.name] = decoded[0];
+                } else throw data.msg;
+            });
+        })
+    };
+    $scope.$watch('tx', function (newValue, oldValue) {
+        $scope.showRaw = false;
+        if (newValue.gasLimit == oldValue.gasLimit && $scope.Validator.isValidHex($scope.tx.data) && $scope.tx.data != '' && $scope.Validator.isPositiveNumber($scope.tx.value)) {
+            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
+            $scope.estimateTimer = setTimeout(function () {
+                $scope.estimateGasLimit();
+            }, 500);
+        }
+    }, true);
+    $scope.estimateGasLimit = function () {
+        var estObj = {
+            from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
+            value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
+            data: ethFuncs.sanitizeHex($scope.tx.data)
+        };
+        if ($scope.tx.to != '') estObj.to = $scope.tx.to;
+        ethFuncs.estimateGas(estObj, function (data) {
+            if (!data.error) $scope.tx.gasLimit = data.data;
+        });
+    };
+    $scope.generateTx = function () {
+        try {
+            if ($scope.wallet == null) throw globalFuncs.errorMsgs[3];else if (!ethFuncs.validateHexString($scope.tx.data)) throw globalFuncs.errorMsgs[9];else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0) throw globalFuncs.errorMsgs[8];
+            $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
+            ajaxReq.getTransactionData($scope.wallet.getAddressString(), function (data) {
+                if (data.error) throw data.msg;
+                data = data.data;
+                $scope.tx.to = $scope.tx.to == '' ? '0xCONTRACT' : $scope.tx.to;
+                var txData = uiFuncs.getTxData($scope);
+                uiFuncs.generateTx(txData, function (rawTx) {
+                    if (!rawTx.isError) {
+                        $scope.rawTx = rawTx.rawTx;
+                        $scope.signedTx = rawTx.signedTx;
+
+                        $scope.showRaw = true;
+                    } else {
+                        $scope.showRaw = false;
+                        $scope.notifier.danger(rawTx.error);
+                    }
+                    if (!$scope.$$phase) $scope.$apply();
+                });
+            });
+        } catch (e) {
+            $scope.notifier.danger(e);
+        }
+    };
+    $scope.sendTx = function (msg) {
+        $scope.fundIcoModal.close();
+        $scope.launchIcoModal.close();
+        uiFuncs.sendTx($scope.signedTx, function (resp) {
+            if (!resp.isError) {
+                var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'><b> View your transaction </b></a>";
+                if ($scope.activeToken) 
+                    bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='http://gastracker.io/addr/" + $scope.activeToken.tokenAddress + "' target='_blank'>here</a> ";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr + msg);
+                $scope.setVisibility("fundView");
+            } else {
+                $scope.notifier.danger(resp.error);
+            }
+        });
+    };
+    $scope.getIcoTx = function (ico) {
+        const createSaleHex = "0x6019061b"; 
+        const createSaleTypes = ["uint256","uint256","address"];
+        var values = [ico.fundingGoal, ico.etherPrice];
+        return createSaleHex + ethUtil.solidityCoder.encodeParams(createSaleTypes, values);
+    };    
+    // write to createSale function
+    $scope.initSale = function() {
+        if (!$scope.wd) {
+            $scope.notifier.danger(globalFuncs.errorMsgs[3]);
+            return;
+        }
+        $scope.tx.data = $scope.getIcoTx($scope.ico);
+        $scope.tx.to = icoMachineAddress; 
+        $scope.fundIcoModal.open();
+    };    
+};
+module.exports = buyIcoCtrl;
+
+
 },{}],14:[function(require,module,exports){
 'use strict';
 var viewCtrl = function($scope, globalService, $sce) {
@@ -2065,6 +2228,7 @@ var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
 var contractsCtrl = require('./controllers/contractsCtrl');
 var icoCtrl = require('./controllers/icoCtrl');
+var buyIcoCtrl = require('./controllers/buyIcoCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
 var walletBalanceCtrl = require('./controllers/walletBalanceCtrl');
 var globalService = require('./services/globalService');
@@ -2103,6 +2267,7 @@ app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
 app.controller('contractsCtrl', ['$scope','$sce','walletService', contractsCtrl]);
 app.controller('icoCtrl', ['$scope','$sce','walletService', icoCtrl]);
+app.controller('buyIcoCtrl', ['$scope','$sce','walletService', buyIcoCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
 app.controller('walletBalanceCtrl', ['$scope', '$sce', walletBalanceCtrl]);
 if(IS_CX){
@@ -2113,7 +2278,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/icoCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/icoCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571,"./controllers/buyIcoCtrl":926}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {

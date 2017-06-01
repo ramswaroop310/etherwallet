@@ -1632,13 +1632,31 @@ contract ReplaySafeSend {
 
       <h1>Buy ICOs</h1>
  
-      <article class="row">
-        <!-- Address -->
-        <section class="col-sm-6 clearfix">
-          <h4 > Token Address</h4> 
-          <input class="form-control" placeholder="0xcf0e737cbe5879ae8973f4e32ada83daf92f657e" ng-class="Validator.isValidAddress(token.address) ? 'is-valid' : 'is-invalid'" ng-model="token.address"/>
-        </section>
-      </article>
+      <div ng-show="!activeToken" class="row">
+        <!-- This is where money is collected -->
+        <h4 > Crowdsale Address</h4> 
+        <div class="col-sm-6">
+          <input class="form-control" placeholder="0x351cbd8e4c32e2dbc9ccb38099abce515f8e7990" ng-class="Validator.isValidAddress(crowdsale.address) ? 'is-valid' : 'is-invalid'" ng-model="crowdsale.address"/>
+        </div>
+        <div class="col-sm-6">
+          <button class="btn btn-primary" ng-click="readCrowdsale(crowdsale.address)" > ACCESS </button>  
+        </div>
+      </div>
+
+      <div ng-show="crowdsale" class="form-group col-xs-10 clearfix">
+        <h4> Crowdsale Info: {{crowdsale}} </h4>
+        <div>
+
+        </div>
+      </div>
+      <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
+        <h4> Token Info: {{activeToken}} </h4>
+        <div>
+         <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
+         <strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
+         <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
+        </div>
+      </div>
     
       <img class="col-sm-4 col-md-3"src="images/pennyscam.gif" />
 
