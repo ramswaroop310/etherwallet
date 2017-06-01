@@ -10,7 +10,8 @@ import "./crowdfund.sol";
 contract IcoMachine {
     address public owner;
 
-    mapping (address => address) public tokens; // map token addresses to creator address
+    mapping (address => address) public tokens; // map creator address to token address
+                                                // right now only one token per creator. fix later.
 
     function IcoMachine() {
         owner = msg.sender;
@@ -23,19 +24,18 @@ contract IcoMachine {
         string tokenSymbol ) returns (address _tokenAddress) 
     {
         address newToken = new CoinGenToken(initialSupply, tokenName, decimalUnits, tokenSymbol);
-        tokens[newToken] = msg.sender;
+        tokens[msg.sender] = newToken;
         _tokenAddress = newToken;
         return _tokenAddress;                                                   
     } 
 
     function createSale(
         uint fundingGoal,
-        uint etherCostOfEachToken,
-        token tokenAddress ) returns (address _saleAddress) 
+        uint etherCostOfEachToken ) returns (address _saleAddress) 
     {
-        if (tokens[tokenAddress] == 0x0) throw;
-        address beneficiary = tokens[tokenAddress];
-        address saleAddress = new Crowdsale(beneficiary, fundingGoal, etherCostOfEachToken, tokenAddress);
+        if (tokens[msg.sender] == 0x0) throw;
+        token tokenAddress = tokens[msg.sender];
+        address saleAddress = new Crowdsale(msg.sender, fundingGoal, etherCostOfEachToken, tokenAddress);
         _saleAddress = saleAddress;
         return _saleAddress;
     }

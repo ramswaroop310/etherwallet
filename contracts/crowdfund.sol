@@ -21,7 +21,7 @@ contract Crowdsale {
         address ifSuccessfulSendTo,
         uint fundingGoalInEthers,
         uint etherCostOfEachToken,
-        token addressOfTokenUsedAsReward
+        address addressOfTokenUsedAsReward
     ) {
         beneficiary = ifSuccessfulSendTo;
         fundingGoal = fundingGoalInEthers * 1 ether;
