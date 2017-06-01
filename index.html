@@ -1362,12 +1362,6 @@ contract ReplaySafeSend {
     <!-- ICO -->
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.ico.id" ng-controller='icoCtrl' ng-cloak>
 
-      <!-- Warning-->
-      <div class="alert alert-danger">
-          <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. Now go get your new Tesla you crazy kids!
-      </div>
-      <!-- end -->
-
       <!-- Title -->
       <div class="row">
       <img class="col-md-5 col-sm-12 "src="images/ICOimg.png" />
@@ -1498,6 +1492,11 @@ contract ReplaySafeSend {
         <!-- Button -->
         <section class="col-xs-12 clearfix" ng-show="wd">
           <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+          <!-- Warning-->
+          <div class="alert alert-danger">
+              <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. Now go get your new Tesla you crazy kids!
+          </div>
+          <!-- end -->
         </section>
 
         <section class="col-xs-12">
