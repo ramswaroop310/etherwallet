@@ -1286,7 +1286,7 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     $scope.showRaw = false;
     $scope.$watch(function () {
         if (walletService.wallet == null) return null;
-        $scope.readFromToken(walletService.wallet.getAddressString());
+        if ($scope.activeToken == null) $scope.readFromToken(walletService.wallet.getAddressString());
         return walletService.wallet.getAddressString();
     }, function () {
         if (walletService.wallet == null) return;
