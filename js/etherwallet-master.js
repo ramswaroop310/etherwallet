@@ -1441,9 +1441,6 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
     $scope.Validator = Validator;
     $scope.crowdsale = null;
     $scope.sendTxModal = new Modal(document.getElementById('buyTokens'));
-    if (globalFuncs.urlGet('address')) {
-        $scope.crowdsale = {address: globalFuncs.urlGet('address')};
-    }
     $scope.tx = {
         gasLimit: globalFuncs.defaultTxGasLimit,
         to: '',
@@ -1463,26 +1460,6 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
         $scope.wd = true;
         $scope.tx.nonce = 0;
     });
-    // get information from registry
-    $scope.readOwnerToken = function (addr) {
-        const tokensHex = "0xe4860339";  //tokens(address)
-        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
-        var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
-        ajaxReq.getEthCall(tokenCall, function (data) {
-            if (!data.error) {
-                var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
-                console.log(decoded);
-                $scope.token = { 
-                    "tokenAddress": decoded[0], 
-                    "saleAddress": decoded[1],
-                    "initialSupply": decoded[2].toString(10),
-                    "name": decoded[3],
-                    "decimals": decoded[4].toString(10),
-                    "symbol": decoded[5]
-                }
-            } else throw data.msg;
-        });
-    };
     $scope.readCrowdsale = function (addr) {
         const amountRaisedHex = "0x7b3e5e7b";
         const beneficiaryHex = "0x38af3eed"; //beneficiary()
@@ -1508,6 +1485,35 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
             });
         })
     };
+    // get information from registry
+    $scope.readOwnerToken = function (addr) {
+        const tokensHex = "0xe4860339";  //tokens(address)
+        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
+        var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
+        ajaxReq.getEthCall(tokenCall, function (data) {
+            if (!data.error) {
+                var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
+                console.log(decoded);
+                $scope.token = { 
+                    "tokenAddress": decoded[0], 
+                    "saleAddress": decoded[1],
+                    "initialSupply": decoded[2].toString(10),
+                    "name": decoded[3],
+                    "decimals": decoded[4].toString(10),
+                    "symbol": decoded[5]
+                }
+                if (!$scope.crowdsale && $scope.token.saleAddress) {
+                    $scope.crowdsale = {address: $scope.token.saleAddress};
+                    $scope.readCrowdsale($scope.token.saleAddress)
+                }
+            } else throw data.msg;
+        });
+    };    
+    if (globalFuncs.urlGet('address')) {
+        $scope.crowdsale = {address: globalFuncs.urlGet('address')};
+    } else if (globalFuncs.urlGet('owner')) {
+        $scope.readOwnerToken(globalFuncs.urlGet('owner'))
+    }
     $scope.generateTx = function(){
         $scope.tx.to = $scope.crowdsale.address;
         var txData = uiFuncs.getTxData($scope);

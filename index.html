@@ -1470,7 +1470,6 @@ contract ReplaySafeSend {
             I can't find your token on the blockchain yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
           </div>
           <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
-            <h4> Token Info: </h4>
             <div>
              <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
              <strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
@@ -1663,7 +1662,7 @@ contract ReplaySafeSend {
             <wallet-decrypt-drtv></wallet-decrypt-drtv>
         </article>
         <article class="form-group" ng-show="wd">
-           <h4>Amount to Buy</h4>
+           <h4>Amount to Spend (TODO: this will get you X tokens)</h4>
            <div class="col-xs-12">
              <input class="form-control" type="text" placeholder="Amount" ng-model="tx.value"/>
            </div>
