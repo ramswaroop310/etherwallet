@@ -2434,7 +2434,15 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "help",
       mew: true,
       cx: true
+    },
+    ico: {
+      id: 10,
+      name: "theICO",
+      url: "ico",
+      mew: true,
+      cx: true
     }
+
   };
   var currentTab = 5;
   if(typeof chrome != 'undefined')
