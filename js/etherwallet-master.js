@@ -1380,7 +1380,7 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             if (!resp.isError) {
                 var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'><b> View your transaction </b></a>";
                 if ($scope.activeToken) 
-                    bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='http://gastracker.io/addr/" + $scope.activeToken.tokenAddress + "' target='_blank'>here</a> ";
+                    bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='?owner=" + walletService.wallet.getAddressString() + "#buy-ico' target='_blank'>here</a> ";
                 $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr + msg);
                 $scope.setVisibility("fundView");
             } else {
