@@ -4316,6 +4316,7 @@ article + .no-items {
 }
 /* Contracts */
 .contracts h4+.dropdown,.contracts h4+.dropdown .btn{margin-top:0}.contracts a.isActive{color:#333}.contracts .dropdown-toggle{display:block;text-align:left;white-space:normal}.contracts .dropdown-toggle .caret{position:absolute;right:1rem;top:1.25rem}.contracts .dropdown-menu-left{font-size:.92rem;left:auto;right:0;min-width:37rem}.contracts .dropdown-menu-left small{float:right}
+a.isActive{color:#333}
 /* Custom Utilities */
 .text-navy {
   color: #263c56;

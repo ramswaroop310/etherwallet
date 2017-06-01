@@ -38,7 +38,7 @@
   </a>
   <header aria-label="header" ng-controller='tabsCtrl'>
     <section class="bg-gradient header-branding">
-    <section class="container">      
+    <section class="container">
       <a class="brand" href="https://ethereumproject.github.io/etherwallet/"><img src="images/etherwallet-logo.png" height="70px" width="auto" alt="Classic Ether Wallet" /></a>
       <div class="tagline"><span style="max-width: 395px">Client-Side Classic Ether Wallet &middot; v3.0</span> &nbsp;&nbsp;
       <span class="dropdown" ng-cloak>
@@ -72,9 +72,9 @@
       <!-- Top -->
       <h2> Generate Wallet </h2>
 
-    
+
       <p>We removed the <a ng-click="globalService.currentTab=globalService.tabs.bulkGenerate.id"> Bulk Generate tab </a> from the nav as it wasn't very widely used, but feel free to still use it if you want.</p>
-  
+
 
       <article class="row">
         <div class="col-sm-6">
@@ -325,10 +325,10 @@
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.sendTransaction.id">
       <h2> Send ETC & Tokens </h2>
       <div>
-          
-          
+
+
             <wallet-decrypt-drtv></wallet-decrypt-drtv>
-          
+
       </div>
       <section class="row" ng-show="wallet!=null" ng-controller='sendTxCtrl'>
         <hr />
@@ -605,13 +605,13 @@
     </div>
     <!-- /send offline transaction -->
 
-    <!-- Replay Protection --> 
+    <!-- Replay Protection -->
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.replayProtection.id">
   <h2> Send with Replay Protection</h2>
   <p>This sends a transaction through a contract to make sure you are NOT on the fork. The transaction will only succeed on EthereumClassic. It will be rejected if replayed on EthereumForked. For more information about replay attacks, <a href="https://medium.com/@timonrapp/how-to-deal-with-the-ethereum-replay-attack-3fd44074a6d8#.tr98aa8ri" target="_blank">go here</a>.
   </p>
   <wallet-decrypt-drtv></wallet-decrypt-drtv>
-  
+
   <section class="row" ng-show="wallet!=null" ng-controller='replayProtectionCtrl'>
 
 
@@ -709,8 +709,8 @@
     <!-- CONTRACT INFO -->
     <div class="col-md-12">
       <span class="form-group">
-        <h4>Contract Information</h4> 
-        <label> Contract Address</label> 
+        <h4>Contract Information</h4>
+        <label> Contract Address</label>
         <pre style="white-space: pre-wrap;">0x40ebf2d6e998a76a848c41908733b26e04adffe2</pre>
         <label>Source: <a href="http://etherhub.io/addr/0x40ebf2d6e998a76a848c41908733b26e04adffe2" target="_blank">Verify contract here.</a></label>
         <pre>
@@ -741,7 +741,7 @@ contract ReplaySafeSend {
     </div>
     <!-- / Replay Protection -->
 
-    <!-- Contracts stuff --> 
+    <!-- Contracts stuff -->
     <div class="tab-pane contracts active" ng-if="globalService.currentTab==globalService.tabs.contracts.id" ng-controller='contractsCtrl' ng-cloak>
 
       <!-- Title -->
@@ -756,7 +756,7 @@ contract ReplaySafeSend {
       <!-- Interact Contracts -->
       <article class="row" ng-show="visibility=='interactView'">
 
-         
+
         <!-- Address -->
         <section class="col-sm-6 clearfix">
           <h4 translate="CONTRACT_Title"> Contract Address</h4> <!--<small style="float: right; margin-top: -2rem;"> or </small>-->
@@ -786,8 +786,8 @@ contract ReplaySafeSend {
         <section class="col-xs-12 clearfix">
           <button class="btn btn-primary" ng-click="initContract()" translate="x_Access"> ACCESS </button>
         </section>
-     
-        
+
+
 
 
         <div class="col-xs-12 clearfix"> <hr /> </div>
@@ -892,8 +892,8 @@ contract ReplaySafeSend {
 
 
           </section>
-     
-          
+
+
         </div>
 
         <article class="modal fade" id="sendContract" tabindex="-1">
@@ -948,8 +948,8 @@ contract ReplaySafeSend {
           </section>
         </article>
 
-     
-        
+
+
 
       </article>
       <!-- / Interact Contracts -->
@@ -983,7 +983,7 @@ contract ReplaySafeSend {
 
           <!-- Sign TX Button (once wallet has been unlocked) -->
           <div class="form-group">
-            <a class="btn btn-info btn-block" ng-click="generateTx()" ng-show="wd" translate="DEP_signtx"> Sign Transaction </a>
+            <a class="btn btn-info btn-block" ng-click="generateTx()" ng-show="wd"> Sign Transaction </a>
           </div>
 
           <!-- TXs -->
@@ -1031,20 +1031,20 @@ contract ReplaySafeSend {
               </section>
             </section>
           </article>
-     
-      
+
+
 
         </section>
-     
-        
+
+
 
       </article>
       <!-- / Deploy Contract -->
 
       <!--wallet decrypt-->
       <article class="form-group" ng-show="(!wd && visibility=='deployView') || (!wd && visibility=='interactView' && contract.selectedFunc && !contract.functions[contract.selectedFunc.index].constant)">
-          
-            <wallet-decrypt-drtv></wallet-decrypt-drtv>         
+
+            <wallet-decrypt-drtv></wallet-decrypt-drtv>
       </article>
 
       <article ng-show="contract.selectedFunc!=null">
@@ -1061,7 +1061,7 @@ contract ReplaySafeSend {
       </article>
 
     </div>
-    <!-- / Contracts stuff --> 
+    <!-- / Contracts stuff -->
 
     <!-- Help -->
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.help.id">
@@ -1094,8 +1094,8 @@ contract ReplaySafeSend {
 
       <h4>1. How do I create a new wallet? </h4>
       <ol>
-           <li> Go to the "Generate Wallet" tab.</li>    
-        
+           <li> Go to the "Generate Wallet" tab.</li>
+
         <li> Create a strong password. Save this somewhere safe. <em><small>The password encrypts the private key for this wallet. You will need this password to send transactions.</small></em></li>
         <li> Type or copy the password from where you have saved it and paste it into the "Enter a password" field. </li>
         <li> Click "GENERATE". </li>
@@ -1122,7 +1122,7 @@ contract ReplaySafeSend {
       </ol>
 
 
-      
+
       <h4>2b. How do I safely / offline / cold storage with ClassicEtherWallet?</h4>
       <ol>
         <li>Go here: <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages">https://github.com/ethereumproject/etherwallet/tree/gh-pages</a>.</li>
@@ -1138,14 +1138,14 @@ contract ReplaySafeSend {
         <li>Refresh that page. Select the keystore file and enter the password to ensure it are correct and can access your wallet. Check that the address you saved on your computer or USB is the same.</li>
       </ol>
       <p>Keep in mind, you must prevent loss of the keys and password due to loss or failure of you hard drive failure, or USB drive, or piece of paper. You also must keep in mind physical loss / damage of an entire area (think fire or flood). So. Multiple. Different. Physical. Locations. </p>
-      
+
 
 
       <h4>3. How do I verify I have access to my new wallet?</h4>
       <p> <strong> Before you send any ETC to your new wallet</strong>, you should ensure you have access to it. You should NOT copy and paste from the generate wallet tab, but instead copy and paste from the text document or paper where you have stored your wallet information.</p>
       <ol>
-           <li> Navigate to the "Send Transaction" tab. </li>    
-        
+           <li> Navigate to the "Send Transaction" tab. </li>
+
         <li> Select your wallet file -or- paste your private key. </li>
         <li> If the wallet is the encrypted, a text box will automatically appear. Enter the password. </li>
         <li> Click the "Decrypt" button. </li>
@@ -1154,7 +1154,7 @@ contract ReplaySafeSend {
       </ol>
 
 
-      
+
       <h4>4. How do I send ETC from one wallet to another? </h4>
       <p> Once you have saved and backed up all information <strong> and </strong> verified you have access to your new wallet, you can transfer some ETC to that new wallet.</p>
       <p><strong>Before you start,</strong> If you plan to move a large amount of ETC, you should test sending a small amount first to make sure everything goes smoothly. After making the small transaction, you can check by pasting the TX ID or the address into a blockchain explorer, e.g. <a href="http://etherhub.io" target="_blank">http://etherhub.io</a>.</p>
@@ -1172,13 +1172,13 @@ contract ReplaySafeSend {
         <li>The transaction will be submitted. The TX ID will display. You can copy that TX ID and paste it into the search bar on a blockchain explorer to verify the transaction went through.</li>
         <li> Success! </li>
       </ol>
-      
 
 
-      
 
 
-      
+
+
+
       <h4>5. How do I run ClassicEtherWallet.com offline/locally? </h4>
       <p> You can run ClassicEtherWallet.com on your computer instead of from the GitHub servers. Everything except the "send transaction" tab can be done completely without the internet, so feel free to turn your internet off. If you would like to send transactions from an offline or airgapped computer, check out the "Offline Transaction" tab. </p>
       <ol>
@@ -1191,20 +1191,20 @@ contract ReplaySafeSend {
       </ol>
       <p> In case you are not familiar, you need to keep the entire <code> dist folder</code> in order to run it, not just index.html. Don't touch or move anything around in the folder. If you are storing a backup of the ClassicEtherWallet repo for the distant future, we recommend just storing the ZIP so you can be sure the folder contents stay intact.</p>
       <p>As we are constantly updating ClassicEtherWallet.com, we recommend you periodically update your saved version of the repo. The ClassicEtherWallet team has <strong> no intentions of ever removing this project from GitHub. As long as GitHub is around, the repo will be accessible.</strong></p>
-      
 
 
-      
 
-      
+
+
+
       <h4>6. What happens if your site goes down? </h4>
       <p>There seems to be a lot of confusion about what ClassicEtherWallet does. It's not a web wallet where you put your ETC and we store them for you. You don't have a login and nothing ever gets saved to our servers. It is simply an interface that allows you to do things you normally would do via command line.</p>
       <p>If ClassicEtherWallet goes down, you would have to find another way (like geth or Ethereum Wallet / Mist) to do what we are doing. But you wouldn't have to "get" your ETC out of ClassicEtherWallet because it's not in ClassicEtherWallet. It's in whatever wallet your generated via our site.</p>
       <p> You can import your unencrypted private key and your Geth/Mist Format (encrypted) files directly into geth / Ethereum Wallet / Mist very easily now. See question #10 below. </p>
       <p>In addition, the likelihood of us taking ClassicEtherWallet down is slim to none. It costs us almost nothing to maintain as we aren't storing any information. If we do take the domain down, it still is, and always will be, publicly available at <a href="https://github.com/ethereumproject/etherwallet/tree/gh-pages" target="_blank">https://github.com/ethereumproject/etherwallet</a>. You can download the ZIP there and run it locally. </p>
-      
 
-      
+
+
 
 
       <h4>7. Is using the send transaction offline? </h4>
@@ -1233,7 +1233,7 @@ contract ReplaySafeSend {
 
 
       <h4>10. How do I import a wallet created with ClassicEtherWallet into geth / Ethereum Wallet / Mist?</h4>
-      
+
       <p><strong> Using your unencrypted private key... </strong></p>
       <ol>
         <li> If you do not already have your unencrypted private key, navigate to the "View Wallet Details" tab.</li>
@@ -1259,11 +1259,11 @@ contract ReplaySafeSend {
             <li> The next time you open the Ethereum Wallet application, your account will be listed under "Accounts". </li>
           </ul>
         </ol>
-      
+
       <p><strong> Using an Geth/Mist JSON file from ClassicEtherWallet v2+....</strong></p>
       <ol>
         <li> Go to the View Wallet Info Tab.</li> <li> Unlock your wallet using your ENCRYPTED private key or JSON file. </li>
-        
+
         <li> On the right hand side, look for <code>Download JSON file - Geth/Mist Format (encrypted)</code>. Press the DOWNLOAD button below that. You now have your keystore file.</li>
         <li> Open the Ethereum Wallet application. </li>
         <li> In the menu bar, go "Accounts" -> "Backup" -> "Accounts"</li>
@@ -1314,7 +1314,7 @@ contract ReplaySafeSend {
       <p> Of course, this all assumes that keys are generated in a truly random way & with sufficient entropy. The keys generated here meet that criteria. geth/Mist as well. Jaxx as well. The EthereumClassic wallets are all pretty good. Keys generated by brainwallets do not, as a person's brain is not capable of creating a truly random seed. There have been a number of other issues regarding lack of entropy or seeds not being generated in a truly random way in Bitcoin-land, but I'll save that for another day. </p>
       <hr />
 
-      
+
 
 
       <h4>Security </h4>
@@ -1359,6 +1359,254 @@ contract ReplaySafeSend {
     </div>
     <!-- end help-->
 
+    <!-- ICO -->
+    <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.ico.id" ng-controller='icoCtrl' ng-cloak>
+
+      <!-- Title -->
+      <div class="row">
+      <img class="col-md-5 col-sm-12 "src="images/ICOimg.png" />
+      </div>
+      <h1>
+        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Create a Token </a>
+        or
+        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Launch a Crowdsale</a>
+      </h1>
+      <!-- / Title -->
+
+      <!-- Launch an ICO -->
+      <article class="row" ng-show="visibility=='launchView'">
+
+
+        <!-- Token Info -->
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Token Name: </h4>
+          <input class="form-control" placeholder="Scamcoin" ng-model="ico.name"/>
+        </div>
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Number of Tokens: </h4>
+          <input class="form-control" placeholder="1000000" ng-model="ico.totalSupply"/>
+        </div>
+        <div class="form-group col-xs-6">
+          <h4> Token Symbol (optional): </h4>
+          <input class="form-control" placeholder="SCAM" ng-model="ico.symbol"/>
+        </div>
+        <div class="form-group col-xs-6">
+          <h4> Decimal Places (optional): </h4>
+          <input class="form-control" placeholder="8" ng-model="ico.decimals"/>
+        </div>
+
+
+        <!-- Button -->
+        <section class="col-xs-12 clearfix" ng-show="wd">
+          <button class="btn btn-primary" ng-click="initToken()"> LET'S DO THIS </button>
+        </section>
+
+        <div class="col-xs-12 clearfix"> <hr /> </div>
+
+        <article class="modal fade" id="launchIco" tabindex="-1">
+          <section class="modal-dialog">
+            <section class="modal-content">
+
+              <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <div ng-show="wd">
+
+                  <h2 class="modal-title text-danger" >Warning!</h2>
+
+                  <p>You are about to <strong>Create a Token</strong> on the <strong>Ethereum Classic</strong> chain.</p>
+
+                  <label> Gas </label>
+                  <input class="form-control" type="text" placeholder="300000" ng-model="tx.gasLimit" ng-class="Validator.isPositiveNumber(tx.gasLimit) ? 'is-valid' : 'is-invalid'"/>
+
+                  <a class="btn btn-info btn-block" ng-click="generateTx()"> GENERATE TRANSACTION </a>
+
+                  <!-- Data -->
+                  <section class="row" ng-show="showRaw">
+                    <!-- Raw TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 translate="SEND_raw"> Raw Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{rawTx}}</textarea>
+                    </div>
+                    <!-- Singed TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 translate="SEND_signed"> Signed Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{signedTx}}</textarea>
+                    </div>
+                  </section>
+
+                </div>
+              </div>
+
+
+              <div class="modal-footer" ng-show="showRaw">
+                <button class="btn btn-default" data-dismiss="modal">
+                  cancel
+                </button>
+                <button class="btn btn-primary" ng-click='sendTx("Your token contract will take a minute to mine. Once it is live, you can start your crowdsale!")'>
+                  Create the Token!
+                </button>
+              </div>
+
+            </section>
+          </section>
+        </article>
+
+
+
+
+      </article>
+      <!-- / Launch ICO -->
+
+
+      <!-- FundICO -->
+      <article class="row" ng-show="visibility=='fundView'">
+        <div class="form-group col-xs-10 clearfix">
+          <h4> Start your Crowdsale! </h4>
+          <div ng-show="!activeToken && !wd">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.<br>
+          If you already have a token, unlock your wallet to start the ICO.
+          </div>
+          <div ng-show="wd && !activeToken">
+            It doesn't look like you have created a token yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+          </div>
+          <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
+            <h4> Token Info: </h4>
+            <div>
+             <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
+             <br /><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
+             <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
+            </div>
+          </div>
+        </div>
+
+        <section class="col-xs-12 clearfix" ng-show="wd">
+          <!-- Token Info -->
+          <div class="form-group col-xs-6">
+            <h4> Price per Token (in ether): </h4>
+            <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Funding Goal (sale will end when goal is reached): </h4>
+            <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
+          </div>
+        </section>
+
+
+        <!-- Button -->
+        <section class="col-xs-12 clearfix" ng-show="wd">
+          <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+        </section>
+
+        <section class="col-xs-12">
+
+          <article class="modal fade" id="fundIco" tabindex="-1">
+            <section class="modal-dialog">
+              <section class="modal-content">
+
+                <div class="modal-body">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                  <p>You are about to <strong>launch an ICO</strong> on the Ethereum Classic chain.</p>
+                  <!-- Warning-->
+                  <div class="alert alert-danger">
+                      <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information.
+                  </div>
+                  <!-- end -->
+                  <h4> Are you sure you want to do this? </h4>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-default" data-dismiss="modal">
+                    No, get me out of here!
+                  </button>
+                  <button class="btn btn-primary" ng-click="sendTx()">
+                    Yes, open the floodgates!
+                  </button>
+                </div>
+
+              </section>
+            </section>
+          </article>
+
+
+
+        </section>
+
+
+
+      </article>
+      <!-- / Launch ICO -->
+
+      <!--wallet decrypt-->
+      <article class="form-group" ng-show="!wd">
+            <wallet-decrypt-drtv></wallet-decrypt-drtv>
+      </article>
+      <!-- General Information Panel -->
+      <article class="row" ng-hide="hideICOInfoPanel">
+
+      <br /><br />
+
+      <section class="col-sm-8 col-xs-12 col-sm-offset-2 well" >
+
+        <h5 class="text-center"> What is the process like? </h5>
+
+        <h6 ng-click="ICOPrep = !ICOPrep">
+        <span ng-show="!ICOPrep">+</span><span ng-show="ICOPrep">-</span>
+        1. Preparation
+      </h6>
+      <ul ng-show="ICOPrep">
+        <li> Decide which account you wish all your free money to go to & ensure you have multiple backups of that account.</li>
+        <li> Decide the maximum amount of ETH you are willing to make from your scam (your <u>Number of tokens</u>). Ensure that account has 0.01 ETH for gas.</li>
+        <li> Start thinking of a name! The less vowels the better. Be sure to use j's, z's, and as many q's as you can . <strong> this is an important step </strong></li>
+        <li> Don't forget to whip up a white paper, don't worry no one will read it! You can use <a href ="whitepaper.koinster.com/#"> koinster </a> for this part.</li>
+        <li> Do a roadshow! This means spam everyones slack, wechat, telegram and twitter relentlessly. Email people on lists you bought on the darknet or scraped from slack. Post an ANN on btctalk. Really make everyone think that your product needs a token somehow instead of just using bitcoin or ether.</li>
+      </ul>
+
+      <h6 ng-click="ICOLaunch = !ICOLaunch">
+        <span ng-show="!ICOLaunch">+</span><span ng-show="ICOLaunch">-</span>
+        2. Launch a token
+      </h6>
+      <ul ng-show="ICOLaunch">
+        <li> Make your <strong>magic</magic>ERC20 token. The code is open to review so you wont be blamed for the 10's of thousands that get lost due to a bug that could be fixed with using the <a href="https://www.reddit.com/r/ethereum/comments/6c68mw/new_record_holder_appears_lets_congratulate/?st=j3edi4n2&sh=18d46ab0">simple fix in EIP223</a></li>
+        <li> You will enter the <u>Token name</u>, <u>Actual number of tokens</u>, <u>Token symbol</u> for trading on markets, and the <u>decimal places</u>.</li>
+        <li> That's it! Load your wallet and move on the crowd sale! (Now is a good time to go test drive a new lambo, you're doing great.)</li>
+      </ul>
+
+      <h6 ng-click="ICOfund = !ICOfund">
+        <span ng-show="!ICOfund">+</span><span ng-show="ICOfund">-</span>
+        3. Crowdfunding
+      </h6>
+      <ul ng-show="ICOfund">
+        <li class="strong">THIS IS WHERE THE REAL MAGIC HAPPENS!</strong> </li>
+        <li> Set a price per token and a funding goal (make sure that you leave yourself a ton of tokens so you can be rich)  </li>
+        <li> You will unlock your account, enter the <u>Price per token</u>, and the <u>funding goal</u>.</li>
+        <li> Start the ICO and pump, Pump, PUMP IT UP!!!!!</li>
+        <li> Be sure to post how much money you are making everywhere to bring the ICO machine more users</li>
+      </ul>
+
+      <h6 ng-click="ICOMore = !ICOMore">
+        <span ng-show="!ICOMore">+</span><span ng-show="ICOMore">-</span>
+        More Information
+      </h6>
+      <ul ng-show="ICOMore">
+         <li>What you are doing is most likely a crime. US financial regulations are very strict on how funds can and cannot be raised. You are not clever because you are being sneaky and using the blockchain, scammers have been doing the same thing for 100 years.</li>
+         <li> I get it, you don't <underline>live</underline> in the USA. Through international treaties, that doesn't matter as you are still soliciting to its citizens. Your country most likely has similar laws you are violating such as anti0spamming and reporting rules.</li>
+          <li><a href="https://www.sec.gov/news/pressrelease/2015-249.html" target="_blank">Crowdfunding in the USA: Jobs act Title III</a></li>
+          <li><a href="http://consumer.findlaw.com/securities-law/what-is-the-howey-test.html" target="_blank">What is a security: the Howey Test</a></li>
+      </ul>
+      <hr />
+
+
+    </section>
+
+    </article>
+    <!--End information -->
+
+    </div>
+    <!-- end ICO-->
 
 
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.bulkGenerate.id" ng-controller='bulkGenCtrl'>
@@ -1494,10 +1742,9 @@ contract ReplaySafeSend {
     <p>Problems?
       <a href="https://github.com/ethereumproject/etherwallet/issues" target="_blank"> Open a GitHub Issue</a> &middot;
       <a href="https://twitter.com/eiaine" target="_blank"> Twitter </a> &middot;
-      <a href="https://www.reddit.com/r/ethereumclassic" target="_blank"> EthereumClassic on reddit </a> 
+      <a href="https://www.reddit.com/r/ethereumclassic" target="_blank"> EthereumClassic on reddit </a>
     </p>
   </div>
 </footer>
 </body>
 </html>
-
