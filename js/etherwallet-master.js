@@ -1440,18 +1440,18 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
     $scope.token = null;
     $scope.Validator = Validator;
     $scope.crowdsale = null;
+    $scope.sendTxModal = new Modal(document.getElementById('buyTokens'));
+    if (globalFuncs.urlGet('address')) {
+        $scope.crowdsale = {address: globalFuncs.urlGet('address')};
+    }
     $scope.tx = {
-        gasLimit: '',
-        data: '',
+        gasLimit: globalFuncs.defaultTxGasLimit,
         to: '',
         unit: "ether",
         value: 0,
         nonce: null,
-        gasPrice: null
-    };
-    $scope.ico = {
-        decimals: 8,
-        symbol: "POOP"
+        gasPrice: null,
+        data: ""
     };
     $scope.showRaw = false;
     $scope.$watch(function () {
@@ -1462,9 +1462,6 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
-    }, function () {
-        if (($scope.activeToken !== null) || !($scope.wd)) return;
-        $scope.readToken(walletService.wallet.getAddressString())
     });
     // get information from registry
     $scope.readOwnerToken = function (addr) {
@@ -1511,83 +1508,33 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
             });
         })
     };
-    $scope.$watch('tx', function (newValue, oldValue) {
-        $scope.showRaw = false;
-        if (newValue.gasLimit == oldValue.gasLimit && $scope.Validator.isValidHex($scope.tx.data) && $scope.tx.data != '' && $scope.Validator.isPositiveNumber($scope.tx.value)) {
-            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
-            $scope.estimateTimer = setTimeout(function () {
-                $scope.estimateGasLimit();
-            }, 500);
-        }
-    }, true);
-    $scope.estimateGasLimit = function () {
-        var estObj = {
-            from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
-            value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
-            data: ethFuncs.sanitizeHex($scope.tx.data)
-        };
-        if ($scope.tx.to != '') estObj.to = $scope.tx.to;
-        ethFuncs.estimateGas(estObj, function (data) {
-            if (!data.error) $scope.tx.gasLimit = data.data;
+    $scope.generateTx = function(){
+        $scope.tx.to = $scope.crowdsale.address;
+        var txData = uiFuncs.getTxData($scope);
+        uiFuncs.generateTx(txData, function (rawTx) {
+            if (!rawTx.isError) {
+                $scope.rawTx = rawTx.rawTx;
+                $scope.signedTx = rawTx.signedTx;
+                $scope.showRaw = true;
+            } else {
+                $scope.showRaw = false;
+                $scope.notifier.danger(rawTx.error);
+            }
+            if (!$scope.$$phase) $scope.$apply();
         });
-    };
-    $scope.generateTx = function () {
-        try {
-            if ($scope.wallet == null) throw globalFuncs.errorMsgs[3];else if (!ethFuncs.validateHexString($scope.tx.data)) throw globalFuncs.errorMsgs[9];else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0) throw globalFuncs.errorMsgs[8];
-            $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
-            ajaxReq.getTransactionData($scope.wallet.getAddressString(), function (data) {
-                if (data.error) throw data.msg;
-                data = data.data;
-                $scope.tx.to = $scope.tx.to == '' ? '0xCONTRACT' : $scope.tx.to;
-                var txData = uiFuncs.getTxData($scope);
-                uiFuncs.generateTx(txData, function (rawTx) {
-                    if (!rawTx.isError) {
-                        $scope.rawTx = rawTx.rawTx;
-                        $scope.signedTx = rawTx.signedTx;
-
-                        $scope.showRaw = true;
-                    } else {
-                        $scope.showRaw = false;
-                        $scope.notifier.danger(rawTx.error);
-                    }
-                    if (!$scope.$$phase) $scope.$apply();
-                });
-            });
-        } catch (e) {
-            $scope.notifier.danger(e);
-        }
-    };
-    $scope.sendTx = function (msg) {
-        $scope.fundIcoModal.close();
-        $scope.launchIcoModal.close();
+    }
+    $scope.sendTx = function() {
+        $scope.sendTxModal.close();
         uiFuncs.sendTx($scope.signedTx, function (resp) {
             if (!resp.isError) {
-                var bExStr = "<a href='http://gastracker.io/tx/" + resp.data + "' target='_blank'><b> View your transaction </b></a>";
-                if ($scope.activeToken) 
-                    bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='http://gastracker.io/addr/" + $scope.activeToken.tokenAddress + "' target='_blank'>here</a> ";
-                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr + msg);
-                $scope.setVisibility("fundView");
+                var bExStr = "<a href='https://gastracker.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
+                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr);
+                $scope.wallet.setBalance();
             } else {
                 $scope.notifier.danger(resp.error);
             }
         });
-    };
-    $scope.getIcoTx = function (ico) {
-        const createSaleHex = "0x6019061b"; 
-        const createSaleTypes = ["uint256","uint256","address"];
-        var values = [ico.fundingGoal, ico.etherPrice];
-        return createSaleHex + ethUtil.solidityCoder.encodeParams(createSaleTypes, values);
-    };    
-    // write to createSale function
-    $scope.initSale = function() {
-        if (!$scope.wd) {
-            $scope.notifier.danger(globalFuncs.errorMsgs[3]);
-            return;
-        }
-        $scope.tx.data = $scope.getIcoTx($scope.ico);
-        $scope.tx.to = icoMachineAddress; 
-        $scope.fundIcoModal.open();
-    };    
+    }
 };
 module.exports = buyIcoCtrl;
 
