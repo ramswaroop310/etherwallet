@@ -1459,6 +1459,13 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
         $scope.wd = true;
         $scope.tx.nonce = 0;
     });
+    $scope.$watch('tx', function (newValue, oldValue) {
+        $scope.showRaw = false;
+        if ($scope.token.decimals && $scope.tx.numTokens)
+            $scope.tx.value = new BigNumber($scope.tx.numTokens).div(new BigNumber(10)
+                .pow($scope.token.decimals)).toNumber();
+        else $scope.tx.value = $scope.tx.numTokens;
+    }, true);    
     $scope.readCrowdsale = function (addr) {
         const amountRaisedHex = "0x7b3e5e7b";
         const beneficiaryHex = "0x38af3eed"; //beneficiary()
