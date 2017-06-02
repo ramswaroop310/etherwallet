@@ -1457,6 +1457,7 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
         if (walletService.wallet == null) return;
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
+        $scope.wallet.setBalance();
         $scope.tx.nonce = 0;
     });
     $scope.$watch('tx', function (newValue, oldValue) {

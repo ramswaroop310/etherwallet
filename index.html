@@ -1656,33 +1656,37 @@ contract ReplaySafeSend {
          <h4>{{token.name}} ({{token.symbol}})</h4>
          <strong style="margin-left: 1em"> Total Token Supply: {{token.initialSupply}}</strong>
       </div>
+      <div class="col-md-12"> <hr /> </div>
       <div ng-show="token" class="form-group col-xs-10 clearfix">
          <!--wallet decrypt-->
         <article class="form-group" ng-show="!wd">
             <wallet-decrypt-drtv></wallet-decrypt-drtv>
         </article>
         <article class="form-group" ng-show="wd">
-           <div class="col-xs-12">
+          <div class="col-sm-4">
+            <wallet-balance-drtv></wallet-balance-drtv>
+          </div>
+           <div class="col-sm-8">
              <h4>Number of Tokens to Buy:</h4>
              <input class="form-control" type="number" placeholder="1" ng-model="tx.numTokens"/>
              <label>Total cost (ETC)</label>
              <input class="form-control" type="text" disabled ng-model="tx.value"/>
             <button class="btn btn-info btn-block" ng-click="generateTx()">GENERATE TRANSACTION</button>
+            <div class="form-group col-xs-12" ng-show="showRaw">
+              <label> Raw Transaction </label>
+              <textarea class="form-control" rows="4" disabled >{{rawTx}}</textarea>
+              <label> Signed Transaction </label>
+              <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
+            </div>
+            <div class="form-group col-xs-12" ng-show="showRaw">
+              <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#buyTokens">SEND MONEY</a>
+            </div>
           </div>
 
          </article>
       </div>
       <div ng-show="!wd">
         <img src="images/pennyscam.gif">
-      </div>
-      <div class="form-group col-xs-12" ng-show="showRaw">
-        <label> Raw Transaction </label>
-        <textarea class="form-control" rows="4" disabled >{{rawTx}}</textarea>
-        <label> Signed Transaction </label>
-        <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
-      </div>
-      <div class="form-group col-xs-12" ng-show="showRaw">
-        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#buyTokens">SEND MONEY</a>
       </div>
       <!-- Modal -->
       <div class="modal fade" id="buyTokens" tabindex="-1" role="dialog" aria-labelledby="buyTokensLabel">
