@@ -1660,7 +1660,6 @@ contract ReplaySafeSend {
          <!--wallet decrypt-->
         <article class="form-group" ng-show="!wd">
             <wallet-decrypt-drtv></wallet-decrypt-drtv>
-            <img src="images/pennyscam.gif">
         </article>
         <article class="form-group" ng-show="wd">
            <h4>Amount to Spend (TODO: this will get you X tokens)</h4>
@@ -1672,6 +1671,9 @@ contract ReplaySafeSend {
           </div>
 
          </article>
+      </div>
+      <div ng-show="!wd">
+        <img src="images/pennyscam.gif">
       </div>
       <div class="form-group col-xs-12" ng-show="showRaw">
         <label> Raw Transaction </label>
