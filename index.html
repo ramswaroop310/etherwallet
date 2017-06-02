@@ -1481,7 +1481,7 @@ contract ReplaySafeSend {
         <section class="col-xs-12 clearfix" ng-show="wd">
           <!-- Token Info -->
           <div class="form-group col-xs-6">
-            <h4> Price per Token (in ether): </h4>
+            <h4> Price per Token (in ETC): </h4>
             <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
           </div>
           <div class="form-group col-xs-10 clearfix">
@@ -1647,9 +1647,9 @@ contract ReplaySafeSend {
           <br><strong style="margin-left: 1em"> Crowdsale Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.address}}">{{crowdsale.address}}</a></strong>
           <br><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.tokenReward}}">{{crowdsale.tokenReward}}</a></strong>
           <br><strong style="margin-left: 1em"> Beneficiary: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.beneficiary}}">{{crowdsale.beneficiary}}</a></strong>
-         <br /><strong style="margin-left: 1em"> Funding Goal: {{crowdsale.fundingGoal}}</strong>
-         <br /><strong style="margin-left: 1em"> Amount Raised: {{crowdsale.amountRaised}}</strong>
-         <br /><strong style="margin-left: 1em"> Token Price: {{crowdsale.tokenPrice}}</strong>
+         <br /><strong style="margin-left: 1em"> Funding Goal: {{crowdsale.fundingGoal}} ETC</strong>
+         <br /><strong style="margin-left: 1em"> Amount Raised: {{crowdsale.amountRaised}} ETC</strong>
+         <br /><strong style="margin-left: 1em"> Token Price: {{crowdsale.tokenPrice}} ETC</strong>
         </div>
       </div>
       <div ng-show="token" class="form-group col-xs-10 clearfix">

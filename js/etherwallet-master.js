@@ -1461,9 +1461,8 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
     });
     $scope.$watch('tx', function (newValue, oldValue) {
         $scope.showRaw = false;
-        if ($scope.token.decimals && $scope.tx.numTokens)
-            $scope.tx.value = new BigNumber($scope.tx.numTokens).div(new BigNumber(10)
-                .pow($scope.token.decimals)).toNumber();
+        if ($scope.crowdsale.tokenPrice && $scope.tx.numTokens)
+            $scope.tx.value = new BigNumber($scope.tx.numTokens).mul($scope.crowdsale.tokenPrice).toNumber();
         else $scope.tx.value = $scope.tx.numTokens;
     }, true);    
     $scope.readCrowdsale = function (addr) {
@@ -1485,7 +1484,10 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
             ajaxReq.getEthCall(crowdCall, function (data) {
                 if (!data.error) {
                     var decoded = ethUtil.solidityCoder.decodeParams([k.type], data.data.replace('0x', ''));
-                    $scope.crowdsale[k.name] = decoded[0];
+                    if ((k.name == "fundingGoal") || (k.name == "tokenPrice") || (k.name == "amountRaised"))
+                        $scope.crowdsale[k.name] = etherUnits.toEther(decoded[0],'wei');
+                    else
+                        $scope.crowdsale[k.name] = decoded[0];
                     if (k.name == "beneficiary") $scope.readOwnerToken(decoded[0]);
                 } else throw data.msg;
             });
