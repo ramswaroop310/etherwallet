@@ -1470,6 +1470,7 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
     });
     $scope.$watch('tx', function (newValue, oldValue) {
         $scope.showRaw = false;
+        if (newValue.numTokens == oldValue.numTokens) return;
         if ($scope.crowdsale.tokenPrice && $scope.tx.numTokens)
             $scope.tx.value = new BigNumber($scope.tx.numTokens).mul($scope.crowdsale.tokenPrice).toNumber();
         else $scope.tx.value = $scope.tx.numTokens;
