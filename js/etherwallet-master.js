@@ -1259,7 +1259,7 @@ module.exports = contractsCtrl;
 'use strict';
 
 var icoCtrl = function icoCtrl($scope, $sce, walletService) {
-    const icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";    
+    var icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";    
 
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
@@ -1296,8 +1296,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     });
     $scope.readFromToken = function () {
         var addr = walletService.wallet.getAddressString();
-        const tokensHex = "0xe4860339";  //tokens(address)
-        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
+        var tokensHex = "0xe4860339";  //tokens(address)
+        var readTokensTypes = ["address","address","uint256","string","uint8","string"];
         var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
         ajaxReq.getEthCall(tokenCall, function (data) {
             if (!data.error) {
@@ -1400,8 +1400,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.visibility = str;
     };
     $scope.getLaunchTx = function (ico) {
-        const createTokenHex = "0x95de8674"; 
-        const createTokenTypes = ["uint256","string","uint8","string"];
+        var createTokenHex = "0x95de8674"; 
+        var createTokenTypes = ["uint256","string","uint8","string"];
         var values = [ico.totalSupply, ico.name, ico.decimals, ico.symbol];
         return createTokenHex + ethUtil.solidityCoder.encodeParams(createTokenTypes, values);
     };    
@@ -1416,8 +1416,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
         $scope.launchIcoModal.open();
     };
     $scope.getIcoTx = function (ico) {
-        const createSaleHex = "0x6019061b"; 
-        const createSaleTypes = ["uint256","uint256","address"];
+        var createSaleHex = "0x6019061b"; 
+        var createSaleTypes = ["uint256","uint256","address"];
         var values = [ico.fundingGoal, ico.etherPrice];
         return createSaleHex + ethUtil.solidityCoder.encodeParams(createSaleTypes, values);
     };    
@@ -1439,7 +1439,7 @@ module.exports = icoCtrl;
 'use strict';
 
 var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
-    const icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";   
+    var icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";   
     $scope.ajaxReq = ajaxReq;
     $scope.notifier = uiFuncs.notifier;
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
@@ -1476,13 +1476,13 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
         else $scope.tx.value = $scope.tx.numTokens;
     }, true);    
     $scope.readCrowdsale = function (addr) {
-        const amountRaisedHex = "0x7b3e5e7b";
-        const beneficiaryHex = "0x38af3eed"; //beneficiary()
-        const fundingGoalHex = "0x7a3a0e84"; //fundingGoal()
-        const priceHex = "0xa035b1fe"; //price()
-        const tokenRewardHex = "0x6e66f6e9"; //tokenReward()
-        const balanceOfHex = "0x70a08231"; //balanceOf(address)
-        const crowdsaleTypes = [
+        var amountRaisedHex = "0x7b3e5e7b";
+        var beneficiaryHex = "0x38af3eed"; //beneficiary()
+        var fundingGoalHex = "0x7a3a0e84"; //fundingGoal()
+        var priceHex = "0xa035b1fe"; //price()
+        var tokenRewardHex = "0x6e66f6e9"; //tokenReward()
+        var balanceOfHex = "0x70a08231"; //balanceOf(address)
+        var crowdsaleTypes = [
             {"sig": amountRaisedHex, "type": "uint", "name": "amountRaised"},
             {"sig": beneficiaryHex, "type": "address", "name": "beneficiary"},
             {"sig": fundingGoalHex, "type": "uint", "name": "fundingGoal"},
@@ -1505,8 +1505,8 @@ var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
     };
     // get information from registry
     $scope.readOwnerToken = function (addr) {
-        const tokensHex = "0xe4860339";  //tokens(address)
-        const readTokensTypes = ["address","address","uint256","string","uint8","string"];
+        var tokensHex = "0xe4860339";  //tokens(address)
+        var readTokensTypes = ["address","address","uint256","string","uint8","string"];
         var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
         ajaxReq.getEthCall(tokenCall, function (data) {
             if (!data.error) {
@@ -43538,9 +43538,9 @@ function getr(priv) {
 }).call(this,require("buffer").Buffer)
 },{"bn.js":52,"buffer":82,"randombytes":448}],74:[function(require,module,exports){
 (function (Buffer){
-const Sha3 = require('js-sha3')
+var Sha3 = require('js-sha3')
 
-const hashLengths = [ 224, 256, 384, 512 ]
+var hashLengths = [ 224, 256, 384, 512 ]
 
 var hash = function (bitcount) {
   if (bitcount !== undefined && hashLengths.indexOf(bitcount) == -1)
@@ -58384,12 +58384,12 @@ module.exports = function () {
 }).call(this,require("buffer").Buffer)
 },{"buffer":82,"ethereum-common/params.json":414,"ethereumjs-util":416}],416:[function(require,module,exports){
 (function (Buffer){
-const SHA3 = require('keccakjs')
-const secp256k1 = require('secp256k1')
-const assert = require('assert')
-const rlp = require('rlp')
-const BN = require('bn.js')
-const createHash = require('create-hash')
+var SHA3 = require('keccakjs')
+var secp256k1 = require('secp256k1')
+var assert = require('assert')
+var rlp = require('rlp')
+var BN = require('bn.js')
+var createHash = require('create-hash')
 
 /**
  * the max integer that this VM can handle (a ```BN```)
@@ -65992,7 +65992,7 @@ module.exports = ripemd160
 }).call(this,require("buffer").Buffer)
 },{"buffer":82}],461:[function(require,module,exports){
 (function (Buffer){
-const assert = require('assert')
+var assert = require('assert')
 /**
  * RLP Encoding based on: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP
  * This function takes in a data, convert it to buffer if not, and a length for recursion
