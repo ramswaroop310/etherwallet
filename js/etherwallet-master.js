@@ -1336,6 +1336,14 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
             }, 500);
         }
     }, true);
+    $scope.$watch('ico', function (newValue, oldValue) {
+        if (newValue.fundingGoal && (newValue.fundingGoal !== oldValue.fundingGoal)) 
+            ajaxReq.getETHvalue(function(data) {
+                    $scope.usdGoal = etherUnits.toFiat($scope.ico.fundingGoal, 'ether', data.usd);
+                    $scope.eurGoal = etherUnits.toFiat($scope.ico.fundingGoal, 'ether', data.eur);
+                    $scope.btcGoal = etherUnits.toFiat($scope.ico.fundingGoal, 'ether', data.btc);
+            });
+    }, true);
     $scope.estimateGasLimit = function () {
         var estObj = {
             from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,

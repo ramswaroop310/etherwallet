@@ -1482,17 +1482,23 @@ contract ReplaySafeSend {
           <!-- Token Info -->
           <div class="form-group col-xs-6">
             <h4> Price per Token (in ETC): </h4>
-            <input class="form-control" placeholder="1" ng-model="ico.etherPrice"/>
+            <input class="form-control" type="number" min="0" placeholder="1" ng-model="ico.etherPrice"/>
           </div>
           <div class="form-group col-xs-10 clearfix">
             <h4> Funding Goal (sale will end when goal is reached): </h4>
-            <input class="form-control" placeholder="1000000" ng-model="ico.fundingGoal"/>
+            <input class="form-control" placeholder="1000000" type="number" ng-model="ico.fundingGoal"/>
+            <section ng-show="ajaxReq.type=='ETC'">
+              <ul class="account-info">
+                <li><span class="mono wrap">{{btcGoal}}</span> BTC</li>
+                <li><span class="mono wrap">{{eurGoal}}</span> EUR</li>
+                <li><span class="mono wrap">{{usdGoal}}</span> USD</li>
+              </ul>
+            </section>
           </div>
           <div class="form-group col-xs-10 clearfix">
             <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
           </div>
         </section>
-
 
         <!-- Button -->
         <section class="col-xs-12 clearfix" ng-show="wd">
