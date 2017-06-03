@@ -1364,7 +1364,7 @@ contract ReplaySafeSend {
 
       <!-- Title -->
       <div class="row">
-      <img class="col-md-5 col-sm-12 "src="images/ICOimg.png" />
+      <img class="col-md-5 col-sm-12" src="images/ICOimg.png" />
       </div>
       <h1>
         <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Create a Token </a>
@@ -1376,30 +1376,29 @@ contract ReplaySafeSend {
       <!-- Launch an ICO -->
       <article class="row" ng-show="visibility=='launchView'">
 
+          <!-- Token Info -->
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Token Name: </h4>
+            <input class="form-control" placeholder="Scamcoin" ng-model="ico.name"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Number of Tokens: </h4>
+            <input class="form-control" placeholder="1000000" ng-model="ico.totalSupply"/>
+          </div>
+          <div class="form-group col-xs-6">
+            <h4> Token Symbol (optional): </h4>
+            <input class="form-control" placeholder="SCAM" ng-model="ico.symbol"/>
+          </div>
+          <div class="form-group col-xs-6">
+            <h4> Decimal Places (optional): </h4>
+            <input class="form-control" placeholder="8" ng-model="ico.decimals"/>
+          </div>
 
-        <!-- Token Info -->
-        <div class="form-group col-xs-10 clearfix">
-          <h4> Token Name: </h4>
-          <input class="form-control" placeholder="Scamcoin" ng-model="ico.name"/>
-        </div>
-        <div class="form-group col-xs-10 clearfix">
-          <h4> Number of Tokens: </h4>
-          <input class="form-control" placeholder="1000000" ng-model="ico.totalSupply"/>
-        </div>
-        <div class="form-group col-xs-6">
-          <h4> Token Symbol (optional): </h4>
-          <input class="form-control" placeholder="SCAM" ng-model="ico.symbol"/>
-        </div>
-        <div class="form-group col-xs-6">
-          <h4> Decimal Places (optional): </h4>
-          <input class="form-control" placeholder="8" ng-model="ico.decimals"/>
-        </div>
 
-
-        <!-- Button -->
-        <section class="col-xs-12 clearfix" ng-show="wd">
-          <button class="btn btn-primary" ng-click="initToken()"> LET'S DO THIS </button>
-        </section>
+          <!-- Button -->
+          <section class="col-xs-12 clearfix" ng-show="wd">
+            <button class="btn btn-primary" ng-click="initToken()"> LET'S DO THIS </button>
+          </section>    
 
         <div class="col-xs-12 clearfix"> <hr /> </div>
 
@@ -1478,7 +1477,7 @@ contract ReplaySafeSend {
           </div>
         </div>
 
-        <section class="col-xs-12 clearfix" ng-show="wd">
+        <section class="col-xs-12 clearfix" ng-show="wd && !whitepaper">
           <!-- Token Info -->
           <div class="form-group col-xs-6">
             <h4> Price per Token (in ETC): </h4>
@@ -1498,12 +1497,53 @@ contract ReplaySafeSend {
           <div class="form-group col-xs-10 clearfix">
             <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
           </div>
-        </section>
 
-        <!-- Button -->
-        <section class="col-xs-12 clearfix" ng-show="wd">
           <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
         </section>
+
+
+        <!-- Generate the whitepaper -->
+        <section class="col-xs-12 clearfix" ng-show="whitepaper">
+          <h4>The {{ico.name}} Crowdsale has begun! Now generate a whitepaper and spread the word!</h4>
+          <div class="form-group col-xs-6 clearfix">
+            <h4> Your Name (optional): </h4>
+            <input class="form-control" placeholder="Satoshi" ng-model="wp.author"/>
+          </div><div class="form-group col-xs-6 clearfix">
+            <h4> Email (optional): </h4>
+            <input class="form-control" placeholder="satoshin@gmx.com" ng-model="wp.email"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Protocols Used: </h4>
+            <label>
+              <input type="checkbox" ng-model="wp.protocol.ethereum"/>
+               Ethereum: A Secure Decentralised Generalised Transaction Ledger
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.bitcoin"/>
+               Bitcoin: A Peer-to-Peer Electronic Cash System
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.ripple"/>
+               The Ripple Protocol Consensus Algorithm
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.cryptonote"/>
+               CryptoNote v 2.0
+             </label><br>
+            <label>
+              <input type="checkbox" ng-model="wp.protocol.mimblewimble"/>
+               MimbleWimble
+             </label><br> 
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.lightning"/>
+               The Bitcoin Lightning Network: Scalable Off-Chain Instant Payments
+             </label> 
+          </div>
+          <section class="col-xs-12 clearfix">
+            <a class="btn btn-primary" target="_blank" href="/paper?email={{wp.email}}&author={{wp.author}}&token={{ico.name}}&symbol={{ico.symbol}}&protocols={{wp.protocol}}&address={{activeToken.ownerAddress}}"> GET WHITEPAPER </a>
+          </section>
+        </section> 
+        <!-- End whitepaper -->
 
         <section class="col-xs-12">
 
