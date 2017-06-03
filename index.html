@@ -1461,7 +1461,7 @@ contract ReplaySafeSend {
       <!-- FundICO -->
       <article class="row" ng-show="visibility=='fundView'">
         <div class="form-group col-xs-10 clearfix">
-          <h4> Start your Crowdsale! </h4>
+          <h4 ng-show="!whitepaper"> Start your Crowdsale! </h4>
           <div ng-show="!activeToken && !wd">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.<br>
           If you already have a token, unlock your wallet to start the ICO.
           </div>
@@ -1497,8 +1497,9 @@ contract ReplaySafeSend {
           <div class="form-group col-xs-10 clearfix">
             <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
           </div>
-
-          <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+          <section class="col-xs-10 clearfix">
+            <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+          </section>
         </section>
 
 
@@ -1540,7 +1541,7 @@ contract ReplaySafeSend {
              </label> 
           </div>
           <section class="col-xs-12 clearfix">
-            <a class="btn btn-primary" target="_blank" href="/paper?email={{wp.email}}&author={{wp.author}}&token={{ico.name}}&symbol={{ico.symbol}}&protocols={{wp.protocol}}&address={{activeToken.ownerAddress}}"> GET WHITEPAPER </a>
+            <a class="btn btn-primary" target="_blank" href="/paper?email={{wp.email}}&author={{wp.author}}&token={{activeToken.name}}&symbol={{activeToken.symbol}}&protocols={{wp.protocol}}&address={{activeToken.ownerAddress}}"> GET WHITEPAPER </a>
           </section>
         </section> 
         <!-- End whitepaper -->
