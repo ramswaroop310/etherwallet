@@ -22,7 +22,7 @@ module.exports = {
       "We note that to create such a transaction, the user must know the sum of all the values of r for commitments entries. Therefore, the r-values (and their sums) act as secret keys. If we can make the r output values known only to the recipient, then we have an authentication system! Unfortunately, if we keep the rule that commits all add to 0, this is impossible, because the sender knows the sum of all _his_ r values, and therefore knows the receipient's r values sum to the negative of that. So instead, we allow the transaction to sum to a nonzero value k*G, and require a signature of an empty string with this as key, to prove its amount component is zero.",
       "We let transactions have as many k*G values as they want, each with a signature, and sum them during verification.\n",
       "To create transactions sender and recipient do following ritual:",
-      [
+      {
          "code": "1. Sender and recipient agree on amount to be sent. Call this b.\n\
 \n\
 2. Sender creates transaction with all inputs and change output(s), and gives recipient the total blinding factor (r-value of change minus r-values of inputs) along with this transaction. So the commitments sum to r*G - b*H.\n\
@@ -61,14 +61,13 @@ module.exports = {
       {'code': "Q. If you delete the transaction outputs, user cannot verify the rangeproof and maybe a negative amount is created.\n\
 \n\
 A. This is OK. For the entire transaction to validate all negative amounts must have been destroyed. User have SPV security only that no illegal inflation happened in the past, but the user knows that _at this time_ no inflation occurred."
-            ],
+            },
       {'code': "Q. If you delete the inputs, double spending can happen.\n\
 \n\
 A. In fact, this means: maybe someone claims that some unspent output was spent in the old days. But this is impossible, otherwise the sum of the combined transaction could not be zero.\n\
 \n\
-An exception is that if the outputs are amount zero, it is possible to make two that are negatives of each other, and the pair can be revived without anything breaks. So to prevent consensus problems, outputs 0-amount should be banned. Just add H at each output, now they all amount to at least 1."},
+An exception is that if the outputs are amount zero, it is possible to make two that are negatives of each other, and the pair can be revived without anything breaks. So to prevent consensus problems, outputs 0-amount should be banned. Just add H at each output, now they all amount to at least 1."}
    ],
-   
    'Future Research': [
       "Here are some questions I can not answer at the time of this writing.",
       {'code': "1. What script support is possible? We would need to translate script operations into some sort of discrete logarithm information."},
@@ -89,6 +88,4 @@ For now maybe the user should just download the blockchain from a Torrent or som
       "https://bitcointalk.org/index.php?topic=281848.0\n",
    ],
    
-   
-   
-];
+};

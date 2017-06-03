@@ -197,8 +197,4 @@ module.exports = {
       "Qianhong Wu, Willy Susilo, Yi Mu, and Fangguo Zhang. Ad hoc group signatures. In IWSEC, pages 120-135, 2006.\n",
    ],
 
-
-
-
-
-];
+};

@@ -76,7 +76,7 @@ Any server can broadcast transactions to be included in the consensus process, a
       "A graphical representation of how the probability of incorrectness scales as a function of UNL size for differing values of pc is depicted in Figure 1. Note that here the vertical axis represents the probability of a nefarious cartel thwarting consensus, and thus lower values indi- cate greater probability of consensus success. As can be seen in the figure, even with a pc as high as 10%, the probability of consensus being thwarted very quickly becomes negligible as the UNL grows past 100 nodes.",
       {'img': "/img/ripple/005.png"},
       {'code': "Figure 1. Probability of a nefarious cartel being able to thwart consensus as a function of the size of the UNL, for different values of pc, the probability that any member of the UNL will decide to collude with others. Here, lower values indicate a higher probability of consensus success."
-      ],
+      }
    ],
 
    'Agreement': [
@@ -119,7 +119,4 @@ Any server can broadcast transactions to be included in the consensus process, a
       "Martin, J-P., and Lorenzo Alvisi. \"Fast byzantine consensus.\" Dependable and Secure Computing, IEEE Transactions on 3.3 (2006): 202-215.\n",
       "Alchieri, Eduardo AP, et al. \"Byzantine consensus with unknown participants.\" Principles of Distributed Systems. Springer Berlin Heidelberg, 2008. 22-40.\n",
    ],
-
-
-
-];
+};

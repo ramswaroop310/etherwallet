@@ -399,7 +399,4 @@ OP HASH160 <Hash160 (R)> OP EQUALVERIFY 2 <Alice2> <Bob2> OP CHECKMULTISIG\n\
    ],
 
 
-
-
-
-];
+}
