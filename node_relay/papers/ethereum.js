@@ -1,6 +1,4 @@
-<?php
-
-return {
+module.exports = {
    'Abstract': [
       "The intent of _PROTOCOL_ is to create an alternative protocol for building decentralized applications, providing a different set of tradeoffs that we believe will be very useful for a large class of decentralized applications, with particular emphasis on situations where rapid development time, security for small and rarely used applications, and the ability of different applications to very efficiently interact, are important. _PROTOCOL_ does this by building what is essentially the ultimate abstract foundational layer: a blockchain with a built-in Turing-complete programming language, allowing anyone to write smart contracts and decentralized applications where they can create their own arbitrary rules for ownership, transaction formats and state transition functions. A bare-bones version of Namecoin can be written in two lines of code, and other protocols like currencies and reputation systems can be built in under twenty. Smart contracts, cryptographic \"boxes\" that contain value and only unlock it if certain conditions are met, can also be built on top of the platform, with vastly more power than that offered by Bitcoin scripting because of the added powers of Turing-completeness, value-awareness, blockchain-awareness and state.",
    ],
@@ -167,7 +165,7 @@ return {
       "",
       "For example, suppose that the contract's code is:",
       {
-         'code': "if !self.storage[calldataload(0)]:
+         'code': "if !self.storage[calldataload(0)]: \n\
                      self.storage[calldataload(0)] = calldataload(32)",
       },
       "Note that in reality the contract code is written in the low-level EVM code; this example is written in Serpent, one of our high-level languages, for clarity, and can be compiled down to EVM code. Suppose that the contract's storage starts off empty, and a transaction is sent with 10 _COIN_ value, 2000 gas, 0.001 _COIN_ gasprice, and 64 bytes of data, with bytes 0-31 representing the number 2 and bytes 32-63 representing the string CHARLIE. The process for the state transition function in this case is as follows:",
@@ -218,9 +216,9 @@ return {
       "On-blockchain token systems have many applications ranging from sub-currencies representing assets such as USD or gold to company stocks, individual tokens representing smart property, secure unforgeable coupons, and even token systems with no ties to conventional value at all, used as point systems for incentivization. Token systems are surprisingly easy to implement in _PROTOCOL_. The key point to understand is that all a currency, or token system, fundamentally is a database with one operation: subtract X units from A and give X units to B, with the proviso that (i) A had at least X units before the transaction and (2) the transaction is approved by A. All that it takes to implement a token system is to implement this logic into a contract.",
       "The basic code for implementing a token system in Serpent looks as follows:",
       {
-         'code': "def send(to, value):
-         if self.storage[msg.sender] >= value:
-               self.storage[msg.sender] = self.storage[msg.sender] - value
+         'code': "def send(to, value):\n\
+         if self.storage[msg.sender] >= value:\n\
+               self.storage[msg.sender] = self.storage[msg.sender] - value\n\
                self.storage[to] = self.storage[to] + value",
       },
       "This is essentially a literal implementation of the \"banking system\" state transition function described further above in this document. A few extra lines of code need to be added to provide for the initial step of distributing the currency units in the first place and a few other edge cases, and ideally a function would be added to let other contracts query for the balance of an address. But that's all there is to it. Theoretically, _PROTOCOL_-based token systems acting as sub-currencies can potentially include another important feature that on-chain Bitcoin-based meta-currencies lack: the ability to pay transaction fees directly in that currency. The way this would be implemented is that the contract would maintain an _COIN_ balance with which it would refund _COIN_ used to pay fees to the sender, and it would refill this balance by collecting the internal currency units that it takes in fees and reselling them in a constant running auction. Users would thus need to \"activate\" their accounts with _COIN_, but once the _COIN_ is there it would be reusable because the contract would refund it each time.",
@@ -243,8 +241,8 @@ return {
    'Identity and Reputation Systems': [
       "The earliest alternative cryptocurrency of all, Namecoin, attempted to use a Bitcoin-like blockchain to provide a name registration system, where users can register their names in a public database alongside other data. The major cited use case is for a DNS system, mapping domain names like \"bitcoin.org\" (or, in Namecoin's case, \"bitcoin.bit\") to an IP address. Other use cases include email authentication and potentially more advanced reputation systems. Here is the basic contract to provide a Namecoin-like name registration system on _PROTOCOL_:",
       {
-         'code': "def register(name, value):
-    if !self.storage[name]:
+         'code': "def register(name, value):\n\
+    if !self.storage[name]:\n\
         self.storage[name] = value",
       },
       "The contract is very simple; all it is is a database inside the _PROTOCOL_ network that can be added to, but not modified or removed from. Anyone can register a name with some value, and that registration then sticks forever. A more sophisticated name registration contract will also have a \"function clause\" allowing other contracts to query it, as well as a mechanism for the \"owner\" (ie. the first registerer) of a name to change the data or transfer ownership. One can even add reputation and web-of-trust functionality on top.",
@@ -293,36 +291,30 @@ return {
    'Modified GHOST Implementation': [
      "The \"Greedy Heaviest Observed Subtree\" (GHOST) protocol is an innovation first introduced by Yonatan Sompolinsky and Aviv Zohar in December 2013. The motivation behind GHOST is that blockchains with fast confirmation times currently suffer from reduced security due to a high stale rate - because blocks take a certain time to propagate through the network, if miner A mines a block and then miner B happens to mine another block before miner A's block propagates to B, miner B's block will end up wasted and will not contribute to network security. Furthermore, there is a centralization issue: if miner A is a mining pool with 30% hashpower and B has 10% hashpower, A will have a risk of producing a stale block 70% of the time (since the other 30% of the time A produced the last block and so will get mining data immediately) whereas B will have a risk of producing a stale block 90% of the time. Thus, if the block interval is short enough for the stale rate to be high, A will be substantially more efficient simply by virtue of its size. With these two effects combined, blockchains which produce blocks quickly are very likely to lead to one mining pool having a large enough percentage of the network hashpower to have de facto control over the mining process.",
      "As described by Sompolinsky and Zohar, GHOST solves the first issue of network security loss by including stale blocks in the calculation of which chain is the \"longest\"; that is to say, not just the parent and further ancestors of a block, but also the stale descendants of the block's ancestor (in _PROTOCOL_ jargon, \"uncles\") are added to the calculation of which block has the largest total proof of work backing it. To solve the second issue of centralization bias, we go beyond the protocol described by Sompolinsky and Zohar, and also provide block rewards to stales: a stale block receives 87.5% of its base reward, and the nephew that includes the stale block receives the remaining 12.5%. Transaction fees, however, are not awarded to uncles.",
-     "_PROTOCOL_ implements a simplified version of GHOST which only goes down seven levels. Specifically, it is defined as follows:",
-     "",
+     "_PROTOCOL_ implements a simplified version of GHOST which only goes down seven levels. Specifically, it is defined as follows:\n",
      "* A block must specify a parent, and it must specify 0 or more uncles",
      "* An uncle included in block B must have the following properties:",
      "* -> It must be a direct child of the kth generation ancestor of B, where 2 <= k <= 7.",
      "* -> It cannot be an ancestor of B",
      "* -> An uncle must be a valid block header, but does not need to be a previously verified or even valid block",
      "* -> An uncle must be different from all uncles included in previous blocks and all other uncles included in the same block (non-double-inclusion)",
-     "* For every uncle U in block B, the miner of B gets an additional 3.125% added to its coinbase reward and the miner of U gets 93.75% of a standard coinbase reward.",
-     "",
+     "* For every uncle U in block B, the miner of B gets an additional 3.125% added to its coinbase reward and the miner of U gets 93.75% of a standard coinbase reward.\n",
      "This limited version of GHOST, with uncles includable only up to 7 generations, was used for two reasons. First, unlimited GHOST would include too many complications into the calculation of which uncles for a given block are valid. Second, unlimited GHOST with compensation as used in _PROTOCOL_ removes the incentive for a miner to mine on the main chain and not the chain of a public attacker.",
    ],
 
    'Fees': [
      "Because every transaction published into the blockchain imposes on the network the cost of needing to download and verify it, there is a need for some regulatory mechanism, typically involving transaction fees, to prevent abuse. The default approach, used in Bitcoin, is to have purely voluntary fees, relying on miners to act as the gatekeepers and set dynamic minimums. This approach has been received very favorably in the Bitcoin community particularly because it is \"market-based\", allowing supply and demand between miners and transaction senders determine the price. The problem with this line of reasoning is, however, that transaction processing is not a market; although it is intuitively attractive to construe transaction processing as a service that the miner is offering to the sender, in reality every transaction that a miner includes will need to be processed by every node in the network, so the vast majority of the cost of transaction processing is borne by third parties and not the miner that is making the decision of whether or not to include it. Hence, tragedy-of-the-commons problems are very likely to occur.",
-     "However, as it turns out this flaw in the market-based mechanism, when given a particular inaccurate simplifying assumption, magically cancels itself out. The argument is as follows. Suppose that:",
-     "",
+     "However, as it turns out this flaw in the market-based mechanism, when given a particular inaccurate simplifying assumption, magically cancels itself out. The argument is as follows. Suppose that:\n",
      "1. A transaction leads to k operations, offering the reward kR to any miner that includes it where R is set by the sender and k and R are (roughly) visible to the miner beforehand.",
      "2. An operation has a processing cost of C to any node (ie. all nodes have equal efficiency)",
      "3. There are N mining nodes, each with exactly equal processing power (ie. 1/N of total)",
-     "4. No non-mining full nodes exist.",
-     "",
+     "4. No non-mining full nodes exist.\n",
      "A miner would be willing to process a transaction if the expected reward is greater than the cost. Thus, the expected reward is kR/N since the miner has a 1/N chance of processing the next block, and the processing cost for the miner is simply kC. Hence, miners will include transactions where kR/N > kC, or R > NC. Note that R is the per-operation fee provided by the sender, and is thus a lower bound on the benefit that the sender derives from the transaction, and NC is the cost to the entire network together of processing an operation. Hence, miners have the incentive to include only those transactions for which the total utilitarian benefit exceeds the cost.",
-     "However, there are several important deviations from those assumptions in reality:",
-     "",
+     "However, there are several important deviations from those assumptions in reality:\n",
      "1. The miner does pay a higher cost to process the transaction than the other verifying nodes, since the extra verification time delays block propagation and thus increases the chance the block will become a stale.",
      "2. There do exist nonmining full nodes.",
      "3. The mining power distribution may end up radically inegalitarian in practice.",
-     "4. Speculators, political enemies and crazies whose utility function includes causing harm to the network do exist, and they can cleverly set up contracts where their cost is much lower than the cost paid by other verifying nodes.",
-     "",
+     "4. Speculators, political enemies and crazies whose utility function includes causing harm to the network do exist, and they can cleverly set up contracts where their cost is much lower than the cost paid by other verifying nodes.\n",
      "(1) provides a tendency for the miner to include fewer transactions, and (2) increases NC; hence, these two effects at least partially cancel each other out. (3) and (4) are the major issue; to solve them we simply institute a floating cap: no block can have more operations than BLK_LIMIT_FACTOR times the long-term exponential moving average. Specifically:",
      {'code': "blk.oplimit = floor((blk.parent.oplimit * (EMAFACTOR - 1) + floor(parent.opcount * BLK_LIMIT_FACTOR)) / EMA_FACTOR)"},
      "BLK_LIMIT_FACTOR and EMA_FACTOR are constants that will be set to 65536 and 1.5 for the time being, but will likely be changed after further analysis.",
@@ -331,43 +323,32 @@ return {
 
    'Computation And Turing-Completeness': [
      "An important note is that the _PROTOCOL_ virtual machine is Turing-complete; this means that EVM code can encode any computation that can be conceivably carried out, including infinite loops. EVM code allows looping in two ways. First, there is a JUMP instruction that allows the program to jump back to a previous spot in the code, and a JUMPI instruction to do conditional jumping, allowing for statements like while x < 27: x = x * 2. Second, contracts can call other contracts, potentially allowing for looping through recursion. This naturally leads to a problem: can malicious users essentially shut miners and full nodes down by forcing them to enter into an infinite loop? The issue arises because of a problem in computer science known as the halting problem: there is no way to tell, in the general case, whether or not a given program will ever halt.",
-     "As described in the state transition section, our solution works by requiring a transaction to set a maximum number of computational steps that it is allowed to take, and if execution takes longer computation is reverted but fees are still paid. Messages work in the same way. To show the motivation behind our solution, consider the following examples:",
-     "",
-     "* An attacker creates a contract which runs an infinite loop, and then sends a transaction activating that loop to the miner. The miner will process the transaction, running the infinite loop, and wait for it to run out of gas. Even though the execution runs out of gas and stops halfway through, the transaction is still valid and the miner still claims the fee from the attacker for each computational step.",
-     "",
-     "* An attacker creates a very long infinite loop with the intent of forcing the miner to keep computing for such a long time that by the time computation finishes a few more blocks will have come out and it will not be possible for the miner to include the transaction to claim the fee. However, the attacker will be required to submit a value for STARTGAS limiting the number of computational steps that execution can take, so the miner will know ahead of time that the computation will take an excessively large number of steps.",
-     "",
-     "* An attacker sees a contract with code of some form like send(A,contract.storage[A]); contract.storage[A] = 0, and sends a transaction with just enough gas to run the first step but not the second (ie. making a withdrawal but not letting the balance go down). The contract author does not need to worry about protecting against such attacks, because if execution stops halfway through the changes get reverted.",
-     "",
-     "* A financial contract works by taking the median of nine proprietary data feeds in order to minimize risk. An attacker takes over one of the data feeds, which is designed to be modifiable via the variable-address-call mechanism described in the section on DAOs, and converts it to run an infinite loop, thereby attempting to force any attempts to claim funds from the financial contract to run out of gas. However, the financial contract can set a gas limit on the message to prevent this problem.",
-     "",
+     "As described in the state transition section, our solution works by requiring a transaction to set a maximum number of computational steps that it is allowed to take, and if execution takes longer computation is reverted but fees are still paid. Messages work in the same way. To show the motivation behind our solution, consider the following examples:\n",
+     "* An attacker creates a contract which runs an infinite loop, and then sends a transaction activating that loop to the miner. The miner will process the transaction, running the infinite loop, and wait for it to run out of gas. Even though the execution runs out of gas and stops halfway through, the transaction is still valid and the miner still claims the fee from the attacker for each computational step.\n",
+     "* An attacker creates a very long infinite loop with the intent of forcing the miner to keep computing for such a long time that by the time computation finishes a few more blocks will have come out and it will not be possible for the miner to include the transaction to claim the fee. However, the attacker will be required to submit a value for STARTGAS limiting the number of computational steps that execution can take, so the miner will know ahead of time that the computation will take an excessively large number of steps.\n",
+     "* An attacker sees a contract with code of some form like send(A,contract.storage[A]); contract.storage[A] = 0, and sends a transaction with just enough gas to run the first step but not the second (ie. making a withdrawal but not letting the balance go down). The contract author does not need to worry about protecting against such attacks, because if execution stops halfway through the changes get reverted.\n",
+     "* A financial contract works by taking the median of nine proprietary data feeds in order to minimize risk. An attacker takes over one of the data feeds, which is designed to be modifiable via the variable-address-call mechanism described in the section on DAOs, and converts it to run an infinite loop, thereby attempting to force any attempts to claim funds from the financial contract to run out of gas. However, the financial contract can set a gas limit on the message to prevent this problem.\n",
      "The alternative to Turing-completeness is Turing-incompleteness, where JUMP and JUMPI do not exist and only one copy of each contract is allowed to exist in the call stack at any given time. With this system, the fee system described and the uncertainties around the effectiveness of our solution might not be necessary, as the cost of executing a contract would be bounded above by its size. Additionally, Turing-incompleteness is not even that big a limitation; out of all the contract examples we have conceived internally, so far only one required a loop, and even that loop could be removed by making 26 repetitions of a one-line piece of code. Given the serious implications of Turing-completeness, and the limited benefit, why not simply have a Turing-incomplete language? In reality, however, Turing-incompleteness is far from a neat solution to the problem. To see why, consider the following contracts:",
-     {'code': "C0: call(C1); call(C1);
-C1: call(C2); call(C2);
-C2: call(C3); call(C3);
-...
-C49: call(C50); call(C50);
+     {'code': "C0: call(C1); call(C1);\n\
+C1: call(C2); call(C2);\n\
+C2: call(C3); call(C3);\n\
+...\n\
+C49: call(C50); call(C50);\n\
 C50: (run one step of a program and record the change in storage)"},
      "Now, send a transaction to A. Thus, in 51 transactions, we have a contract that takes up 250 computational steps. Miners could try to detect such logic bombs ahead of time by maintaining a value alongside each contract specifying the maximum number of computational steps that it can take, and calculating this for contracts calling other contracts recursively, but that would require miners to forbid contracts that create other contracts (since the creation and execution of all 26 contracts above could easily be rolled into a single contract). Another problematic point is that the address field of a message is a variable, so in general it may not even be possible to tell which other contracts a given contract will call ahead of time. Hence, all in all, we have a surprising conclusion: Turing-completeness is surprisingly easy to manage, and the lack of Turing-completeness is equally surprisingly difficult to manage unless the exact same controls are in place - but in that case why not just let the protocol be Turing-complete?",
    ],
 
    'Currency And Issuance': [
-     "The _PROTOCOL_ network includes its own built-in currency, _COIN_, which serves the dual purpose of providing a primary liquidity layer to allow for efficient exchange between various types of digital assets and, more importantly, of providing a mechanism for paying transaction fees. For convenience and to avoid future argument (see the current mBTC/uBTC/satoshi debate in Bitcoin), the denominations will be pre-labeled:",
-     "",
+     "The _PROTOCOL_ network includes its own built-in currency, _COIN_, which serves the dual purpose of providing a primary liquidity layer to allow for efficient exchange between various types of digital assets and, more importantly, of providing a mechanism for paying transaction fees. For convenience and to avoid future argument (see the current mBTC/uBTC/satoshi debate in Bitcoin), the denominations will be pre-labeled:\n",
      "* 1: wei",
      "* 10^12: szabo",
      "* 10^15: finney",
-     "* 10^18: _COIN_",
-     "",
+     "* 10^18: _COIN_\n",
      "This should be taken as an expanded version of the concept of \"dollars\" and \"cents\" or \"BTC\" and \"satoshi\". In the near future, we expect \"_COIN_\" to be used for ordinary transactions, \"finney\" for microtransactions and \"szabo\" and \"wei\" for technical discussions around fees and protocol implementation; the remaining denominations may become useful later and should not be included in clients at this point.",
-     "The issuance model will be as follows:",
-     "",
-     "* _COIN_ will be released in a currency sale at the price of 1000-2000 _COIN_ per BTC, a mechanism intended to fund the _PROTOCOL_ organization and pay for development that has been used with success by other platforms such as Mastercoin and NXT. Earlier buyers will benefit from larger discounts. The BTC received from the sale will be used entirely to pay salaries and bounties to developers and invested into various for-profit and non-profit projects in the _PROTOCOL_ and cryptocurrency ecosystem.",
-     "",
-     "* 0.099x the total amount sold (60102216 _COIN_) will be allocated to the organization to compensate early contributors and pay _COIN_-denominated expenses before the genesis block.",
-     "",
-     "* 0.099x the total amount sold will be maintained as a long-term reserve.",
-     "",
+     "The issuance model will be as follows:\n",
+     "* _COIN_ will be released in a currency sale at the price of 1000-2000 _COIN_ per BTC, a mechanism intended to fund the _PROTOCOL_ organization and pay for development that has been used with success by other platforms such as Mastercoin and NXT. Earlier buyers will benefit from larger discounts. The BTC received from the sale will be used entirely to pay salaries and bounties to developers and invested into various for-profit and non-profit projects in the _PROTOCOL_ and cryptocurrency ecosystem.\n",
+     "* 0.099x the total amount sold (60102216 _COIN_) will be allocated to the organization to compensate early contributors and pay _COIN_-denominated expenses before the genesis block.\n",
+     "* 0.099x the total amount sold will be maintained as a long-term reserve.\n",
      "* 0.26x the total amount sold will be allocated to miners per year forever after that point.",
      {'img': "/img/ethereum/007.png"},
      {'img': "/img/ethereum/008.png"},
@@ -396,48 +377,27 @@ C50: (run one step of a program and record the change in storage)"},
    ],
 
    'References': [
-     "Intrinsic value: http://bitcoinmagazine.com/8640/an-exploration-of-intrinsic-value-what-it-is-why-bitcoin-doesnt-have-it-and-why-bitcoin-does-have-it/",
-     "",
-     "Smart property: https://en.bitcoin.it/wiki/Smart_Property",
-     "",
-     "Smart contracts: https://en.bitcoin.it/wiki/Contracts",
-     "",
-     "B-money: http://www.weidai.com/bmoney.txt",
-     "",
-     "Reusable proofs of work: http://www.finney.org/~hal/rpow/",
-     "",
-     "Secure property titles with owner authority: http://szabo.best.vwh.net/securetitle.html",
-     "",
-     "Bitcoin whitepaper: http://bitcoin.org/bitcoin.pdf",
-     "",
-     "Namecoin: https://namecoin.org/",
-     "",
-     "Zooko's triangle: http://en.wikipedia.org/wiki/Zooko's_triangle",
-     "",
-     "Colored coins whitepaper: https://docs.google.com/a/buterin.com/document/d/1AnkP_cVZTCMLIzw4DvsW6M8Q2JC0lIzrTLuoWu2z1BE/edit",
-     "",
-     "Mastercoin whitepaper: https://github.com/mastercoin-MSC/spec",
-     "",
-     "Decentralized autonomous corporations, Bitcoin Magazine: http://bitcoinmagazine.com/7050/bootstrapping-a-decentralized-autonomous-corporation-part-i/",
-     "",
-     "Simplified payment verification: https://en.bitcoin.it/wiki/Scalability#Simplifiedpaymentverification",
-     "",
-     "Merkle trees: http://en.wikipedia.org/wiki/Merkle_tree",
-     "",
-     "Patricia trees: http://en.wikipedia.org/wiki/Patricia_tree",
-     "",
-     "GHOST: http://www.cs.huji.ac.il/~avivz/pubs/13/btc_scalability_full.pdf",
-     "",
-     "StorJ and Autonomous Agents, Jeff Garzik: http://garzikrants.blogspot.ca/2013/01/storj-and-bitcoin-autonomous-agents.html",
-     "",
-     "Mike Hearn on Smart Property at Turing Festival: http://www.youtube.com/watch?v=Pu4PAMFPo5Y",
-     "",
-     "Ethereum RLP: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP",
-     "",
-     "Ethereum Merkle Patricia trees: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-Patricia-Tree",
-     "",
-     "Peter Todd on Merkle sum trees: http://sourceforge.net/p/bitcoin/mailman/message/31709140",
-     "",
+     "Intrinsic value: http://bitcoinmagazine.com/8640/an-exploration-of-intrinsic-value-what-it-is-why-bitcoin-doesnt-have-it-and-why-bitcoin-does-have-it/\n",
+     "Smart property: https://en.bitcoin.it/wiki/Smart_Property\n",
+     "Smart contracts: https://en.bitcoin.it/wiki/Contracts\n",
+     "B-money: http://www.weidai.com/bmoney.txt\n",
+     "Reusable proofs of work: http://www.finney.org/~hal/rpow/\n",
+     "Secure property titles with owner authority: http://szabo.best.vwh.net/securetitle.html\n",
+     "Bitcoin whitepaper: http://bitcoin.org/bitcoin.pdf\n",
+     "Namecoin: https://namecoin.org/\n",
+     "Zooko's triangle: http://en.wikipedia.org/wiki/Zooko's_triangle\n",
+     "Colored coins whitepaper: https://docs.google.com/a/buterin.com/document/d/1AnkP_cVZTCMLIzw4DvsW6M8Q2JC0lIzrTLuoWu2z1BE/edit\n",
+     "Mastercoin whitepaper: https://github.com/mastercoin-MSC/spec\n",
+     "Decentralized autonomous corporations, Bitcoin Magazine: http://bitcoinmagazine.com/7050/bootstrapping-a-decentralized-autonomous-corporation-part-i/\n",
+     "Simplified payment verification: https://en.bitcoin.it/wiki/Scalability#Simplifiedpaymentverification\n",
+     "Merkle trees: http://en.wikipedia.org/wiki/Merkle_tree\n",
+     "Patricia trees: http://en.wikipedia.org/wiki/Patricia_tree\n",
+     "GHOST: http://www.cs.huji.ac.il/~avivz/pubs/13/btc_scalability_full.pdf\n",
+     "StorJ and Autonomous Agents, Jeff Garzik: http://garzikrants.blogspot.ca/2013/01/storj-and-bitcoin-autonomous-agents.html\n",
+     "Mike Hearn on Smart Property at Turing Festival: http://www.youtube.com/watch?v=Pu4PAMFPo5Y\n",
+     "Ethereum RLP: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP\n",
+     "Ethereum Merkle Patricia trees: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-Patricia-Tree\n",
+     "Peter Todd on Merkle sum trees: http://sourceforge.net/p/bitcoin/mailman/message/31709140\n",
    ],
 
-];
+};
