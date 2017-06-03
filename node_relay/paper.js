@@ -25,11 +25,11 @@ module.exports = function(req, res){
   
 
   // Title page
-  doc.font('Times-Bold', 24).text(token + ": ");
-  doc.font('Times-Bold', 18).text(title + ": ");
+  doc.font('Times-Bold', 24).text(token + ": ", {align:"center"});
+  doc.font('Times-Bold', 18).text(title, {align:"center"});
   doc.moveDown();
 
-  doc.font('Times-Roman', 15).text(author + "\n" + email);
+  doc.font('Times-Roman', 15).text(author + "\n" + email, {align:"center"});
   doc.moveDown();
 
   doc.fillColor(243).font('Times-Roman', 12);
@@ -52,14 +52,16 @@ module.exports = function(req, res){
             var para = content[c];
             if (para.img) {
                 doc.moveDown();
-                doc.image(__dirname + para.img).moveDown();
+                doc.image(__dirname + para.img, {width: 450}).moveDown();
             } else if (para.code) {
                 doc.moveDown();
                 doc.font('Courier', 12).text(keywordReplace(para.code, token, symbol));
                 doc.moveDown();
+            } else if (k == "References") {
+                var num = parseInt(c) + 1;
+                doc.font('Times-Roman', 12).text("[" + num + "] " + keywordReplace(para, token, symbol));
             } else {
-                doc.moveDown();
-                doc.font('Times-Roman', 12).text(keywordReplace(para, token, symbol));
+                doc.font('Times-Roman', 12).text(keywordReplace(para, token, symbol), {indent: 32});
             }
         }
     }
@@ -72,7 +74,7 @@ module.exports = function(req, res){
 };
 
 function keywordReplace(str, token, symbol) {
-    return str.replace("_PROTOCOL_", token).replace("_COIN_", symbol);
+    return str.replace(/_PROTOCOL_/g, token).replace(/_COIN_/g, symbol);
 }
 
 function getWhitepaper(protocols) {
