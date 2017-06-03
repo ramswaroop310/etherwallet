@@ -1266,6 +1266,7 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
     $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
     walletService.wallet = null;
     $scope.activeToken = null;
+    $scope.whitepaper = false;
     $scope.visibility = "launchView";
     $scope.launchIcoModal = new Modal(document.getElementById('launchIco'));
     $scope.fundIcoModal = new Modal(document.getElementById('fundIco'));
@@ -1304,6 +1305,7 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
                 var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
                 console.log(decoded);
                 $scope.activeToken = { 
+                    "ownerAddress": addr,
                     "tokenAddress": decoded[0], 
                     "saleAddress": decoded[1],
                     "initialSupply": decoded[2].toString(10),
@@ -1390,6 +1392,8 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
                 if ($scope.activeToken) 
                     bExStr = bExStr + "Send all your friends to your crowdfunding site <a href='?owner=" + walletService.wallet.getAddressString() + "#buy-ico' target='_blank'>here</a> ";
                 $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr + msg);
+                if ($scope.activeToken && ($scope.visibility == "fundView")) 
+                    $scope.whitepaper = true;
                 $scope.setVisibility("fundView");
             } else {
                 $scope.notifier.danger(resp.error);
