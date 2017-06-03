@@ -1,23 +1,22 @@
 var PDFDocument = require('pdfkit');
 
 module.exports = function(req, res){
-  console.log(req.body)
+  console.log(req.query)
 
-  //reqs: combine protocol and coin (symbol?), 
-  // optional: name, email
-  /*
-  var title = req.body.protocol;  
-  var email = req.body.email;
-  var protocols = req.body.protocols
-    */
+  var token = req.query.token;
+  var symbol = req.query.symbol;
+  var author = req.query.author;
+  var email = req.query.email;
+  var address = req.query.address;
 
-  var token = "ScamMonster";
-  var symbol = "SCAM";
-  var author = "Satoshi";
-  var protocols = ["bitcoin", "cryptonote", "lightning"];
+  var protocols = JSON.parse(req.query.protocols);
+  protocols = Object.keys(protocols).filter(function(p) { return protocols[p]; })
   var title = getTitle(protocols)
-  var email = "elaine@gmail.com"
+  var subtitle = "";
 
+  if (author !== "") subtitle = author + "\n";
+  if (email !== "") subtitle = subtitle + email + "\n";
+  
   var whitepaper = getWhitepaper(protocols);
   
 
@@ -29,10 +28,15 @@ module.exports = function(req, res){
   doc.font('Times-Bold', 18).text(title, {align:"center"});
   doc.moveDown();
 
-  doc.font('Times-Roman', 15).text(author + "\n" + email, {align:"center"});
+  doc.font('Times-Roman', 14).text(subtitle, {align:"center"});
+  if (address !== "") {
+    address = "https://classicetherwallet.com/#buy-ico?owner=" + address;
+    doc.text("Crowdsale Address: ")
+        .text(address, {link: address, underline:true, align: "center"});
+  }
   doc.moveDown();
 
-  doc.fillColor(243).font('Times-Roman', 12);
+  doc.font('Times-Roman', 12);
 
   var sections = Object.keys(whitepaper);
 
