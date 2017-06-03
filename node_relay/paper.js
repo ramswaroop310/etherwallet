@@ -14,8 +14,8 @@ module.exports = function(req, res){
   var token = "ScamMonster";
   var symbol = "SCAM";
   var author = "Satoshi";
-  var protocols = ["ethereum"];
-  var title = "A blah blah blah"
+  var protocols = ["bitcoin", "cryptonote", "lightning"];
+  var title = getTitle(protocols)
   var email = "elaine@gmail.com"
 
   var whitepaper = getWhitepaper(protocols);
@@ -40,7 +40,7 @@ module.exports = function(req, res){
     var k = sections[s];
     var content = whitepaper[k];
 
-    if(content) {
+    if(content.length > 0) {
         doc.moveDown();
         var header = keywordReplace(k, token, symbol);
 
@@ -78,12 +78,43 @@ function keywordReplace(str, token, symbol) {
 }
 
 function getWhitepaper(protocols) {
-    var whitepaper = require('./papers/template.js');
-    var ethereum = require('./papers/ethereum.js');
+    var template = require('./papers/template.js');
+    var sections = Object.keys(template);
 
-    if (protocols.includes("ethereum")) 
-        Object.assign(whitepaper, ethereum);
+    for (p in protocols) {
+        var wp = require('./papers/' + protocols[p] + '.js');
+        for (s in sections) {
+            if (wp[sections[s]]) {
+                template[sections[s]] = template[sections[s]].concat(wp[sections[s]])
+            }
+        }
+    }
+    return template;
 
-    return whitepaper;
+}
 
+function getTitle(protocols) {
+    var title = 'Secure Untrusted Anonymous Decentralised Generalised One-time Ring Signature Peer-to-Peer Scalable Off-Chain Electronic Instant Cash System and MimbleWimble Transaction Ledger Consensus Algorithm';
+    var removals = [];
+
+    if (!protocols.includes("bitcoin")) 
+        removals = removals.concat(["Peer-to-Peer ", "Electronic ", "Cash ", "System "])
+    if (!protocols.includes("ripple"))
+        removals = removals.concat(["Consensus ", "Algorithm"]) 
+    if (!protocols.includes("ethereum"))
+        removals = removals.concat(["Secure ", "Decentralised ", "Generalised ", "Transaction ", "Ledger "]) 
+    if (!protocols.includes("cryptonote"))
+        removals = removals.concat(["Untraceable ", "One-time Ring Signature "]) 
+    if (!protocols.includes("mimblewimble"))
+        removals = removals.concat(["MimbleWimble "]) 
+    if (!protocols.includes("lightning"))
+        removals = removals.concat(["Scalable Off-Chain ", "Instant "]) 
+    for (r in removals) {
+        title = title.replace(removals[r], "");
+    }
+    if (title.substr(title.length - 4) == "and ")
+        title = title.replace(" and ", "")
+    if (title == "")
+        title = "This paper contains my complete knowledge of the Blockchain"
+    return title
 }
