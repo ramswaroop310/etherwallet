@@ -1363,16 +1363,407 @@ contract ReplaySafeSend {
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.ico.id" ng-controller='icoCtrl' ng-cloak>
 
       <!-- Title -->
+      <div class="row">
+      <img class="col-md-5 col-sm-12" src="images/ICOimg.png" />
+      </div>
       <h1>
-        The ICO Project has been moved to <a href="https://github.com/ethereumproject/TokenMint" target="_blank">TokenMint</a>.
+        <a ng-class="{'isActive': visibility=='launchView'}" ng-click="setVisibility('launchView')">  Create a Token </a>
+        or
+        <a ng-class="{'isActive': visibility=='fundView'}" ng-click="setVisibility('fundView')"> Launch a Crowdsale</a>
       </h1>
       <!-- / Title -->
 
+      <!-- Launch an ICO -->
+      <article class="row" ng-show="visibility=='launchView'">
+
+          <!-- Token Info -->
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Token Name: </h4>
+            <input class="form-control" placeholder="Scamcoin" ng-model="ico.name"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Number of Tokens: </h4>
+            <input class="form-control" placeholder="1000000" ng-model="ico.totalSupply"/>
+          </div>
+          <div class="form-group col-xs-6">
+            <h4> Token Symbol (optional): </h4>
+            <input class="form-control" placeholder="SCAM" ng-model="ico.symbol"/>
+          </div>
+          <div class="form-group col-xs-6">
+            <h4> Decimal Places (optional): </h4>
+            <input class="form-control" placeholder="8" ng-model="ico.decimals"/>
+          </div>
+
+
+          <!-- Button -->
+          <section class="col-xs-12 clearfix" ng-show="wd">
+            <button class="btn btn-primary" ng-click="initToken()"> LET'S DO THIS </button>
+          </section>    
+
+        <div class="col-xs-12 clearfix"> <hr /> </div>
+
+        <article class="modal fade" id="launchIco" tabindex="-1">
+          <section class="modal-dialog">
+            <section class="modal-content">
+
+              <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <div ng-show="wd">
+
+                  <h2 class="modal-title text-danger" >Warning!</h2>
+
+                  <p>You are about to <strong>Create a Token</strong> on the <strong>Ethereum Classic</strong> chain.</p>
+
+                  <label> Gas </label>
+                  <input class="form-control" type="text" placeholder="300000" ng-model="tx.gasLimit" ng-class="Validator.isPositiveNumber(tx.gasLimit) ? 'is-valid' : 'is-invalid'"/>
+
+                  <a class="btn btn-info btn-block" ng-click="generateTx()"> GENERATE TRANSACTION </a>
+
+                  <!-- Data -->
+                  <section class="row" ng-show="showRaw">
+                    <!-- Raw TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 translate="SEND_raw"> Raw Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{rawTx}}</textarea>
+                    </div>
+                    <!-- Singed TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 translate="SEND_signed"> Signed Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{signedTx}}</textarea>
+                    </div>
+                  </section>
+
+                </div>
+              </div>
+
+
+              <div class="modal-footer" ng-show="showRaw">
+                <button class="btn btn-default" data-dismiss="modal">
+                  cancel
+                </button>
+                <button class="btn btn-primary" ng-click='sendTx("Your token contract will take a minute to mine. Once it is live, you can start your crowdsale!")'>
+                  Create the Token!
+                </button>
+              </div>
+
+            </section>
+          </section>
+        </article>
+
+
+
+
+      </article>
+      <!-- / Launch ICO -->
+
+
+      <!-- FundICO -->
+      <article class="row" ng-show="visibility=='fundView'">
+        <div class="form-group col-xs-10 clearfix">
+          <h4 ng-show="!whitepaper"> Start your Crowdsale! </h4>
+          <div ng-show="!activeToken && !wd">Did you already create a token? If not, <button class="btn btn-info btn-sm" ng-click="setVisibility('launchView')">do that first</button>.<br>
+          If you already have a token, unlock your wallet to start the ICO.
+          </div>
+          <div ng-show="wd && !activeToken">
+            I can't find your token on the blockchain yet. <button class="btn btn-info btn-sm" ng-click="readFromToken()">Refresh my Token</button>
+          </div>
+          <div ng-show="activeToken" class="form-group col-xs-10 clearfix">
+            <div>
+             <h4>{{activeToken.name}} ({{activeToken.symbol}})</h4>
+             <strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{activeToken.tokenAddress}}">{{activeToken.tokenAddress}}</a></strong>
+             <br /><strong style="margin-left: 1em"> Token Supply: {{activeToken.initialSupply}}</strong>
+            </div>
+          </div>
+        </div>
+
+        <section class="col-xs-12 clearfix" ng-show="wd && !whitepaper">
+          <!-- Token Info -->
+          <div class="form-group col-xs-6">
+            <h4> Price per Token (in ETC): </h4>
+            <input class="form-control" type="number" min="0" placeholder="1" ng-model="ico.etherPrice"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Funding Goal (sale will end when goal is reached): </h4>
+            <input class="form-control" placeholder="1000000" type="number" ng-model="ico.fundingGoal"/>
+            <section ng-show="ajaxReq.type=='ETC'">
+              <ul class="account-info">
+                <li><span class="mono wrap">{{btcGoal}}</span> BTC</li>
+                <li><span class="mono wrap">{{eurGoal}}</span> EUR</li>
+                <li><span class="mono wrap">{{usdGoal}}</span> USD</li>
+              </ul>
+            </section>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <label><input type="checkbox"/> I certify that I understand and comply with all relevant securities regulations including Section 5(e) of the Securities Act and Section 6(l) of the Securities Exchange Act hahahhahahahhahh I can't even finish that sentence </label>
+          </div>
+          <section class="col-xs-10 clearfix">
+            <button class="btn btn-primary" ng-click="initSale()"> START THE ICO </button>
+          </section>
+        </section>
+
+
+        <!-- Generate the whitepaper -->
+        <section class="col-xs-12 clearfix" ng-show="whitepaper">
+          <h4>The {{activeToken.name}} Crowdsale has begun! Now generate a whitepaper and spread the word!</h4>
+          <div class="form-group col-xs-6 clearfix">
+            <h4> Your Name (optional): </h4>
+            <input class="form-control" placeholder="Satoshi" ng-model="wp.author"/>
+          </div><div class="form-group col-xs-6 clearfix">
+            <h4> Email (optional): </h4>
+            <input class="form-control" placeholder="satoshin@gmx.com" ng-model="wp.email"/>
+          </div>
+          <div class="form-group col-xs-10 clearfix">
+            <h4> Protocols Used: </h4>
+            <label>
+              <input type="checkbox" ng-model="wp.protocol.ethereum"/>
+               Ethereum: A Secure Decentralised Generalised Transaction Ledger
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.bitcoin"/>
+               Bitcoin: A Peer-to-Peer Electronic Cash System
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.ripple"/>
+               The Ripple Protocol Consensus Algorithm
+             </label><br>
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.cryptonote"/>
+               CryptoNote v 2.0
+             </label><br>
+            <label>
+              <input type="checkbox" ng-model="wp.protocol.mimblewimble"/>
+               MimbleWimble
+             </label><br> 
+             <label>
+              <input type="checkbox" ng-model="wp.protocol.lightning"/>
+               The Bitcoin Lightning Network: Scalable Off-Chain Instant Payments
+             </label> 
+          </div>
+          <section class="col-xs-12 clearfix">
+            <a class="btn btn-primary" target="_blank" href="https://classicetherwallet.com:8081/paper?email={{wp.email}}&author={{wp.author}}&token={{activeToken.name}}&symbol={{activeToken.symbol}}&protocols={{wp.protocol}}&address={{activeToken.ownerAddress}}"> GET WHITEPAPER </a>
+          </section>
+        </section> 
+        <!-- End whitepaper -->
+
+        <section class="col-xs-12">
+
+          <article class="modal fade" id="fundIco" tabindex="-1">
+            <section class="modal-dialog">
+              <section class="modal-content">
+
+                <div class="modal-body">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                  <p>You are about to <strong>launch an ICO</strong> on the Ethereum Classic chain.</p>
+                  <!-- Warning-->
+                  <div class="alert alert-danger">
+                      <strong>Warning: You should consult a securities lawyer if you are considering launching an actual ICO.</strong> There is a very real chance you have no legitimate reason to launch a token other than to make a money grab.  Read this <a href="https://medium.com/@derosetech_10334/dear-sec-icos-tokens-are-killing-innovation-2f8d287f88c3" target="_blank">helpful page</a> for information. 
+                  </div>
+                  <!-- end -->
+                
+                  <label> Gas </label>
+                  <input class="form-control" type="text" placeholder="300000" ng-model="tx.gasLimit" ng-class="Validator.isPositiveNumber(tx.gasLimit) ? 'is-valid' : 'is-invalid'"/>
+
+                  <a class="btn btn-info btn-block" ng-click="generateTx()"> GENERATE TRANSACTION </a>
+
+                  <!-- Data -->
+                  <section class="row" ng-show="showRaw">
+                    <!-- Raw TX -->
+                    <div class="form-group col-sm-6">
+                      <h4 > Raw Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{rawTx}}</textarea>
+                    </div>
+                    <!-- Singed TX -->
+                    <div class="form-group col-sm-6">
+                      <h4> Signed Transaction </h4>
+                      <textarea class="form-control" rows="3" readonly >{{signedTx}}</textarea>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="modal-footer" ng-show="showRaw">
+                  <h4> Are you sure you want to do this? </h4>
+                  <button class="btn btn-default" data-dismiss="modal">
+                    No, get me out of here!
+                  </button>
+                  <button class="btn btn-primary" ng-click='sendTx("HELL YEAH!")'>
+                    Yes, open the floodgates!
+                  </button>
+                </div>
+
+              </section>
+            </section>
+          </article>
+
+
+
+        </section>
+
+
+
+      </article>
+      <!-- / Launch ICO -->
+
+      <!--wallet decrypt-->
+      <article class="form-group" ng-show="!wd">
+            <wallet-decrypt-drtv></wallet-decrypt-drtv>
+      </article>
+      <!-- General Information Panel -->
+      <article class="row" ng-hide="hideICOInfoPanel">
+
+      <br /><br />
+
+      <section class="col-sm-8 col-xs-12 col-sm-offset-2 well" >
+
+        <h5 class="text-center"> What is the process like? </h5>
+
+        <h6 ng-click="ICOPrep = !ICOPrep">
+        <span ng-show="!ICOPrep">+</span><span ng-show="ICOPrep">-</span>
+        1. Preparation
+      </h6>
+      <ul ng-show="ICOPrep">
+        <li> Decide which account you wish all your free money to go to & ensure you have multiple backups of that account.</li>
+        <li> Decide the maximum amount of ETC you are willing to make from your scam (your <u>Number of tokens</u>). Ensure that account has 0.01 ETC for gas.</li>
+        <li> Start thinking of a name! The less vowels the better. Be sure to use j's, z's, and as many q's as you can . <strong> this is an important step </strong></li>
+        <li> Do a roadshow! This means spam everyones slack, wechat, telegram and twitter relentlessly. Email people on lists you bought on the darknet or scraped from slack. Post an ANN on btctal. Really make everyone think that your product needs a token somehow instead of just using bitcoin or ether.</li>
+      </ul>
+
+      <h6 ng-click="ICOLaunch = !ICOLaunch">
+        <span ng-show="!ICOLaunch">+</span><span ng-show="ICOLaunch">-</span>
+        2. Launch a token
+      </h6>
+      <ul ng-show="ICOLaunch">
+        <li> Make your <strong>magic</magic>ERC20 token. The code is open to review so you wont be blamed for the 10's of thousands that get lost due to a bug that could be fixed with using the <a href="https://www.reddit.com/r/ethereum/comments/6c68mw/new_record_holder_appears_lets_congratulate/?st=j3edi4n2&sh=18d46ab0">simple fix in EIP223</a></li>
+        <li> You will enter the <u>Token name</u>, <u>Actual number of tokens</u>, <u>Token symbol</u> for trading on markets, and the <u>decimal places</u>.</li>
+        <li> That's it! load your wallet and move on the crowd sale! (Now is a good time to go test drive a new lambo, your doing great.)</li>
+      </ul>
+
+      <h6 ng-click="ICOfund = !ICOfund">
+        <span ng-show="!ICOfund">+</span><span ng-show="ICOfund">-</span>
+        3. Crowdfunding
+      </h6>
+      <ul ng-show="ICOfund">
+        <li class="strong">THIS IS WHERE THE REAL MAGIC HAPPENS!</strong> </li>
+        <li> Set a price per token and a funding goal (make sure that you leave your self a ton of tokens so you can be rich)  </li>
+        <li> You will unlock your account, enter the <u>Price per token</u>, and the <u>funding goal</u>.</li>
+        <li> Start the ICO and pump, Pump, PUMP IT UP!!!!!</li>
+        <li> Be sure to post how much money you are making everywher to bring the ICO machine more users</li>
+      </ul>
+
+      <h6 ng-click="ICOMore = !ICOMore">
+        <span ng-show="!ICOMore">+</span><span ng-show="ICOMore">-</span>
+        More Information
+      </h6>
+      <ul ng-show="ICOMore">
+         <li>What you are doing is most likely a crime. US financial regulations are very strict on how funds can and can not be raised. You are not clever because you are being sneaky and using the blockchain, scammers have been doing the same thing for 100 years.</li>
+         <li> I get it, you don't <underline>live</underline> in the USA. Through international treaties, that doesnt matter as you are still soliciting to its citizens. Your conuntry most likely has similar laws you are violiating such as anti0spamming and reporting rules.</li>
+          <li><a href="https://www.sec.gov/news/pressrelease/2015-249.html" target="_blank">Crowdfunding in the USA: Jobs act Title III</a></li>
+          <li><a href="http://consumer.findlaw.com/securities-law/what-is-the-howey-test.html" target="_blank">What is a security: the Howey Test</a></li>
+      </ul>
+      <hr />
+
+
+    </section>
+
+    </article>
+    <!--End information -->
 
     </div>
     <!-- end ICO-->
 
 
+    <!-- BUY ICO -->
+    <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.buyIco.id" ng-controller='buyIcoCtrl' ng-cloak>
+
+      <h1>Buy Tokens</h1>
+ 
+      <div ng-show="!activeToken" class="row">
+        <!-- This is where money is collected -->
+        <h4 > Crowdsale Address</h4> 
+        <div class="col-sm-6">
+          <input class="form-control" placeholder="0x351cbd8e4c32e2dbc9ccb38099abce515f8e7990" ng-class="Validator.isValidAddress(crowdsale.address) ? 'is-valid' : 'is-invalid'" ng-model="crowdsale.address"/>
+        </div>
+        <div class="col-sm-6">
+          <button class="btn btn-primary" ng-click="readCrowdsale(crowdsale.address)" > ACCESS </button>  
+        </div>
+      </div>
+
+      <div ng-show="crowdsale.tokenReward" class="form-group col-xs-10 clearfix">
+        <div>
+          <br><strong style="margin-left: 1em"> Crowdsale Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.address}}">{{crowdsale.address}}</a></strong>
+          <br><strong style="margin-left: 1em"> Token Contract: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.tokenReward}}">{{crowdsale.tokenReward}}</a></strong>
+          <br><strong style="margin-left: 1em"> Beneficiary: <a target="_blank" href="https://gastracker.io/addr/{{crowdsale.beneficiary}}">{{crowdsale.beneficiary}}</a></strong>
+         <br /><strong style="margin-left: 1em"> Funding Goal: {{crowdsale.fundingGoal}} ETC</strong>
+         <br /><strong style="margin-left: 1em"> Amount Raised: {{crowdsale.amountRaised}} ETC</strong>
+         <br /><strong style="margin-left: 1em"> Token Price: {{crowdsale.tokenPrice}} ETC</strong>
+        </div>
+      </div>
+      <div ng-show="token" class="form-group col-xs-10 clearfix">
+         <h4>{{token.name}} ({{token.symbol}})</h4>
+         <strong style="margin-left: 1em"> Total Token Supply: {{token.initialSupply}}</strong>
+      </div>
+      <div class="col-md-12"> <hr /> </div>
+      <div ng-show="token" class="form-group col-xs-10 clearfix">
+         <!--wallet decrypt-->
+        <article class="form-group" ng-show="!wd">
+            <wallet-decrypt-drtv></wallet-decrypt-drtv>
+        </article>
+        <article class="form-group" ng-show="wd">
+          <div class="col-sm-4">
+            <wallet-balance-drtv></wallet-balance-drtv>
+          </div>
+           <div class="col-sm-8">
+             <h4>Number of Tokens to Buy:</h4>
+             <input class="form-control" type="number" placeholder="1" ng-model="tx.numTokens"/>
+             <label>Total cost (ETC)</label>
+             <input class="form-control" type="text" disabled ng-model="tx.value"/>
+            <button class="btn btn-info btn-block" ng-click="generateTx()">GENERATE TRANSACTION</button>
+            <div class="form-group col-xs-12" ng-show="showRaw">
+              <label> Raw Transaction </label>
+              <textarea class="form-control" rows="4" disabled >{{rawTx}}</textarea>
+              <label> Signed Transaction </label>
+              <textarea class="form-control" rows="4" disabled >{{signedTx}}</textarea>
+            </div>
+            <div class="form-group col-xs-12" ng-show="showRaw">
+              <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#buyTokens">SEND MONEY</a>
+            </div>
+          </div>
+
+         </article>
+      </div>
+      <div ng-show="!wd">
+        <img src="images/pennyscam.gif">
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="buyTokens" tabindex="-1" role="dialog" aria-labelledby="buyTokensLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h3 class="modal-title" id="myModalLabel"> <strong class="text-danger">Warning!</strong></h3>
+            </div>
+            <div class="modal-body">
+              <h4>
+                You are about to send
+                <strong id="confirmAmount" class="text-primary"> {{tx.value}} </strong>
+                <strong id="confirmCurrancy" class="text-primary"> {{tx.unit}} </strong>
+                to address
+                <strong id="confirmAddress" class="text-primary"> {{tx.to}} </strong>
+              </h4>
+              <h4> Are you <span class="text-underline"> sure </span> you want to do this?</h4>
+            </div>
+            <div class="modal-footer text-center">
+              <button type="button" class="btn btn-default" data-dismiss="modal">No, get me out of here!</button>
+              <button type="button" class="btn btn-primary" ng-click="sendTx()">Yes, take me to the moon!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/modal-->
+
+    </div>
+    <!-- end BUY ICO -->    
 
 
     <div class="tab-pane active" ng-if="globalService.currentTab==globalService.tabs.bulkGenerate.id" ng-controller='bulkGenCtrl'>
