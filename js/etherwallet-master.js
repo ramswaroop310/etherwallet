@@ -1439,134 +1439,6 @@ var icoCtrl = function icoCtrl($scope, $sce, walletService) {
 module.exports = icoCtrl;
 
 
-},{}],926:[function(require,module,exports){
-'use strict';
-
-var buyIcoCtrl = function buyIcoCtrl($scope, $sce, walletService) {
-    var icoMachineAddress = "0x26c243b8a4a460a9bb20f3afcf127fa7dd764cfa";   
-    $scope.ajaxReq = ajaxReq;
-    $scope.notifier = uiFuncs.notifier;
-    $scope.notifier.sce = $sce;$scope.notifier.scope = $scope;
-    walletService.wallet = null;
-    $scope.token = null;
-    $scope.Validator = Validator;
-    $scope.crowdsale = null;
-    $scope.sendTxModal = new Modal(document.getElementById('buyTokens'));
-    $scope.tx = {
-        gasLimit: globalFuncs.defaultTxGasLimit,
-        to: '',
-        unit: "ether",
-        value: 0,
-        nonce: null,
-        gasPrice: null,
-        data: ""
-    };
-    $scope.showRaw = false;
-    $scope.$watch(function () {
-        if (walletService.wallet == null) return null;
-        return walletService.wallet.getAddressString();
-    }, function () {
-        if (walletService.wallet == null) return;
-        $scope.wallet = walletService.wallet;
-        $scope.wd = true;
-        $scope.wallet.setBalance();
-        $scope.tx.nonce = 0;
-    });
-    $scope.$watch('tx', function (newValue, oldValue) {
-        $scope.showRaw = false;
-        if (newValue.numTokens == oldValue.numTokens) return;
-        if ($scope.crowdsale.tokenPrice && $scope.tx.numTokens)
-            $scope.tx.value = new BigNumber($scope.tx.numTokens).mul($scope.crowdsale.tokenPrice).toNumber();
-        else $scope.tx.value = $scope.tx.numTokens;
-    }, true);    
-    $scope.readCrowdsale = function (addr) {
-        var amountRaisedHex = "0x7b3e5e7b";
-        var beneficiaryHex = "0x38af3eed"; //beneficiary()
-        var fundingGoalHex = "0x7a3a0e84"; //fundingGoal()
-        var priceHex = "0xa035b1fe"; //price()
-        var tokenRewardHex = "0x6e66f6e9"; //tokenReward()
-        var balanceOfHex = "0x70a08231"; //balanceOf(address)
-        var crowdsaleTypes = [
-            {"sig": amountRaisedHex, "type": "uint", "name": "amountRaised"},
-            {"sig": beneficiaryHex, "type": "address", "name": "beneficiary"},
-            {"sig": fundingGoalHex, "type": "uint", "name": "fundingGoal"},
-            {"sig": priceHex, "type": "uint", "name": "tokenPrice"},
-            {"sig": tokenRewardHex, "type": "address", "name": "tokenReward"}
-        ]
-        crowdsaleTypes.map(function(k) {
-            var crowdCall = ethFuncs.getDataObj(addr, k.sig, []);
-            ajaxReq.getEthCall(crowdCall, function (data) {
-                if (!data.error) {
-                    var decoded = ethUtil.solidityCoder.decodeParams([k.type], data.data.replace('0x', ''));
-                    if ((k.name == "fundingGoal") || (k.name == "tokenPrice") || (k.name == "amountRaised"))
-                        $scope.crowdsale[k.name] = etherUnits.toEther(decoded[0],'wei');
-                    else
-                        $scope.crowdsale[k.name] = decoded[0];
-                    if (k.name == "beneficiary") $scope.readOwnerToken(decoded[0]);
-                } else throw data.msg;
-            });
-        })
-    };
-    // get information from registry
-    $scope.readOwnerToken = function (addr) {
-        var tokensHex = "0xe4860339";  //tokens(address)
-        var readTokensTypes = ["address","address","uint256","string","uint8","string"];
-        var tokenCall = ethFuncs.getDataObj(icoMachineAddress, tokensHex, [ethFuncs.getNakedAddress(addr)]);
-        ajaxReq.getEthCall(tokenCall, function (data) {
-            if (!data.error) {
-                var decoded = ethUtil.solidityCoder.decodeParams(readTokensTypes, data.data.replace('0x', ''));
-                console.log(decoded);
-                $scope.token = { 
-                    "tokenAddress": decoded[0], 
-                    "saleAddress": decoded[1],
-                    "initialSupply": decoded[2].toString(10),
-                    "name": decoded[3],
-                    "decimals": decoded[4].toString(10),
-                    "symbol": decoded[5]
-                }
-                if (!$scope.crowdsale && $scope.token.saleAddress) {
-                    $scope.crowdsale = {address: $scope.token.saleAddress};
-                    $scope.readCrowdsale($scope.token.saleAddress)
-                }
-            } else throw data.msg;
-        });
-    };    
-    if (globalFuncs.urlGet('address')) {
-        $scope.crowdsale = {address: globalFuncs.urlGet('address')};
-    } else if (globalFuncs.urlGet('owner')) {
-        $scope.readOwnerToken(globalFuncs.urlGet('owner'))
-    }
-    $scope.generateTx = function(){
-        $scope.tx.to = $scope.crowdsale.address;
-        var txData = uiFuncs.getTxData($scope);
-        uiFuncs.generateTx(txData, function (rawTx) {
-            if (!rawTx.isError) {
-                $scope.rawTx = rawTx.rawTx;
-                $scope.signedTx = rawTx.signedTx;
-                $scope.showRaw = true;
-            } else {
-                $scope.showRaw = false;
-                $scope.notifier.danger(rawTx.error);
-            }
-            if (!$scope.$$phase) $scope.$apply();
-        });
-    }
-    $scope.sendTx = function() {
-        $scope.sendTxModal.close();
-        uiFuncs.sendTx($scope.signedTx, function (resp) {
-            if (!resp.isError) {
-                var bExStr = "<a href='https://gastracker.io/tx/" + resp.data + "' target='_blank'> View your transaction </a>";
-                $scope.notifier.success(globalFuncs.successMsgs[2] + resp.data + "<br />" + bExStr);
-                $scope.wallet.setBalance();
-            } else {
-                $scope.notifier.danger(resp.error);
-            }
-        });
-    }
-};
-module.exports = buyIcoCtrl;
-
-
 },{}],14:[function(require,module,exports){
 'use strict';
 var viewCtrl = function($scope, globalService, $sce) {
@@ -2204,7 +2076,6 @@ var viewWalletCtrl = require('./controllers/viewWalletCtrl');
 var sendTxCtrl = require('./controllers/sendTxCtrl');
 var contractsCtrl = require('./controllers/contractsCtrl');
 var icoCtrl = require('./controllers/icoCtrl');
-var buyIcoCtrl = require('./controllers/buyIcoCtrl');
 var sendOfflineTxCtrl = require('./controllers/sendOfflineTxCtrl');
 var walletBalanceCtrl = require('./controllers/walletBalanceCtrl');
 var globalService = require('./services/globalService');
@@ -2243,7 +2114,6 @@ app.controller('viewWalletCtrl', ['$scope','walletService', viewWalletCtrl]);
 app.controller('sendTxCtrl', ['$scope','$sce','walletService', sendTxCtrl]);
 app.controller('contractsCtrl', ['$scope','$sce','walletService', contractsCtrl]);
 app.controller('icoCtrl', ['$scope','$sce','walletService', icoCtrl]);
-app.controller('buyIcoCtrl', ['$scope','$sce','walletService', buyIcoCtrl]);
 app.controller('sendOfflineTxCtrl', ['$scope','$sce','walletService', sendOfflineTxCtrl]);
 app.controller('walletBalanceCtrl', ['$scope', '$sce', walletBalanceCtrl]);
 if(IS_CX){
@@ -2254,7 +2124,7 @@ if(IS_CX){
     app.controller('cxDecryptWalletCtrl', ['$scope','$sce','walletService', cxDecryptWalletCtrl]);
 }
 
-},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/icoCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571,"./controllers/buyIcoCtrl":926}],27:[function(require,module,exports){
+},{"./ajaxReq":1,"./controllers/CX/addWalletCtrl":2,"./controllers/CX/cxDecryptWalletCtrl":3,"./controllers/CX/mainPopCtrl":4,"./controllers/CX/myWalletsCtrl":5,"./controllers/CX/quickSendCtrl":6,"./controllers/bulkGenCtrl":7,"./controllers/decryptWalletCtrl":8,"./controllers/icoCtrl":9,"./controllers/sendOfflineTxCtrl":10,"./controllers/sendTxCtrl":11,"./controllers/tabsCtrl":12,"./controllers/contractsCtrl":13,"./controllers/viewCtrl":14,"./controllers/viewWalletCtrl":15,"./controllers/walletGenCtrl":16,"./cxFuncs":17,"./directives/QRCodeDrtv":18,"./directives/blockiesDrtv":19,"./directives/cxWalletDecryptDrtv":20,"./directives/fileReaderDrtv":21,"./directives/walletDecryptDrtv":22,"./ethFuncs":23,"./etherUnits":24,"./globalFuncs":25,"./myetherwallet":27,"./services/globalService":28,"./services/walletService":29,"./uiFuncs":30,"angular":32,"babel-polyfill":48,"bignumber.js":50,"./validator":87,"./solidity/coder":545,"./solidity/utils":556,"crypto":385,"ethereumjs-tx":415,"ethereumjs-util":416,"marked":432,"scryptsy":462,"uuid":482,"./controllers/walletBalanceCtrl":522,"./directives/balanceDrtv":526,"./tokenlib":562,"wallet-address-validator":571}],27:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var Wallet = function(priv) {
@@ -2608,7 +2478,7 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       id: 6,
       name: "Offline Transaction",
       url:"offline-transaction",
-      mew: false,
+      mew: true,
       cx: false
     },
     /*
@@ -2653,14 +2523,14 @@ var globalService = function($http, $httpParamSerializerJQLike) {
       url: "ico",
       mew: true,
       cx: true
-    },
+    }/*
     buyIco: {
       id: 10,
       name: "BUY TOKENS",
       url: "buy-ico",
       mew: true,
       cx: true
-    }
+    }*/
 
   };
   var currentTab = 5;
