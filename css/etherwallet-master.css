@@ -3854,7 +3854,7 @@ footer a:focus {
   font-weight: 300;
   color: white;
   display: block;
-  background-color: #21a4ce;
+  background-color: #30B332;
 }
 .announcement a {
   text-decoration: underline;
@@ -3870,7 +3870,7 @@ footer a:focus {
   font-weight: 400;
 }
 .announcement-warning {
-  background-color: rgba(212, 63, 58, 0.75);
+  background-color: #30B332;
 }
 .announcement-info {
   text-align: left;
@@ -3878,7 +3878,7 @@ footer a:focus {
 }
 .annoucement-warning:hover,
 .annoucement-warning:focus {
-  background-color: #d43f3a;
+  background-color: #30B332;
 }
 .annoucement-danger {
   background-color: #d9534f;
