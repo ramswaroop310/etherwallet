@@ -2010,6 +2010,45 @@ globalFuncs.stripTags = function(str) {
 globalFuncs.getRandomBytes = function(num) {
     return ethUtil.crypto.randomBytes(num);
 }
+globalFuncs.saveTokenToLocal = function (localToken, callback) {
+    try {
+        if (!ethFuncs.validateEtherAddress(localToken.contractAdd)) throw globalFuncs.errorMsgs[5];else if (!globalFuncs.isNumeric(localToken.decimals) || parseFloat(localToken.decimals) < 0) throw globalFuncs.errorMsgs[7];else if (!globalFuncs.isAlphaNumeric(localToken.symbol) || localToken.symbol == "") throw globalFuncs.errorMsgs[19];
+        var storedTokens = localStorage.getItem("localTokens") != null ? JSON.parse(localStorage.getItem("localTokens")) : [];
+        storedTokens.push({
+            contractAddress: localToken.contractAdd,
+            symbol: localToken.symbol,
+            decimal: parseInt(localToken.decimals),
+            type: "custom"
+        });
+        localStorage.setItem("localTokens", JSON.stringify(storedTokens));
+        callback({
+            error: false
+        });
+    } catch (e) {
+        callback({
+            error: false,
+            msg: e
+        });
+    }
+};
+globalFuncs.removeTokenFromLocal = function (symbol, tokenObj) {
+    var storedTokens = localStorage.getItem("localTokens") != null ? JSON.parse(localStorage.getItem("localTokens")) : [];
+    // remove from localstorage so it doesn't show up on refresh
+    for (var i = 0; i < storedTokens.length; i++) {
+        if (storedTokens[i].symbol === symbol) {
+            storedTokens.splice(i, 1);
+            break;
+        }
+    }localStorage.setItem("localTokens", JSON.stringify(storedTokens));
+    if (!tokenObj) return;
+    // remove from tokenObj so it removes from display
+    for (var i = 0; i < tokenObj.length; i++) {
+        if (tokenObj[i].symbol === symbol) {
+            tokenObj.splice(i, 1);
+            break;
+        }
+    }
+};
 globalFuncs.checkAndRedirectHTTPS = function() {
 	var host = "classicetherwallet.com";
 	var githost = "elaineo.github.io";
@@ -2149,6 +2188,12 @@ Wallet.prototype.setTokens = function () {
         this.tokenObjs.push(new Token(tokens[i].address, this.getAddressString(), tokens[i].symbol, tokens[i].decimal, tokens[i].type));
         this.tokenObjs[this.tokenObjs.length - 1].setBalance();
     }
+    var storedTokens = localStorage.getItem("localTokens") != null ? JSON.parse(localStorage.getItem("localTokens")) : [];
+    for (var i = 0; i < storedTokens.length; i++) {
+        this.tokenObjs.push(new Token(storedTokens[i].contractAddress, this.getAddressString(), globalFuncs.stripTags(storedTokens[i].symbol), storedTokens[i].decimal, storedTokens[i].type));
+        this.tokenObjs[this.tokenObjs.length - 1].setBalance();
+    }
+    console.log(this.tokenObjs)
 };
 Wallet.prototype.setBalance = function () {
     var parentObj = this;
@@ -71398,6 +71443,12 @@ module.exports=[
     "address":"0xbb9bc244d798123fde783fcc1c72d3bb8c189413",
     "symbol":"DAO",
     "decimal":16,
+    "type":"default"
+  },
+  {
+    "address":"0xdf0b7310588741cad931de88bc6c4f687cdf0e16",
+    "symbol":"GAM",
+    "decimal":8,
     "type":"default"
   }
  ]
